@@ -879,26 +879,47 @@
   margin: 0 auto;
 }
 
+/* ── FLEX UTILITIES & DASHBOARD OVERVIEW STACK ─────────────────────── */
+.dash-overview-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.gap-4 {
+  gap: 20px;
+}
+
 /* ── ROW 1: WELCOME & GREETING CARDS ──────────────────────────────── */
 .dash-welcome-grid {
   display: grid;
-  grid-template-columns: 1fr 2.1fr;
-  gap: 18px;
+  grid-template-columns: minmax(320px, 1fr) minmax(520px, 2fr);
+  gap: 20px;
+  align-items: stretch;
 }
 
 .welcome-banner-card {
   background: linear-gradient(135deg, #080D23 0%, #0a112e 50%, #091338 100%);
-  border: 1px solid rgba(2, 132, 199, 0.25);
+  border: 1px solid rgba(2, 132, 199, 0.28);
   border-radius: 18px;
-  padding: 24px 28px;
+  padding: 26px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  box-shadow: 0 8px 24px rgba(8, 13, 35, 0.12);
+  gap: 20px;
+  box-shadow: 0 8px 24px rgba(8, 13, 35, 0.14);
   position: relative;
   overflow: hidden;
-  min-height: 180px;
+  min-height: 175px;
 }
 
 .welcome-banner-card::before {
@@ -906,9 +927,9 @@
   position: absolute;
   top: -50px;
   right: 180px;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(0, 192, 253, 0.2) 0%, transparent 70%);
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(0, 192, 253, 0.22) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -916,8 +937,9 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   z-index: 2;
+  min-width: 0;
 }
 
 .welcome-tag {
@@ -937,11 +959,11 @@
 }
 
 .welcome-subtext {
-  font-size: 12.5px;
+  font-size: 13px;
   color: #94a3b8;
-  line-height: 1.45;
-  margin: 0;
-  max-width: 440px;
+  line-height: 1.5;
+  margin: 2px 0 0 0;
+  max-width: 480px;
 }
 
 .welcome-art-col {
@@ -950,6 +972,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   z-index: 2;
 }
 
@@ -958,47 +981,53 @@
   background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
   border: 1px solid #bae6fd;
   border-radius: 18px;
-  padding: 24px 26px;
+  padding: 26px 28px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.05);
+  box-shadow: 0 4px 16px rgba(2, 132, 199, 0.06);
+  min-height: 175px;
 }
 
 .greeting-content {
   z-index: 2;
+  display: flex;
+  flex-direction: column;
 }
 
 .greeting-date {
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 700;
   color: #0284c7;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-bottom: 2px;
 }
 
 .greeting-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 800;
   color: #080D23;
-  margin: 4px 0 2px 0;
+  margin: 2px 0 2px 0;
   letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .greeting-sub {
   font-size: 14px;
   font-weight: 600;
   color: #0288cc;
-  margin: 0;
+  margin: 0 0 4px 0;
 }
 
 .greeting-desc {
-  font-size: 12px;
+  font-size: 12.5px;
   color: #64748b;
   line-height: 1.45;
-  margin: 6px 0 0 0;
+  margin: 0;
+  max-width: 360px;
 }
 
 .greeting-wave-decor {
@@ -1006,9 +1035,9 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 50px;
+  height: 52px;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
 .greeting-wave-decor svg {
@@ -1020,20 +1049,21 @@
 .dash-kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
 
 .kpi-card {
   background: #ffffff;
   border: 1px solid var(--gx-border);
   border-radius: 16px;
-  padding: 18px 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 142px;
 }
 
 .kpi-card:hover {
@@ -1086,20 +1116,27 @@
 .kpi-label-wrap {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
 }
 
 .kpi-label {
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
   color: #64748b;
+  min-height: 32px;
+  display: flex;
+  align-items: flex-start;
+  line-height: 1.35;
 }
 
 .kpi-value {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: #0f172a;
-  line-height: 1.15;
+  line-height: 1.1;
+  margin-top: 2px;
 }
 
 .kpi-footer {
@@ -1107,6 +1144,8 @@
   align-items: center;
   gap: 6px;
   font-size: 11.5px;
+  margin-top: auto;
+  padding-top: 4px;
 }
 
 .kpi-trend {
@@ -1133,13 +1172,16 @@
   margin-left: auto;
   width: 60px;
   height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 /* ── ROW 3: SPLIT TWO-COLUMN GRID (Table + Right Analytics) ──────── */
 .dash-split-grid {
   display: grid;
-  grid-template-columns: 1fr 255px;
-  gap: 16px;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
   align-items: start;
 }
 
@@ -1150,9 +1192,9 @@
 .dash-side-col {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   min-width: 0;
-  width: 255px;
+  width: 280px;
 }
 
 /* ── LEADS TABLE CARD ─────────────────────────────────────────────── */
@@ -3876,20 +3918,21 @@
   align-items: center;
   background: #F1F5F9;
   padding: 4px;
-  border-radius: 10px;
+  border-radius: 12px;
   gap: 4px;
-  margin-bottom: 6px;
+  margin-bottom: 16px;
   width: fit-content;
   border: 1px solid #E2E8F0;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 
 .switcher-tab {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 7px 14px;
-  border-radius: 7px;
-  font-size: 12.5px;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 600;
   color: #64748B;
   background: transparent;
@@ -3911,7 +3954,7 @@
 .switcher-count {
   font-size: 11px;
   font-weight: 700;
-  padding: 1px 7px;
+  padding: 2px 7px;
   border-radius: 10px;
   background: #E2E8F0;
   color: #475569;

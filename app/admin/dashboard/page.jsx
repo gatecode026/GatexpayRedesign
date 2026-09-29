@@ -565,7 +565,7 @@ export default function AdminDashboardPage() {
           {/* 1. DASHBOARD OVERVIEW — EXACT MATCH TO REFERENCE SCREEN   */}
           {/* ========================================================= */}
           {activeNav === "overview" && (
-            <div className="flex flex-col gap-4">
+            <div className="dash-overview-stack">
               {/* Row 1: Morning Date Card + Welcome Banner */}
               <section className="dash-welcome-grid">
                 <MorningCard />
@@ -749,7 +749,7 @@ export default function AdminDashboardPage() {
             activeNav === "retail_commerce" ||
             activeNav === "citizen_identity" ||
             activeNav === "enterprise_tech") && (
-            <div className="flex flex-col gap-4">
+            <div className="dash-overview-stack">
               <div className="panel-page-header">
                 <div className="panel-header-left">
                   <div className="panel-breadcrumbs">
@@ -894,7 +894,7 @@ export default function AdminDashboardPage() {
           {/* 3. BLOG ARTICLES & CMS PANEL                              */}
           {/* ========================================================= */}
           {activeNav === "blog_posts" && (
-            <div className="flex flex-col gap-4">
+            <div className="dash-overview-stack">
               <div className="panel-page-header">
                 <div className="panel-header-left">
                   <div className="panel-breadcrumbs">
@@ -929,7 +929,7 @@ export default function AdminDashboardPage() {
           {/* 4. DPDP COOKIE CONSENTS AUDIT PANEL                       */}
           {/* ========================================================= */}
           {activeNav === "cookie_logs" && (
-            <div className="flex flex-col gap-4">
+            <div className="dash-overview-stack">
               <div className="panel-page-header">
                 <div className="panel-header-left">
                   <div className="panel-breadcrumbs">
