@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Contact page — "Visit Our Headquarter": address + info cards beside a map.
+   ========================================================================== */
+
+.contact-hq { background: var(--color-bg); }
+
+.contact-hq-grid {
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 1023px) {
+  .contact-hq-grid { grid-template-columns: 1fr; }
+}
+
+.contact-hq-left {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.contact-hq-title {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3.8vw, 54px);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.contact-hq-company h3 {
+  font-family: var(--font-heading);
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.375;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+.contact-hq-company p {
+  margin-top: var(--space-2);
+  font-size: clamp(15px, 1.6vw, 20px);
+  line-height: 1.5;
+  color: #64748B;
+}
+
+.contact-hq-cards {
+  display: flex;
+  gap: var(--space-4);
+}
+@media (max-width: 480px) {
+  .contact-hq-cards { flex-direction: column; }
+}
+
+.contact-hq-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+}
+
+.contact-hq-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #F0F9FF;
+  color: #0284C7;
+}
+
+.contact-hq-card h4 {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+.contact-hq-card p {
+  font-size: 12px;
+  line-height: 16px;
+  color: #64748B;
+}
+
+.contact-hq-map {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+}
+.contact-hq-map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 1023px) {
+  .contact-hq-map { aspect-ratio: 16 / 10; }
+}

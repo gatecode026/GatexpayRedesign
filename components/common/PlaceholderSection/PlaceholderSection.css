@@ -1,0 +1,5 @@
+.placeholder-section {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+}

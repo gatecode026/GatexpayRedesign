@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Trust Ribbon — Dark brand marquee strip, real logo assets
+   ========================================================================== */
+
+.trust-ribbon {
+  /* Strip height ~100px, logos scaled to match */
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  background: #0f172a;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Infinite scroll track */
+.trust-track {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: max-content;
+  animation: marquee-scroll 22s linear infinite;
+}
+
+.trust-ribbon:hover .trust-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Brand logos */
+.trust-logo {
+  height: 44px;
+  width: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+  opacity: 0.92;
+  transition: opacity 0.2s ease;
+}
+.trust-logo:hover {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trust-track { animation: none; }
+}

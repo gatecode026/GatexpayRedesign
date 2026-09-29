@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Blog Hero — "Gate X Pay Insights" + search
+   ========================================================================== */
+
+.blog-hero {
+  position: relative;
+  /* Navbar is fixed/overlaid, so clearance must be explicit — matches the
+     sitewide Hero.css convention: navbar height + real breathing room. */
+  padding-top: calc(var(--navbar-h, 80px) + 80px);
+  padding-bottom: 48px;
+  background: radial-gradient(230.13% 1114.82% at 49.97% 50.01%, #080D23 0%, #0F172A 58.78%, #0284C7 100%);
+  overflow: hidden;
+}
+
+.blog-hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.blog-hero-heading {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 66px;
+  color: #FFFFFF;
+  margin: 0 0 16px;
+}
+.blog-hero-heading-accent { color: #08B9F2; }
+
+.blog-hero-desc {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #CBD5E1;
+  max-width: 560px;
+  margin: 0 0 32px;
+}
+
+.blog-search {
+  display: flex;
+  align-items: center;
+  width: 655px;
+  max-width: 100%;
+  height: 44px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.blog-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding-inline: 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #0F172A;
+  background: transparent;
+}
+.blog-search-input::placeholder { color: #94A3B8; }
+
+.blog-search-btn {
+  flex-shrink: 0;
+  width: 126px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0284C7;
+  color: #FFFFFF;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.blog-search-btn:hover { background: #0369A1; }
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  .blog-hero { padding-top: calc(var(--navbar-h, 80px) + 64px); padding-bottom: 40px; }
+  .blog-hero-heading { font-size: 42px; line-height: 1.2; }
+}
+
+@media (max-width: 767px) {
+  .blog-hero { padding-top: calc(var(--navbar-h, 80px) + 40px); padding-bottom: 36px; text-align: center; }
+  .blog-hero-inner { display: flex; flex-direction: column; align-items: center; }
+  .blog-hero-heading { font-size: clamp(30px, 8vw, 38px); }
+  .blog-hero-desc { max-width: 420px; }
+  .blog-search { width: 100%; }
+}
+
+@media (max-width: 374px) {
+  .blog-hero { padding-top: calc(var(--navbar-h, 80px) + 32px); padding-bottom: 32px; }
+  .blog-hero-heading { font-size: 28px; line-height: 1.25; }
+  .blog-search-btn { width: 100px; padding-inline: 0; }
+}

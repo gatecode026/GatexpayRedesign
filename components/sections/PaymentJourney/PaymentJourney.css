@@ -1,0 +1,383 @@
+/* ==========================================================================
+   The Path to Seamless Payments — Figma pixel-perfect
+   Section:       padding 64px 76px | gap 32px | bg #0F172A
+   Active card:   413 x 406px | border #00C0FD | padding 24px
+   Inactive card: 304 x 306px | border #64748B | padding 20px
+   Image area:    240px height (both states)
+   Step num:      Source Serif Pro 32px | opacity 0.25
+                  cyan #00C0FD on active | white on inactive
+   Animations:    smooth cubic-bezier width + height + opacity
+   ========================================================================== */
+
+/* CSS tokens */
+:root {
+  --ease-silk: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --card-dur: 0.55s;
+}
+
+/* Section — aligned with site vertical rhythm */
+.journey {
+  background: #0F172A;
+  padding-block: var(--section-py);
+  overflow: hidden;
+  position: relative;
+  /* CSS grid line background — matches reference design */
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center center;
+}
+
+/* Journey inner layout — sits inside Container (max 1260px, aligned with site) */
+.journey-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;  /* +10px gap between heading and cards */
+  min-height: 524px;
+}
+
+/* Header row */
+.journey-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.journey-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+/* Arrows wrapper: Figma 8px gap */
+.journey-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Shared button base — 52px, smooth state transitions */
+.journey-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  line-height: 1;
+  flex-shrink: 0;
+  transition:
+    background    0.3s var(--ease-silk),
+    border-color  0.3s var(--ease-silk),
+    color         0.3s var(--ease-silk),
+    transform     0.2s var(--ease-silk),
+    box-shadow    0.3s var(--ease-silk);
+}
+
+/* Outlined state: transparent bg, slate 200 border, slate 200 arrow */
+/* Used when: prev is on first card | next is on last card   */
+.journey-btn--outline {
+  border: 1.5px solid #E2E8F0;
+  background: transparent;
+  color: #E2E8F0;
+}
+.journey-btn--outline:hover {
+  background: rgba(226, 232, 240, 0.12);
+  border-color: #E2E8F0;
+  transform: scale(1.08);
+}
+
+/* Filled state: solid slate 200 bg, dark navy arrow */
+/* Used when: prev can go back | next can go forward         */
+.journey-btn--filled {
+  border: 1.5px solid #E2E8F0;
+  background: #E2E8F0;
+  color: #080D23;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+}
+.journey-btn--filled:hover {
+  background: #CBD5E1;
+  border-color: #CBD5E1;
+  transform: scale(1.08);
+}
+
+/* Cards outer (track + dots, Figma gap 8px) — fixed height prevents stretch/compress during animation */
+.journey-cards-outer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 430px;
+  height: 430px;
+}
+
+/* Cards track — top-aligned: fixed 406px height locks track in place during card transitions */
+.journey-track {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;             /* tighter gap so all 4 fit */
+  min-height: 406px;
+  height: 406px;
+}
+
+/* ── Inactive card (flex-grow = 1, Figma height 306px) ─────────────────── */
+.journey-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  flex: 1 0 0;
+  min-width: 0;
+  height: 306px;
+
+  background: #0F172A;
+  border: 1px solid #64748B;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  opacity: 0.75;
+
+  transition:
+    flex-grow    var(--card-dur) var(--ease-silk),
+    height       var(--card-dur) var(--ease-silk),
+    border-color 0.4s var(--ease-silk),
+    box-shadow   0.4s var(--ease-silk),
+    opacity      0.4s var(--ease-silk);
+
+  will-change: flex-grow, height, opacity;
+}
+
+/* ── Active card (~10px wider: 1.46 instead of 1.36) ────────────────── */
+.journey-card.active {
+  flex: 1.46 0 0;        /* increased from 1.36 → ~10px wider */
+  height: 406px;
+  border: 1px solid #00C0FD;
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px rgba(0, 192, 253, 0.12),
+    0 8px 40px rgba(0, 192, 253, 0.1),
+    0 20px 56px rgba(0, 0, 0, 0.55);
+}
+
+.journey-card:hover:not(.active) {
+  opacity: 0.9;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* ── Image wrapper: 220px inactive, 240px active ────────────────────── */
+.journey-card-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 220px;         /* slightly reduced so text fits cleanly */
+  flex-shrink: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.journey-card.active .journey-card-img-wrap {
+  height: 240px;         /* active gets a bit more image space */
+  transition: height var(--card-dur) var(--ease-silk);
+}
+.journey-card:not(.active) .journey-card-img-wrap {
+  transition: height var(--card-dur) var(--ease-silk);
+}
+
+/* Contain — never cropped */
+.journey-card-img {
+  object-fit: contain !important;
+  transition: transform var(--card-dur) var(--ease-silk);
+}
+.journey-card.active .journey-card-img { transform: scale(1.04); }
+
+/* ── Step number ────────────────────────────────────────────────────────── */
+/* Figma: Source Serif Pro 700 32px, opacity 0.25                           */
+/* Inactive: color #FFFFFF, left 20px top 16px                              */
+/* Active:   color #00C0FD, left 24px top 24px                              */
+.journey-step-num {
+  position: absolute;
+  left: 20px;
+  top: 16px;
+  z-index: 2;
+
+  font-family: 'Source Serif Pro', Georgia, serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 44px;
+  color: #FFFFFF;
+  opacity: 0.25;
+
+  user-select: none;
+  pointer-events: none;
+  transition:
+    color var(--card-dur) var(--ease-silk),
+    left  var(--card-dur) var(--ease-silk),
+    top   var(--card-dur) var(--ease-silk);
+}
+
+.journey-card.active .journey-step-num {
+  color: #00C0FD;
+  left: 24px;
+  top: 24px;
+}
+
+/* ── Card body ──────────────────────────────────────────────────────────── */
+/* Inactive: padding 20px, height ~64px (title only)                        */
+/* Active:   padding 24px, height ~164px (title + description)              */
+.journey-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.journey-card.active .journey-card-body {
+  padding: 24px;
+}
+
+/* ── Title: Figma Poppins 600 16px lh 24px #FFFFFF ─────────────────────── */
+.journey-card-title {
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #FFFFFF;
+  margin: 0;
+  width: 100%;
+  /* Inactive: single line clip */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: white-space var(--card-dur) var(--ease-silk);
+}
+
+.journey-card.active .journey-card-title {
+  white-space: normal;
+}
+
+/* ── Description: Figma Poppins 400 14px lh 20px #CBD5E1 ───────────────── */
+/* Hidden on inactive, smooth reveal on active */
+.journey-card-desc {
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #CBD5E1;
+  margin: 0;
+  width: 100%;
+
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  /* Staggered: expand then fade */
+  transition:
+    max-height var(--card-dur) var(--ease-silk),
+    opacity    0.35s var(--ease-silk) 0.16s;
+}
+
+.journey-card.active .journey-card-desc {
+  max-height: 120px;
+  opacity: 1;
+}
+
+/* ── Dots: Figma active 32x8 #00C0FD | inactive 8x8 #CBD5E1 ────────────── */
+.journey-dots {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 8px;
+}
+
+.journey-dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 999px;
+  background: #CBD5E1;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    width      0.35s var(--ease-silk),
+    background 0.3s  var(--ease-silk);
+}
+
+.journey-dot.active {
+  width: 32px;
+  background: #00C0FD;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .journey-cards-outer { min-height: 430px; height: 430px; }
+  .journey-track {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+    min-height: 406px;
+    height: 406px;
+  }
+  .journey-track::-webkit-scrollbar { display: none; }
+
+  /* Peek carousel: active card + a sliver of the next one, inviting the
+     swipe. Advancing (dots/arrows/swipe/auto) scroll-syncs the active card
+     to the start of the track — see the effect in PaymentJourney.tsx. */
+  .journey-card        { flex: 0 0 65vw !important; height: 306px !important; }
+  .journey-card.active { flex: 0 0 75vw !important; height: 406px !important; }
+}
+
+@media (max-width: 640px) {
+  /* Tightened vertical rhythm — the stacked header is taller than desktop's
+     single row, so the same 42px inner gap read as loose/disconnected. */
+  .journey-inner       { min-height: auto; gap: 22px; }
+  .journey-cards-outer { min-height: 484px; height: 484px; }
+  .journey-track       { min-height: 460px; height: 460px; }
+  .journey-card        { flex: 0 0 80vw !important; height: 290px !important; }
+  /* 460px (not 390px): at narrow widths the description wraps to more
+     lines than it does on desktop, and 390px clipped the longest step's
+     text against the card's overflow:hidden. Fixed-height bug fix. */
+  .journey-card.active { flex: 0 0 86vw !important; height: 460px !important; }
+  /* Stack heading above controls so the heading gets the full row width
+     instead of sharing it with the arrows — needed to keep it to 2 lines. */
+  .journey-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .journey-heading     {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+  .journey-card-img-wrap { height: 200px; }
+
+  /* Right-aligned, small — sits under the heading on the opposite side. */
+  .journey-controls { align-self: flex-end; gap: 8px; }
+  .journey-btn { width: 32px; height: 32px; }
+  .journey-btn svg { width: 14px; height: 14px; }
+}
+
+/* ── Narrow phones only (320px–420px): the peek sliver has no room to
+   breathe at this width, so show only the single active card. ── */
+@media (max-width: 420px) {
+  .journey-track        { scroll-snap-type: x mandatory; }
+  .journey-card         { flex: 0 0 100% !important; scroll-snap-align: start; }
+  .journey-card.active  { flex: 0 0 100% !important; }
+}

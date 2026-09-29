@@ -1,0 +1,91 @@
+/* ==========================================================================
+   GateXPay ScrollToTop / Jump to Top Component Styles
+   ========================================================================== */
+
+.scroll-to-top-btn {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 890;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.9);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+  box-shadow: 0 8px 24px -4px rgba(2, 132, 199, 0.25), 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.scroll-to-top-btn.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.scroll-to-top-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  border-color: #0284C7;
+  box-shadow: 0 12px 28px -4px rgba(2, 132, 199, 0.35), 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.stt-arrow-icon {
+  color: #0284C7;
+  transition: color 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+
+.scroll-to-top-btn:hover .stt-arrow-icon {
+  color: #0369A1;
+  animation: sttBounceUp 0.8s ease infinite;
+}
+
+.stt-progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.stt-progress-bar {
+  transition: stroke-dashoffset 0.15s ease-out;
+  transform-origin: 50% 50%;
+}
+
+@keyframes sttBounceUp {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@media (max-width: 640px) {
+  .scroll-to-top-btn {
+    bottom: 84px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .stt-arrow-icon {
+    width: 16px;
+    height: 16px;
+  }
+}

@@ -1,0 +1,71 @@
+/* ==========================================================================
+   Everything Your Business Needs to Scale
+   ========================================================================== */
+
+.scale-section { background: var(--color-bg); }
+
+.scale-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: var(--space-8);
+}
+
+/* ── Grids ─────────────────────────────────────────────────────────────── */
+.scale-top-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .scale-top-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.scale-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .scale-bottom-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .scale-bottom-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── Card ──────────────────────────────────────────────────────────────── */
+.scale-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-7, 28px) var(--space-6);
+  transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out);
+}
+
+.scale-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.scale-card--top { min-height: 160px; }
+
+.scale-card-title {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: var(--space-3);
+  line-height: 1.3;
+}
+
+.scale-card-title--sm { font-size: 14.5px; }
+
+.scale-card-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--color-body);
+}

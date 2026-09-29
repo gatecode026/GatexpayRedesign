@@ -1,0 +1,583 @@
+/* ==========================================================================
+   GateXPay AI Chatbot Styles
+   Ultra-sleek FinTech styling matching GateXPay 2.0 aesthetics
+   Fixed for all screen heights, responsive viewports, and custom scrollbars
+   ========================================================================== */
+
+.chatbot-root {
+  position: relative;
+  z-index: 1000;
+}
+
+/* ── Global Scrollbar Button Suppression inside Chatbot ─────────────────── */
+.cb-window *::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* ── Floating Launcher Trigger ──────────────────────────────────────────── */
+.cb-launcher-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  color: #FFFFFF;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  box-shadow: 0 10px 25px -4px rgba(2, 132, 199, 0.45), 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.2s ease;
+}
+
+.cb-launcher-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 14px 30px -4px rgba(2, 132, 199, 0.55), 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.cb-launcher-btn.is-open {
+  background: #0F172A;
+  box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.35);
+}
+
+.cb-launcher-icon {
+  transition: transform 0.2s ease;
+}
+
+.cb-launcher-badge {
+  position: absolute;
+  right: 66px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #FFFFFF;
+  border: 1px solid #BAE6FD;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.15);
+  color: #0369A1;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  animation: cbBadgeFloat 3s ease-in-out infinite;
+}
+
+.cb-badge-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: cbPulse 2s infinite;
+}
+
+@keyframes cbPulse {
+  0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+@keyframes cbBadgeFloat {
+  0%, 100% { transform: translateY(-50%); }
+  50% { transform: translateY(-54%); }
+}
+
+/* ── Chat Window (Always on Top of Navbar, Never Cut Off) ────────────────── */
+.cb-window {
+  position: fixed;
+  bottom: 92px;
+  right: 24px;
+  width: 385px;
+  max-width: calc(100vw - 32px);
+  height: min(540px, calc(100dvh - 110px));
+  max-height: calc(100dvh - 110px);
+  background: #FFFFFF;
+  border: 1px solid rgba(2, 132, 199, 0.22);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.22),
+              0 10px 20px -5px rgba(2, 132, 199, 0.12),
+              0 0 0 1px rgba(2, 132, 199, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1001; /* Higher than navbar (999) so it is NEVER cut off */
+  animation: cbWindowEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cb-window.is-minimized {
+  height: auto;
+}
+
+@keyframes cbWindowEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Premium Window Header (Pure White Sans-Serif, Zero Serif) ───────────── */
+.cb-header {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 65%, #075985 100%);
+  color: #FFFFFF !important;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  user-select: none;
+  box-shadow: 0 2px 10px rgba(2, 132, 199, 0.2);
+}
+
+.cb-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cb-avatar-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cb-avatar-bot {
+  color: #FFFFFF;
+}
+
+.cb-status-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #0369A1;
+  box-shadow: 0 0 4px rgba(16, 185, 129, 0.8);
+}
+
+.cb-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cb-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cb-header-title {
+  font-family: var(--font-body, var(--font-body-src, "Poppins", -apple-system, sans-serif)) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.01em;
+}
+
+.cb-header-badge {
+  font-family: var(--font-body, var(--font-body-src, "Poppins", -apple-system, sans-serif)) !important;
+  font-size: 10px;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cb-header-subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cb-subtitle-pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34D399;
+  box-shadow: 0 0 6px rgba(52, 211, 153, 0.9);
+  animation: cbPulse 2s infinite;
+}
+
+.cb-header-subtitle {
+  font-family: var(--font-body, var(--font-body-src, "Poppins", -apple-system, sans-serif)) !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  color: #E0F2FE !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+  opacity: 0.95;
+}
+
+.cb-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cb-control-btn {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cb-control-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.cb-close-btn:hover {
+  background: rgba(239, 68, 68, 0.85);
+  border-color: rgba(239, 68, 68, 0.9);
+}
+
+/* ── Window Messages Body with Sleek Modern Scrollbar ───────────────────── */
+.cb-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px;
+  background: #F8FAFC;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 transparent;
+}
+
+/* Sleek WebKit Custom Scrollbar (Hides ugly default gray scrollbar and arrows) */
+.cb-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cb-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cb-body::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+
+.cb-body::-webkit-scrollbar-thumb:hover {
+  background: #0284C7;
+}
+
+.cb-body::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.cb-msg-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.cb-msg-row.is-user-row {
+  justify-content: flex-end;
+}
+
+.cb-msg-row.is-bot-row {
+  justify-content: flex-start;
+}
+
+.cb-msg-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: #E0F2FE;
+  color: #0284C7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+.cb-msg-bubble {
+  max-width: 82%;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.cb-msg-bubble.is-user-bubble {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  color: #FFFFFF;
+  border-radius: 16px 16px 4px 16px;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+}
+
+.cb-msg-bubble.is-bot-bubble {
+  background: #FFFFFF;
+  color: #1E293B;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px 16px 16px 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* ── Markdown Content inside Bubble ─────────────────────────────────────── */
+.cb-md {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cb-md-p {
+  margin: 0;
+}
+
+.cb-md-heading {
+  font-weight: 700;
+  color: #0F172A;
+  margin: 4px 0 2px 0;
+  font-size: 13px;
+}
+
+.cb-md-list {
+  margin: 2px 0;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cb-md-list li {
+  line-height: 1.4;
+}
+
+/* ── Typing Dots Indicator ──────────────────────────────────────────────── */
+.cb-typing-bubble {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 14px;
+}
+
+.cb-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #94A3B8;
+  animation: cbBounce 1.4s infinite ease-in-out both;
+}
+
+.cb-dot:nth-child(1) { animation-delay: -0.32s; }
+.cb-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes cbBounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); background: #0284C7; }
+}
+
+/* ── Suggestions Section (Zero Arrow Scrollbars) ────────────────────────── */
+.cb-suggestions {
+  background: #FFFFFF;
+  border-top: 1px solid #F1F5F9;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.cb-suggestions-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.cb-suggestions-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none !important; /* Hides horizontal bar in Firefox */
+  -ms-overflow-style: none !important; /* Hides horizontal bar in IE/Edge */
+  padding-bottom: 2px;
+}
+
+/* Hides horizontal scrollbar & arrows in WebKit/Chrome/Windows */
+.cb-suggestions-chips::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.cb-suggestions-chips::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.cb-chip-btn {
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  color: #0369A1;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.cb-chip-btn:hover {
+  background: #E0F2FE;
+  border-color: #0284C7;
+  color: #0284C7;
+  transform: translateY(-1px);
+}
+
+/* ── Input Box ──────────────────────────────────────────────────────────── */
+.cb-input-box {
+  background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cb-input {
+  flex: 1;
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  border-radius: 9999px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  color: #0F172A;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cb-input:focus {
+  border-color: #0284C7;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.cb-send-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #0284C7;
+  color: #FFFFFF;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.cb-send-btn:hover:not(:disabled) {
+  background: #0369A1;
+  transform: scale(1.05);
+}
+
+.cb-send-btn:disabled {
+  background: #E2E8F0;
+  color: #94A3B8;
+  cursor: not-allowed;
+}
+
+/* ── Tablet View (641px - 1024px) ───────────────────────────────────────── */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .cb-window {
+    bottom: 88px;
+    right: 20px;
+    width: 360px;
+    height: min(500px, calc(100dvh - 100px));
+  }
+
+  .cb-launcher-btn {
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/* ── Mobile View (<= 640px) ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cb-launcher-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .cb-launcher-badge {
+    display: none;
+  }
+
+  .cb-window {
+    bottom: 74px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: 400px;
+    margin-inline: auto;
+    height: min(520px, calc(100dvh - 90px));
+    border-radius: 18px;
+  }
+
+  .cb-header {
+    padding: 12px 14px;
+  }
+
+  .cb-body {
+    padding: 12px;
+  }
+}

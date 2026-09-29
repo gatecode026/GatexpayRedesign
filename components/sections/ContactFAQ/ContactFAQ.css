@@ -1,0 +1,92 @@
+/* ==========================================================================
+   Contact page — Frequently Asked Questions accordion.
+   ========================================================================== */
+
+.contact-faq { background: var(--color-bg); }
+
+.contact-faq-title {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3.8vw, 54px);
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin-bottom: var(--space-8);
+}
+
+.contact-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.contact-faq-item {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.contact-faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 20px 24px;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-heading);
+}
+
+.contact-faq-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-heading);
+  transition: transform 0.4s var(--ease-in-out), background 0.4s var(--ease-out);
+}
+.contact-faq-item.is-open .contact-faq-icon {
+  transform: rotate(45deg);
+  background: #F0F9FF;
+}
+
+.contact-faq-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  border-top: 1px solid transparent;
+  background: transparent;
+  transition:
+    grid-template-rows 0.4s var(--ease-in-out),
+    background 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
+}
+.contact-faq-panel-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.contact-faq-panel p {
+  padding: 16px 24px 20px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #64748B;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+.contact-faq-item.is-open .contact-faq-panel {
+  grid-template-rows: 1fr;
+  border-top-color: var(--color-border);
+  background: var(--color-bg-subtle);
+}
+.contact-faq-item.is-open .contact-faq-panel p {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.35s var(--ease-out) 0.1s, transform 0.35s var(--ease-out) 0.1s;
+}

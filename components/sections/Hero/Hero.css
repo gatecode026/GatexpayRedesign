@@ -1,0 +1,719 @@
+/* ==========================================================================
+   Hero Section
+   Primary design reference: 1440 × 600 desktop frame (below 80px fixed navbar).
+   100% pixel-perfect match to Figma reference at 1440px, aligned with navbar,
+   with wanted line-height & spacing, and 100% responsive on every screen.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  padding-top: var(--navbar-h, 80px);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.hero *,
+.hero *::before,
+.hero *::after {
+  box-sizing: border-box;
+}
+
+/* ── Desktop Stage (≥1440px) ────────────────────────────────────────────── */
+.hero-stage {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  height: 615px;            /* adjusted +15px to accommodate top visual offset */
+  margin-inline: auto;
+}
+
+/* ── Left Content (Aligned with Navbar logo at clamp(20px, 3.5vw, 80px)) ── */
+.hero-content {
+  position: absolute;
+  left: clamp(20px, 3.5vw, 80px);
+  top: 88px;                /* increased by 20px (was 68px) */
+  width: 767px;
+  max-width: calc(100% - clamp(40px, 7vw, 160px));
+  z-index: 10;
+  pointer-events: none;
+}
+
+.hero-content > * {
+  pointer-events: auto;
+}
+
+/* Heading from Figma: 62px / 84px (135%), width 767px, height 168px */
+.hero-title {
+  margin: 0;
+  width: 767px;
+  max-width: 100%;
+  font-family: 'Source Serif Pro', var(--font-heading), Georgia, serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 62px;
+  line-height: 84px;
+  letter-spacing: -0.025em;
+  color: var(--color-heading, #090f22);
+  white-space: normal;
+  animation: heroFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-title-blue {
+  background: linear-gradient(90deg, #0284C7 0%, #00C0FD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.hero-title-mobile-break {
+  display: none;
+}
+
+.hero-title-desktop-break {
+  display: inline;
+}
+
+/* Description paragraph from Figma: 24px / 36px (150%), #64748B, width 612px, height 108px */
+.hero-desc {
+  margin: 0;
+  margin-top: 24px;
+  width: 612px;
+  max-width: 100%;
+  font-family: 'Poppins', var(--font-body), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  color: #64748B;
+  animation: heroFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+/* Action buttons with wanted gap */
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 36px;
+  animation: heroFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+/* ── Primary CTA ───────────────────────────────────────────────────────── */
+.hero-cta {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 20px;
+  gap: 12px;
+  width: 221px;
+  height: 52px;
+  background: #0284C7;
+  border-radius: 12px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+.hero-cta:hover {
+  background-color: #0277b3;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(2, 132, 199, 0.38);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+}
+
+.hero-cta-icon {
+  flex-shrink: 0;
+}
+
+/* ── Secondary CTA ─────────────────────────────────────────────────────── */
+.hero-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0284c7;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hero-more:hover {
+  color: #0369a1;
+}
+
+.hero-arrow {
+  display: inline-block;
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.hero-more:hover .hero-arrow {
+  transform: translateX(4px);
+}
+
+/* ── Right Visual (Background Curve + 3D Devices) ────────────────────────── */
+.hero-visual {
+  position: absolute;
+  top: 15px;                /* 15px spacing from top */
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+/* ── Ellipse 2 (SVG from Figma) ────────────────────────────────────────── */
+.hero-glow-shape,
+.hero-ellipse {
+  position: absolute;
+  left: 657px;
+  top: 29px;
+  width: 783px;
+  height: 571px;
+  z-index: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Device wrappers (handles positioning, layering, and continuous bouncy floating) */
+.hero-device {
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+  height: auto;
+  will-change: transform;
+}
+
+/* Device inner images (handles responsive sizing, drop-shadow, and initial spring pop-up) */
+.hero-device-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.hero-device--ipad {
+  left: 1098px;
+  top: 84px;
+  width: 326px;
+  z-index: 2;
+  filter: drop-shadow(0 20px 40px rgba(5, 15, 35, 0.25));
+  animation: heroBouncyFloatIpad 6.6s ease-in-out 1.25s infinite;
+}
+
+.hero-device--iphone {
+  left: 663px;
+  top: 186px;
+  width: 228px;
+  z-index: 3;
+  filter: drop-shadow(0 18px 36px rgba(5, 15, 35, 0.28));
+  animation: heroBouncyFloatIphone 6.0s ease-in-out 1.1s infinite;
+}
+
+.hero-device--macbook {
+  left: 680px;
+  top: 90px;
+  width: 672px;
+  z-index: 4;
+  filter: drop-shadow(0 28px 56px rgba(5, 15, 35, 0.3));
+  animation: heroBouncyFloatMacbook 7.0s ease-in-out 0.95s infinite;
+}
+
+/* Initial Pop-Up Entrance Animation (from small size to normal size with smooth spring overshoot) */
+.hero-device-img--macbook {
+  animation: heroDevicePop 0.9s cubic-bezier(0.25, 1, 0.35, 1) 0.1s both;
+}
+
+.hero-device-img--iphone {
+  animation: heroDevicePop 0.9s cubic-bezier(0.25, 1, 0.35, 1) 0.26s both;
+}
+
+.hero-device-img--ipad {
+  animation: heroDevicePop 0.9s cubic-bezier(0.25, 1, 0.35, 1) 0.4s both;
+}
+
+/* Pop-up keyframes: start small (0.35), smoothly expand with subtle overshoot (1.04), settle to 1 */
+@keyframes heroDevicePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  85% {
+    transform: scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slow, silky-smooth buoyant floating animations */
+@keyframes heroBouncyFloatMacbook {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-13px);
+  }
+}
+
+@keyframes heroBouncyFloatIphone {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-17px);
+  }
+}
+
+@keyframes heroBouncyFloatIpad {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-11px);
+  }
+}
+
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* ── 1200px to 1439px (standard laptops: 1366px, 1280px) ───────────────── */
+@media (max-width: 1439px) and (min-width: 1200px) {
+  .hero-stage {
+    width: 100%;
+    max-width: 1440px;
+    height: 615px;
+    justify-content: space-between;
+  }
+
+  .hero-content {
+    width: clamp(540px, 54vw, 700px);
+    top: 88px;
+    left: clamp(20px, 3.5vw, 80px);
+  }
+
+  .hero-title {
+    width: 100%;
+    font-size: clamp(48px, 62px, 56px);
+    line-height: 1.40;
+  }
+
+  .hero-desc {
+    width: 100%;
+    max-width: 540px;
+    margin-top: 40px;
+    font-size: clamp(18px, 1.4vw, 21px);
+    line-height: 1.5;
+  }
+
+  .hero-actions {
+    margin-top: 40px;
+  }
+
+  .hero-visual {
+    width: 820px;
+    height: 600px;
+    left: auto;
+    right: -70px;
+    top: 15px;
+  }
+
+  .hero-ellipse,
+  .hero-glow-shape {
+    width: 1540px;
+    height: auto;
+    top: 25px;
+    left: 0;
+  }
+
+  .hero-device--ipad {
+    left: 450px;
+    top: 88px;
+    width: 290px;
+  }
+
+  .hero-device--macbook {
+    left: 80px;
+    top: 94px;
+    width: 590px;
+  }
+
+  .hero-device--iphone {
+    width: 200px;
+    top: 160px;
+    left: 65px;
+  }
+}
+
+/* ── 992px to 1199px (compact laptops / large tablets) ──────────────────── */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .hero-stage {
+    width: 100%;
+    height: 480px;
+  }
+
+  .hero-content {
+    left: clamp(20px, 3.5vw, 80px);
+    top: 70px;
+    width: 480px;
+  }
+
+  .hero-title {
+    width: 100%;
+    font-size: 38px;
+    line-height: 1.22;
+  }
+
+  .hero-desc {
+    width: 100%;
+    max-width: 440px;
+    font-size: 17px;
+    line-height: 1.5;
+    margin-top: 18px;
+  }
+
+  .hero-actions {
+    margin-top: 24px;
+    gap: 20px;
+  }
+
+  .hero-cta {
+    height: 48px;
+    padding: 0 22px;
+    font-size: 15px;
+  }
+
+  .hero-visual {
+    width: 600px;
+    height: 540px;
+    top: -25px;
+    left: auto;
+    right: 0;
+  }
+
+  .hero-ellipse,
+  .hero-glow-shape {
+    left: 20px;
+    top: 20px;
+    width: 800px;
+    height: 520px;
+  }
+
+  .hero-device--ipad {
+    left: 330px;
+    top: 80px;
+    width: 230px;
+  }
+
+  .hero-device--macbook {
+    left: 30px;
+    top: 90px;
+    width: 470px;
+  }
+
+  .hero-device--iphone {
+    left: 20px;
+    top: 165px;
+    width: 160px;
+  }
+}
+
+/* ── 768px to 991px (tablets in portrait) ──────────────────────────────── */
+@media (max-width: 991px) and (min-width: 768px) {
+  .hero {
+    padding-top: calc(var(--navbar-h, 80px) + 44px);
+    padding-bottom: 40px;
+  }
+
+  .hero-stage {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-inline: 32px;
+  }
+
+  .hero-content {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: 680px;
+  }
+
+  .hero-title {
+    font-size: 42px;
+    line-height: 1.22;
+  }
+
+  .hero-desc {
+    width: 100%;
+    max-width: 580px;
+    margin-inline: auto;
+    font-size: 18px;
+    line-height: 1.55;
+    margin-top: 20px;
+  }
+
+  .hero-actions {
+    justify-content: center;
+    margin-top: 30px;
+    gap: 20px;
+  }
+
+  .hero-visual {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    aspect-ratio: 783 / 571;
+    height: auto;
+    margin-top: 36px;
+    margin-inline: auto;
+    overflow: visible;
+  }
+
+  .hero-ellipse,
+  .hero-glow-shape {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-device--macbook {
+    left: 2.94%;
+    top: 10.68%;
+    width: 85.82%;
+  }
+
+  .hero-device--iphone {
+    left: 0.77%;
+    top: 27.50%;
+    width: 29.12%;
+  }
+
+  .hero-device--ipad {
+    left: 56.32%;
+    top: 9.63%;
+    width: 41.63%;
+  }
+}
+
+/* ── Mobile (≤767px) ───────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .hero {
+    padding-top: calc(var(--navbar-h, 80px) + 32px);
+    padding-bottom: 0;
+  }
+
+  .hero-stage {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-inline: 0;
+  }
+
+  .hero-content {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    text-align: center;
+    padding-inline: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  .hero-title {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    font-size: clamp(23px, 6.4vw, 30px);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    word-break: normal;
+    text-align: center;
+  }
+
+  .hero-title-mobile-break {
+    display: inline;
+  }
+
+  .hero-desc {
+    width: 100%;
+    max-width: 320px;
+    margin-inline: auto;
+    font-size: 14px;
+    line-height: 1.55;
+    margin-top: 12px;
+    word-break: normal;
+    overflow-wrap: break-word;
+    text-align: center;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .hero-cta {
+    height: 48px;
+    width: 100%;
+    max-width: 260px;
+    justify-content: center;
+    padding: 0 20px;
+    font-size: 15px;
+    margin-inline: auto;
+  }
+
+  .hero-more {
+    font-size: 15px;
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  .hero-visual {
+    position: relative;
+    width: calc(100% + 12px);
+    max-width: none;
+    aspect-ratio: 783 / 571;
+    height: auto;
+    margin-top: 18px;
+    margin-left: auto;
+    margin-right: -12px;
+    margin-bottom: 0;
+    overflow: visible;
+    align-self: flex-end;
+  }
+
+  .hero-ellipse,
+  .hero-glow-shape {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-device--macbook {
+    left: 2.94%;
+    top: 10.68%;
+    width: 85.82%;
+  }
+
+  .hero-device--iphone {
+    left: 0.77%;
+    top: 27.50%;
+    width: 29.12%;
+  }
+
+  .hero-device--ipad {
+    left: 56.32%;
+    top: 9.63%;
+    width: 41.63%;
+  }
+}
+
+/* ── Small Mobile (≤400px) ─────────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .hero-title {
+    font-size: 26px;
+    line-height: 1.2;
+  }
+
+  .hero-desc {
+    font-size: 14px;
+    margin-top: 12px;
+  }
+
+  .hero-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .hero-more {
+    justify-content: center;
+  }
+
+  .hero-visual {
+    width: calc(100% + 14px);
+    margin-right: -14px;
+    margin-bottom: 0;
+    margin-top: 14px;
+  }
+}
+
+/* ── Reduced Motion ────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-title,
+  .hero-desc,
+  .hero-actions,
+  .hero-device,
+  .hero-device-img,
+  .hero-more:hover .hero-arrow {
+    animation: none;
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+}
