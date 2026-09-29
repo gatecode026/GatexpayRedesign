@@ -19,10 +19,15 @@ export default function AddLeadModal({
     notes: "",
     source: "contact_modal",
   });
+  const [errorMsg, setErrorMsg] = useState("");
   if (!isOpen) return null;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await onSubmit(form);
+    setErrorMsg("");
+    const res = await onSubmit(form);
+    if (res && !res.success) {
+      setErrorMsg(res.error || "Failed to create lead");
+    }
   };
   return (
     <div className="dash-modal-overlay">
@@ -44,13 +49,27 @@ export default function AddLeadModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="dash-modal-body">
+        <form onSubmit={handleSubmit} className="dash-modal-body" noValidate>
+          {errorMsg && (
+            <div
+              style={{
+                color: "#ef4444",
+                fontSize: "13px",
+                marginBottom: "12px",
+                padding: "8px 12px",
+                background: "rgba(239, 68, 68, 0.1)",
+                borderRadius: "6px",
+                border: "1px solid rgba(239, 68, 68, 0.2)",
+              }}
+            >
+              {errorMsg}
+            </div>
+          )}
           <div className="dash-modal-grid">
             <div className="dash-modal-field">
-              <label className="dash-field-label">Merchant Name *</label>
+              <label className="dash-field-label">Merchant Name</label>
               <input
                 type="text"
-                required
                 className="modal-text-input"
                 placeholder="e.g. Aditya Sharma"
                 value={form.fullName}
@@ -72,10 +91,9 @@ export default function AddLeadModal({
             </div>
 
             <div className="dash-modal-field">
-              <label className="dash-field-label">Phone Number *</label>
+              <label className="dash-field-label">Phone Number</label>
               <input
                 type="tel"
-                required
                 className="modal-text-input"
                 placeholder="e.g. 9822334455"
                 value={form.phone}
@@ -95,7 +113,7 @@ export default function AddLeadModal({
             </div>
 
             <div className="dash-modal-field">
-              <label className="dash-field-label">Service Requested *</label>
+              <label className="dash-field-label">Service Requested</label>
               <select
                 className="modal-text-input"
                 value={form.serviceCategory}

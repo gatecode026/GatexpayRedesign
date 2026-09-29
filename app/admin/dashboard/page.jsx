@@ -291,9 +291,13 @@ export default function AdminDashboardPage() {
         setToastMessage("Lead created and admin notification dispatched.");
         setTimeout(() => setToastMessage(null), 4000);
         fetchData();
+        return { success: true };
+      } else {
+        return { success: false, error: data.error || "Failed to create lead" };
       }
     } catch (err) {
       console.error("Failed to create lead:", err);
+      return { success: false, error: "Network error creating lead" };
     } finally {
       setSubmittingLead(false);
     }

@@ -76,7 +76,7 @@ export default function AdminLoginPage() {
         )}
 
         {/* Form */}
-        <form className="admin-login-form" onSubmit={handleLogin}>
+        <form className="admin-login-form" onSubmit={handleLogin} noValidate>
           <div className="admin-input-group">
             <label htmlFor="admin-email">Administrator Email</label>
             <div className="admin-input-wrap">
@@ -87,7 +87,6 @@ export default function AdminLoginPage() {
                 placeholder="admin@gatexpay.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
                 autoComplete="email"
               />
             </div>
@@ -103,7 +102,6 @@ export default function AdminLoginPage() {
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
                 autoComplete="current-password"
               />
               <button

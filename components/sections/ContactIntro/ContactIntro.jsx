@@ -139,21 +139,23 @@ export default function ContactIntro() {
                   business day.
                 </p>
 
-                <form className="contact-intro-form" onSubmit={handleSubmit}>
+                <form
+                  className="contact-intro-form"
+                  onSubmit={handleSubmit}
+                  noValidate
+                >
                   <div className="contact-intro-form-row">
                     <input
                       type="text"
                       name="fullName"
                       placeholder="Full Name"
                       autoComplete="name"
-                      required
                     />
                     <input
                       type="text"
                       name="companyName"
                       placeholder="Company Name"
                       autoComplete="organization"
-                      required
                     />
                   </div>
 
@@ -163,14 +165,12 @@ export default function ContactIntro() {
                       name="email"
                       placeholder="Email"
                       autoComplete="email"
-                      required
                     />
                     <input
                       type="tel"
                       name="phone"
                       placeholder="Phone Number"
                       autoComplete="tel"
-                      required
                     />
                   </div>
 
@@ -178,7 +178,6 @@ export default function ContactIntro() {
                     <select
                       name="serviceCategory"
                       defaultValue=""
-                      required
                       aria-label="Service Category"
                     >
                       <option value="" disabled>
@@ -213,7 +212,6 @@ export default function ContactIntro() {
                     name="message"
                     placeholder="Tell us about your requirements"
                     rows={4}
-                    required
                   />
 
                   <input

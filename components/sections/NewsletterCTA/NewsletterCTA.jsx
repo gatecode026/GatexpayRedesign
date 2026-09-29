@@ -1,24 +1,33 @@
 "use client";
 import { useState } from "react";
 import "./NewsletterCTA.css";
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function NewsletterCTA() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const handleSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const value = email.trim();
-    if (!value) {
-      setError("Please enter your email address.");
-      return;
-    }
-    if (!EMAIL_RE.test(value)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+    setIsSubmitting(true);
     setError("");
-    setSubmitted(true);
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Subscription failed. Please try again.");
+      }
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <section className="blog-section newsletter-section">

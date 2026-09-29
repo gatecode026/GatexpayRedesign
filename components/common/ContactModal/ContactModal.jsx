@@ -124,21 +124,23 @@ export default function ContactModal({ isOpen, onClose }) {
               business day.
             </p>
 
-            <form className="contact-modal-form" onSubmit={handleSubmit}>
+            <form
+              className="contact-modal-form"
+              onSubmit={handleSubmit}
+              noValidate
+            >
               <input
                 ref={firstFieldRef}
                 type="text"
                 name="fullName"
                 placeholder="Full Name"
                 autoComplete="name"
-                required
               />
 
               <div className="contact-modal-select-wrap">
                 <select
                   name="serviceCategory"
                   defaultValue=""
-                  required
                   aria-label="Service Category"
                 >
                   <option value="" disabled>
@@ -157,12 +159,11 @@ export default function ContactModal({ isOpen, onClose }) {
                 name="companyName"
                 placeholder="Company Name"
                 autoComplete="organization"
-                required
               />
 
               <div className="contact-modal-phone-row">
                 <div className="contact-modal-code-field">
-                  <label htmlFor="contact-modal-code">Code *</label>
+                  <label htmlFor="contact-modal-code">Code</label>
                   <div className="contact-modal-select-wrap">
                     <select
                       id="contact-modal-code"
@@ -182,7 +183,6 @@ export default function ContactModal({ isOpen, onClose }) {
                   name="mobileNumber"
                   placeholder="Mobile Number"
                   autoComplete="tel-national"
-                  required
                 />
               </div>
 

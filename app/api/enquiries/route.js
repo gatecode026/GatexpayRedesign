@@ -6,13 +6,28 @@ import { sendAdminLeadNotification } from "@/lib/email";
 const EnquiryInputSchema = z.object({
   fullName: z
     .string()
+    .trim()
+    .min(1, "Full name is required")
     .min(2, "Full name must be at least 2 characters")
-    .max(100),
-  email: z.string().email("Invalid email address").optional().or(z.literal("")),
-  phone: z.string().min(7, "Phone number is too short").max(20),
+    .max(100, "Full name is too long"),
+  email: z
+    .string()
+    .trim()
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Phone number is required")
+    .min(7, "Phone number must be at least 7 digits")
+    .max(20, "Phone number is too long"),
   countryCode: z.string().optional().default("+91"),
   companyName: z.string().max(120).optional().default(""),
-  serviceCategory: z.string().min(1, "Please select a service category"),
+  serviceCategory: z
+    .string()
+    .trim()
+    .min(1, "Please select a service category"),
   timeline: z.string().optional().default("Immediately"),
   message: z.string().max(2000).optional().default(""),
   source: z
@@ -45,10 +60,12 @@ export async function POST(req) {
     }
     const parsed = EnquiryInputSchema.safeParse(body);
     if (!parsed.success) {
+      const firstIssue = parsed.error.issues?.[0];
+      const errorMessage = firstIssue ? firstIssue.message : "Validation failed";
       return NextResponse.json(
         {
           success: false,
-          error: "Validation failed",
+          error: errorMessage,
           details: parsed.error.issues,
         },
         { status: 400 }
