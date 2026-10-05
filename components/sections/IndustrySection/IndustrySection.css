@@ -28,20 +28,24 @@
   z-index: 100;
   width: 100%;
   background: var(--color-bg);
-  padding-top: 4px;
+  padding-top: 6px;
   padding-bottom: 8px;
   margin-bottom: 14px;
-  transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, padding 0.2s ease;
+  transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, padding 0.2s ease;
+}
+
+body.navbar--hidden .industry-tabs-sticky-wrap {
+  top: 0;
 }
 
 .industry-tabs-sticky-wrap.is-sticky {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(226, 232, 240, 0.85);
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
   padding-top: 12px;
-  padding-bottom: 12px;
+  padding-bottom: 14px;
 }
 
 /* When sticky, hide the "Industries We Offer:" heading label — only show tabs */
@@ -75,7 +79,8 @@
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 4px 2px;
+  padding: 10px 8px 18px 8px;
+  margin: -6px 0 -8px 0;
   flex: 1;
 }
 .industry-tabs-scroll::-webkit-scrollbar {
@@ -112,7 +117,7 @@
   color: #FFFFFF;
   font-weight: 600;
   border-color: var(--color-blue);
-  box-shadow: 0 4px 14px rgba(26, 93, 200, 0.28);
+  box-shadow: 0 4px 14px rgba(26, 93, 200, 0.32);
   transform: translateY(-1px);
 }
 
@@ -258,27 +263,39 @@
    by the viewport too, for short/landscape screens. */
 .industry-stack-sticky {
   position: sticky;
-  top: calc(var(--navbar-h) + 78px);
-  height: min(calc(100vh - var(--navbar-h) - 90px), 960px);
+  top: calc(var(--navbar-h, 80px) + 72px);
+  height: min(calc(100vh - var(--navbar-h, 80px) - 80px), 960px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
+  transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1), height 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+body.navbar--hidden .industry-stack-sticky {
+  top: 68px;
+  height: min(calc(100vh - 80px), 960px);
+}
+
 @media (min-width: 375px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 920px); }
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 80px), 920px); }
+  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 80px), 920px); }
 }
 @media (min-width: 414px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 860px); }
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 80px), 860px); }
+  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 80px), 860px); }
 }
 @media (min-width: 480px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 830px); }
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 80px), 830px); }
+  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 80px), 830px); }
 }
 @media (min-width: 768px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 620px); }
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 80px), 620px); }
+  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 80px), 620px); }
 }
 @media (min-width: 1024px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 580px); }
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 80px), 580px); }
+  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 80px), 580px); }
 }
 
 .industry-stack-stage-outer {

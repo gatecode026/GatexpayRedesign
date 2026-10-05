@@ -200,6 +200,8 @@ export default function IndustrySection() {
   const ref = useRef(null);
   const sentinelRef = useRef(null);
   const tabsScrollRef = useRef(null);
+
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -243,10 +245,12 @@ export default function IndustrySection() {
     let lastActiveIndex = -1;
     const update = () => {
       rafId = null;
-      // Sticky state check (at navbar height ~80px)
-      if (sentinel) {
+      // Sticky state check: active when tabs sentinel reaches top threshold and section is still in view
+      const sectionEl = ref.current;
+      if (sentinel && sectionEl) {
         const sRect = sentinel.getBoundingClientRect();
-        setIsSticky(sRect.top <= 82);
+        const secRect = sectionEl.getBoundingClientRect();
+        setIsSticky(sRect.top <= 80 && secRect.bottom > 80);
       }
       if (reducedMotion || !wrap) return;
       const rect = wrap.getBoundingClientRect();

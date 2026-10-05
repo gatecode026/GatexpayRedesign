@@ -21,11 +21,52 @@ export default function Navbar() {
   const pathname = usePathname();
   const navRef = useRef(null);
   const { open: openContactModal } = useContactModal();
+  const [navVisible, setNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    let ticking = false;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(currentScrollY > 8);
+
+          // Near page top or if mobile menu is open, navbar must always be visible
+          if (currentScrollY <= 20 || isMenuOpen) {
+            setNavVisible(true);
+            document.body.classList.remove("navbar--hidden");
+          } else {
+            const diff = currentScrollY - lastScrollY.current;
+            // Scrolling down -> hide navbar
+            if (diff > 8) {
+              setNavVisible(false);
+              document.body.classList.add("navbar--hidden");
+              setOpenDropdown(null);
+            }
+            // Scrolling up -> reveal navbar
+            else if (diff < -6) {
+              setNavVisible(true);
+              document.body.classList.remove("navbar--hidden");
+            }
+          }
+
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.body.classList.remove("navbar--hidden");
+    };
+  }, [isMenuOpen]);
+
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
     return () => {
@@ -59,7 +100,9 @@ export default function Navbar() {
     setOpenDropdown((current) => (current === key ? null : key));
   };
   return (
-    <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
+    <header
+      className={`navbar ${scrolled ? "scrolled" : ""} ${!navVisible ? "navbar--hidden" : ""}`}
+    >
       <div className="navbar-container">
         <Link
           href="/"
