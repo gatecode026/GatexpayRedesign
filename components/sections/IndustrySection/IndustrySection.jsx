@@ -250,7 +250,16 @@ export default function IndustrySection() {
       if (sentinel && sectionEl) {
         const sRect = sentinel.getBoundingClientRect();
         const secRect = sectionEl.getBoundingClientRect();
-        setIsSticky(sRect.top <= 80 && secRect.bottom > 80);
+        const inside = sRect.top <= 80 && secRect.bottom > 80;
+        setIsSticky(inside);
+        if (typeof document !== "undefined") {
+          if (inside) {
+            document.body.classList.add("in-industry-section");
+          } else {
+            document.body.classList.remove("in-industry-section");
+            document.body.classList.remove("navbar--hidden");
+          }
+        }
       }
       if (reducedMotion || !wrap) return;
       const rect = wrap.getBoundingClientRect();
@@ -359,6 +368,10 @@ export default function IndustrySection() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (rafId !== null) cancelAnimationFrame(rafId);
+      if (typeof document !== "undefined") {
+        document.body.classList.remove("in-industry-section");
+        document.body.classList.remove("navbar--hidden");
+      }
     };
   }, [reducedMotion]);
   // Keep active tab centered in horizontal scroll

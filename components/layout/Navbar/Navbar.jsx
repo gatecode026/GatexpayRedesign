@@ -34,19 +34,23 @@ export default function Navbar() {
         window.requestAnimationFrame(() => {
           setScrolled(currentScrollY > 8);
 
-          // Near page top or if mobile menu is open, navbar must always be visible
-          if (currentScrollY <= 20 || isMenuOpen) {
+          const inIndustry =
+            typeof document !== "undefined" &&
+            document.body.classList.contains("in-industry-section");
+
+          // For all other sections (or near page top / menu open), navbar is ALWAYS sticky & visible
+          if (!inIndustry || currentScrollY <= 20 || isMenuOpen) {
             setNavVisible(true);
             document.body.classList.remove("navbar--hidden");
           } else {
             const diff = currentScrollY - lastScrollY.current;
-            // Scrolling down -> hide navbar
+            // Inside Industry section: scrolling down -> hide navbar
             if (diff > 8) {
               setNavVisible(false);
               document.body.classList.add("navbar--hidden");
               setOpenDropdown(null);
             }
-            // Scrolling up -> reveal navbar
+            // Inside Industry section: scrolling up -> reveal navbar
             else if (diff < -6) {
               setNavVisible(true);
               document.body.classList.remove("navbar--hidden");
