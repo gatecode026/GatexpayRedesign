@@ -27,7 +27,7 @@ body.navbar--hidden .navbar {
 
 .navbar-container {
   align-items: center;
-  column-gap: var(--space-6);
+  column-gap: 28px;
   grid-template-columns: auto 1fr auto;
   max-width: var(--page-max);
   height: 100%;
@@ -50,12 +50,12 @@ body.navbar--hidden .navbar {
   max-width: 100%;
 }
 
-/* --- Desktop nav links --- */
+/* --- Desktop nav links (grouped together with CTA on the right) --- */
 .navbar-links {
   display: none;
   align-items: center;
-  justify-self: center;
-  gap: 36px;
+  justify-self: end;
+  gap: 28px;
 }
 
 @media (min-width: 769px) {
