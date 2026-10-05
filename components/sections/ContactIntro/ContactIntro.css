@@ -183,8 +183,17 @@
 .contact-intro-form-row {
   display: flex;
   gap: var(--space-4);
+  align-items: flex-start;
 }
 .contact-intro-form-row > * { flex: 1; min-width: 0; }
+
+.contact-form-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+}
 
 .contact-intro-form input,
 .contact-intro-form select,
@@ -198,7 +207,7 @@
   background: #fff;
   border: 1px solid #E1E0E0;
   border-radius: var(--radius-md);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 .contact-intro-form input,
 .contact-intro-form select { height: 52px; }
@@ -214,6 +223,71 @@
   outline: none;
   border-color: #0284C7;
   box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+}
+
+/* ── Inline Error States ───────────────────────────────────────────────── */
+.contact-intro-form input.is-invalid,
+.contact-intro-form select.is-invalid,
+.contact-intro-form textarea.is-invalid {
+  border-color: #EF4444 !important;
+  background-color: #FFF8F8 !important;
+}
+
+.contact-intro-form input.is-invalid:focus,
+.contact-intro-form select.is-invalid:focus,
+.contact-intro-form textarea.is-invalid:focus {
+  outline: none;
+  border-color: #DC2626 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18) !important;
+}
+
+.contact-field-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: #DC2626;
+  margin-top: 5px;
+  padding-left: 2px;
+  animation: fieldErrorSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-field-error svg {
+  flex-shrink: 0;
+  color: #DC2626;
+}
+
+@keyframes fieldErrorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-general-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: #B91C1C;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  animation: fieldErrorSlideIn 0.2s ease-out;
+}
+.contact-general-error svg {
+  flex-shrink: 0;
+  color: #DC2626;
 }
 
 .contact-intro-select-wrap { position: relative; }

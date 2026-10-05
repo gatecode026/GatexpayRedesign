@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { X, AlertCircle } from "lucide-react";
 import { SOLUTIONS } from "@/components/layout/Navbar/SolutionsMegaMenu";
 import "./ContactModal.css";
+
 const SERVICE_CATEGORIES = [...SOLUTIONS.map((cat) => cat.title), "Other"];
 const COUNTRY_CODES = [
   { value: "+91", label: "IND +91" },
@@ -12,17 +13,38 @@ const COUNTRY_CODES = [
   { value: "+971", label: "UAE +971" },
   { value: "+65", label: "SGP +65" },
 ];
+
 export default function ContactModal({ isOpen, onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const [errors, setErrors] = useState({});
   const dialogRef = useRef(null);
   const firstFieldRef = useRef(null);
+  const formRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    serviceCategory: "",
+    companyName: "",
+    countryCode: "+91",
+    mobileNumber: "",
+    honeypot: "",
+  });
 
   const handleClose = useCallback(() => {
     setSubmitted(false);
     setIsSubmitting(false);
-    setErrorMessage("");
+    setGeneralError("");
+    setErrors({});
+    setFormData({
+      fullName: "",
+      serviceCategory: "",
+      companyName: "",
+      countryCode: "+91",
+      mobileNumber: "",
+      honeypot: "",
+    });
     onClose();
   }, [onClose]);
 
@@ -41,31 +63,126 @@ export default function ContactModal({ isOpen, onClose }) {
   }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
+
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) handleClose();
   };
+
+  const validateField = (name, value) => {
+    let error = "";
+    if (name === "fullName") {
+      if (!value.trim()) {
+        error = "Full name is required";
+      } else if (value.trim().length < 2) {
+        error = "Full name must be at least 2 characters";
+      }
+    } else if (name === "serviceCategory") {
+      if (!value || value.trim() === "") {
+        error = "Please select a service category";
+      }
+    } else if (name === "mobileNumber") {
+      const digits = value.replace(/\D/g, "");
+      if (!value.trim()) {
+        error = "Mobile number is required";
+      } else if (digits.length < 7) {
+        error = "Mobile number must be at least 7 digits";
+      }
+    }
+    return error;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      const error = validateField(name, value);
+      setErrors((prev) => {
+        const next = { ...prev };
+        if (!error) delete next[name];
+        else next[name] = error;
+        return next;
+      });
+    }
+    if (generalError) setGeneralError("");
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (["fullName", "serviceCategory", "mobileNumber"].includes(name)) {
+      const error = validateField(name, value);
+      if (error) {
+        setErrors((prev) => ({ ...prev, [name]: error }));
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setGeneralError("");
+
+    const newErrors = {};
+    const nameErr = validateField("fullName", formData.fullName);
+    if (nameErr) newErrors.fullName = nameErr;
+
+    const catErr = validateField("serviceCategory", formData.serviceCategory);
+    if (catErr) newErrors.serviceCategory = catErr;
+
+    const phoneErr = validateField("mobileNumber", formData.mobileNumber);
+    if (phoneErr) newErrors.mobileNumber = phoneErr;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      const firstInvalidKey = ["fullName", "serviceCategory", "mobileNumber"].find(
+        (k) => newErrors[k]
+      );
+      if (firstInvalidKey && formRef.current) {
+        const el = formRef.current.elements.namedItem(firstInvalidKey);
+        if (el && typeof el.focus === "function") el.focus();
+      }
+      return;
+    }
+
     setIsSubmitting(true);
-    setErrorMessage("");
-    const formData = new FormData(e.currentTarget);
     const payload = {
-      fullName: formData.get("fullName") || "",
-      serviceCategory: formData.get("serviceCategory") || "",
-      companyName: formData.get("companyName") || "",
-      countryCode: formData.get("countryCode") || "+91",
-      phone: formData.get("mobileNumber") || "",
+      fullName: formData.fullName.trim(),
+      serviceCategory: formData.serviceCategory,
+      companyName: formData.companyName.trim(),
+      countryCode: formData.countryCode || "+91",
+      phone: formData.mobileNumber.trim(),
       source: "contact_modal",
       timeline: "Immediately",
+      honeypot: formData.honeypot,
     };
+
     try {
       const res = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Unable to connect to server. Please try again.");
+      }
+
       if (!res.ok || !data.success) {
+        if (data.details && Array.isArray(data.details)) {
+          const serverFieldErrors = {};
+          data.details.forEach((issue) => {
+            let field = issue.path?.[0];
+            if (field === "phone") field = "mobileNumber";
+            if (field && !serverFieldErrors[field]) {
+              serverFieldErrors[field] = issue.message;
+            }
+          });
+          if (Object.keys(serverFieldErrors).length > 0) {
+            setErrors(serverFieldErrors);
+            return;
+          }
+        }
         throw new Error(
           data.error || "Failed to submit enquiry. Please try again."
         );
@@ -73,8 +190,8 @@ export default function ContactModal({ isOpen, onClose }) {
       setSubmitted(true);
     } catch (err) {
       console.error("[ContactModal Submit Error]:", err);
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong."
+      setGeneralError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -126,85 +243,128 @@ export default function ContactModal({ isOpen, onClose }) {
             </p>
 
             <form
+              ref={formRef}
               className="contact-modal-form"
               onSubmit={handleSubmit}
               noValidate
             >
-              <input
-                ref={firstFieldRef}
-                type="text"
-                name="fullName"
-                placeholder="Full Name"
-                autoComplete="name"
-              />
-
-              <div className="contact-modal-select-wrap">
-                <select
-                  name="serviceCategory"
-                  defaultValue=""
-                  aria-label="Service Category"
-                >
-                  <option value="" disabled>
-                    Service Category
-                  </option>
-                  {SERVICE_CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+              <div className="contact-modal-field">
+                <input
+                  ref={firstFieldRef}
+                  type="text"
+                  name="fullName"
+                  placeholder="Full Name *"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  autoComplete="name"
+                  className={errors.fullName ? "is-invalid" : ""}
+                  aria-invalid={Boolean(errors.fullName)}
+                  aria-describedby={errors.fullName ? "modal-err-fullName" : undefined}
+                />
+                {errors.fullName && (
+                  <span id="modal-err-fullName" className="contact-modal-field-error" role="alert">
+                    <AlertCircle size={12} strokeWidth={2} aria-hidden="true" />
+                    {errors.fullName}
+                  </span>
+                )}
               </div>
 
-              <input
-                type="text"
-                name="companyName"
-                placeholder="Company Name"
-                autoComplete="organization"
-              />
-
-              <div className="contact-modal-phone-row">
-                <div className="contact-modal-code-field">
-                  <label htmlFor="contact-modal-code">Code</label>
-                  <div className="contact-modal-select-wrap">
-                    <select
-                      id="contact-modal-code"
-                      name="countryCode"
-                      defaultValue="+91"
-                    >
-                      {COUNTRY_CODES.map((c) => (
-                        <option key={c.value} value={c.value}>
-                          {c.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+              <div className="contact-modal-field">
+                <div className="contact-modal-select-wrap">
+                  <select
+                    name="serviceCategory"
+                    value={formData.serviceCategory}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    aria-label="Service Category"
+                    className={errors.serviceCategory ? "is-invalid" : ""}
+                    aria-invalid={Boolean(errors.serviceCategory)}
+                    aria-describedby={errors.serviceCategory ? "modal-err-serviceCategory" : undefined}
+                  >
+                    <option value="" disabled>
+                      Service Category *
+                    </option>
+                    {SERVICE_CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+                {errors.serviceCategory && (
+                  <span id="modal-err-serviceCategory" className="contact-modal-field-error" role="alert">
+                    <AlertCircle size={12} strokeWidth={2} aria-hidden="true" />
+                    {errors.serviceCategory}
+                  </span>
+                )}
+              </div>
+
+              <div className="contact-modal-field">
                 <input
-                  type="tel"
-                  name="mobileNumber"
-                  placeholder="Mobile Number"
-                  autoComplete="tel-national"
+                  type="text"
+                  name="companyName"
+                  placeholder="Company Name"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  autoComplete="organization"
                 />
+              </div>
+
+              <div className="contact-modal-field">
+                <div className="contact-modal-phone-row">
+                  <div className="contact-modal-code-field">
+                    <label htmlFor="contact-modal-code">Code</label>
+                    <div className="contact-modal-select-wrap">
+                      <select
+                        id="contact-modal-code"
+                        name="countryCode"
+                        value={formData.countryCode}
+                        onChange={handleChange}
+                      >
+                        {COUNTRY_CODES.map((c) => (
+                          <option key={c.value} value={c.value}>
+                            {c.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <input
+                    type="tel"
+                    name="mobileNumber"
+                    placeholder="Mobile Number *"
+                    value={formData.mobileNumber}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    autoComplete="tel-national"
+                    className={errors.mobileNumber ? "is-invalid" : ""}
+                    aria-invalid={Boolean(errors.mobileNumber)}
+                    aria-describedby={errors.mobileNumber ? "modal-err-phone" : undefined}
+                  />
+                </div>
+                {errors.mobileNumber && (
+                  <span id="modal-err-phone" className="contact-modal-field-error" role="alert">
+                    <AlertCircle size={12} strokeWidth={2} aria-hidden="true" />
+                    {errors.mobileNumber}
+                  </span>
+                )}
               </div>
 
               <input
                 type="text"
                 name="honeypot"
+                value={formData.honeypot}
+                onChange={handleChange}
                 style={{ display: "none" }}
                 tabIndex={-1}
                 autoComplete="off"
               />
 
-              {errorMessage && (
-                <div
-                  style={{
-                    color: "#ef4444",
-                    fontSize: "13px",
-                    padding: "6px 0",
-                    textAlign: "center",
-                  }}
-                >
-                  {errorMessage}
+              {generalError && (
+                <div className="contact-modal-general-error" role="alert">
+                  <AlertCircle size={14} strokeWidth={2} aria-hidden="true" />
+                  <span>{generalError}</span>
                 </div>
               )}
 

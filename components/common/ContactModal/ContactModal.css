@@ -140,6 +140,75 @@
   pointer-events: none;
 }
 
+/* ── Inline Field Validation & Error States ────────────────────────────── */
+.contact-modal-field {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+}
+
+.contact-modal-form input.is-invalid,
+.contact-modal-form select.is-invalid {
+  border-color: #EF4444 !important;
+  background-color: #FFF8F8 !important;
+}
+
+.contact-modal-form input.is-invalid:focus,
+.contact-modal-form select.is-invalid:focus {
+  outline: none;
+  border-color: #DC2626 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18) !important;
+}
+
+.contact-modal-field-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  line-height: 15px;
+  font-weight: 500;
+  color: #DC2626;
+  margin-top: 4px;
+  animation: modalErrorSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-modal-field-error svg {
+  flex-shrink: 0;
+  color: #DC2626;
+}
+
+@keyframes modalErrorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-modal-general-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  color: #B91C1C;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  animation: modalErrorSlideIn 0.2s ease-out;
+}
+.contact-modal-general-error svg {
+  flex-shrink: 0;
+  color: #DC2626;
+}
+
 /* ── Code + Mobile Number row ─────────────────────────────────────────── */
 .contact-modal-phone-row {
   display: flex;

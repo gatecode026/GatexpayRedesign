@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
-import { Headset, Users } from "lucide-react";
+import { useState, useRef } from "react";
+import { Headset, Users, AlertCircle } from "lucide-react";
 import Container from "@/components/common/Container/Container";
 import { SOLUTIONS } from "@/components/layout/Navbar/SolutionsMegaMenu";
 import "./ContactIntro.css";
+
 const SERVICE_CATEGORIES = [...SOLUTIONS.map((cat) => cat.title), "Other"];
 const TIMELINES = [
   "Immediately",
@@ -16,33 +17,158 @@ const STATS = [
   { value: "5+", label: "Years of Expertise" },
   { value: "50+", label: "Fintech Integrations" },
 ];
+
 export default function ContactIntro() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const [errors, setErrors] = useState({});
+  const formRef = useRef(null);
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+    serviceCategory: "",
+    timeline: "Immediately",
+    message: "",
+    honeypot: "",
+  });
+
+  const validateField = (name, value) => {
+    let error = "";
+    if (name === "fullName") {
+      if (!value.trim()) {
+        error = "Full name is required";
+      } else if (value.trim().length < 2) {
+        error = "Full name must be at least 2 characters";
+      }
+    } else if (name === "phone") {
+      const digits = value.replace(/\D/g, "");
+      if (!value.trim()) {
+        error = "Phone number is required";
+      } else if (digits.length < 7) {
+        error = "Phone number must be at least 7 digits";
+      }
+    } else if (name === "email") {
+      if (value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+        error = "Please enter a valid email address";
+      }
+    } else if (name === "serviceCategory") {
+      if (!value || value.trim() === "") {
+        error = "Please select a service category";
+      }
+    }
+    return error;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      const error = validateField(name, value);
+      setErrors((prev) => {
+        const next = { ...prev };
+        if (!error) {
+          delete next[name];
+        } else {
+          next[name] = error;
+        }
+        return next;
+      });
+    }
+    if (generalError) setGeneralError("");
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (["fullName", "phone", "email", "serviceCategory"].includes(name)) {
+      const error = validateField(name, value);
+      if (error) {
+        setErrors((prev) => ({ ...prev, [name]: error }));
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setGeneralError("");
+
+    // Validate all required fields inline
+    const newErrors = {};
+    const nameErr = validateField("fullName", formData.fullName);
+    if (nameErr) newErrors.fullName = nameErr;
+
+    const phoneErr = validateField("phone", formData.phone);
+    if (phoneErr) newErrors.phone = phoneErr;
+
+    const emailErr = validateField("email", formData.email);
+    if (emailErr) newErrors.email = emailErr;
+
+    const catErr = validateField("serviceCategory", formData.serviceCategory);
+    if (catErr) newErrors.serviceCategory = catErr;
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Focus the first invalid field
+      const firstInvalidKey = ["fullName", "email", "phone", "serviceCategory"].find(
+        (k) => newErrors[k]
+      );
+      if (firstInvalidKey && formRef.current) {
+        const el = formRef.current.elements.namedItem(firstInvalidKey);
+        if (el && typeof el.focus === "function") {
+          el.focus();
+        }
+      }
+      return;
+    }
+
     setIsSubmitting(true);
-    setErrorMessage("");
-    const formData = new FormData(e.currentTarget);
     const payload = {
-      fullName: formData.get("fullName") || "",
-      companyName: formData.get("companyName") || "",
-      email: formData.get("email") || "",
-      phone: formData.get("phone") || "",
-      serviceCategory: formData.get("serviceCategory") || "",
-      timeline: formData.get("timeline") || "Immediately",
-      message: formData.get("message") || "",
+      fullName: formData.fullName.trim(),
+      companyName: formData.companyName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      serviceCategory: formData.serviceCategory,
+      timeline: formData.timeline || "Immediately",
+      message: formData.message.trim(),
       source: "contact_page",
+      honeypot: formData.honeypot,
     };
+
     try {
       const res = await fetch("/api/enquiries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
+
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Unable to connect to server. Please try again.");
+      }
+
       if (!res.ok || !data.success) {
+        // If server returns Zod validation issue details, map them to inline field errors
+        if (data.details && Array.isArray(data.details)) {
+          const serverFieldErrors = {};
+          data.details.forEach((issue) => {
+            const field = issue.path?.[0];
+            if (field && !serverFieldErrors[field]) {
+              serverFieldErrors[field] = issue.message;
+            }
+          });
+          if (Object.keys(serverFieldErrors).length > 0) {
+            setErrors(serverFieldErrors);
+            const firstKey = Object.keys(serverFieldErrors)[0];
+            const el = formRef.current?.elements.namedItem(firstKey);
+            if (el && typeof el.focus === "function") el.focus();
+            return;
+          }
+        }
         throw new Error(
           data.error || "Failed to submit enquiry. Please try again."
         );
@@ -50,8 +176,8 @@ export default function ContactIntro() {
       setSubmitted(true);
     } catch (err) {
       console.error("[ContactIntro Submit Error]:", err);
-      setErrorMessage(
-        err instanceof Error ? err.message : "Something went wrong."
+      setGeneralError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
       );
     } finally {
       setIsSubmitting(false);
@@ -140,98 +266,163 @@ export default function ContactIntro() {
                 </p>
 
                 <form
+                  ref={formRef}
                   className="contact-intro-form"
                   onSubmit={handleSubmit}
                   noValidate
                 >
                   <div className="contact-intro-form-row">
-                    <input
-                      type="text"
-                      name="fullName"
-                      placeholder="Full Name"
-                      autoComplete="name"
-                    />
-                    <input
-                      type="text"
-                      name="companyName"
-                      placeholder="Company Name"
-                      autoComplete="organization"
-                    />
+                    <div className="contact-form-field">
+                      <input
+                        type="text"
+                        name="fullName"
+                        placeholder="Full Name *"
+                        value={formData.fullName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        autoComplete="name"
+                        className={errors.fullName ? "is-invalid" : ""}
+                        aria-invalid={Boolean(errors.fullName)}
+                        aria-describedby={errors.fullName ? "error-fullName" : undefined}
+                      />
+                      {errors.fullName && (
+                        <span id="error-fullName" className="contact-field-error" role="alert">
+                          <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
+                          {errors.fullName}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="contact-form-field">
+                      <input
+                        type="text"
+                        name="companyName"
+                        placeholder="Company Name"
+                        value={formData.companyName}
+                        onChange={handleChange}
+                        autoComplete="organization"
+                      />
+                    </div>
                   </div>
 
                   <div className="contact-intro-form-row">
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      autoComplete="email"
-                    />
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder="Phone Number"
-                      autoComplete="tel"
-                    />
+                    <div className="contact-form-field">
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email Address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        autoComplete="email"
+                        className={errors.email ? "is-invalid" : ""}
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={errors.email ? "error-email" : undefined}
+                      />
+                      {errors.email && (
+                        <span id="error-email" className="contact-field-error" role="alert">
+                          <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
+                          {errors.email}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="contact-form-field">
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number *"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        autoComplete="tel"
+                        className={errors.phone ? "is-invalid" : ""}
+                        aria-invalid={Boolean(errors.phone)}
+                        aria-describedby={errors.phone ? "error-phone" : undefined}
+                      />
+                      {errors.phone && (
+                        <span id="error-phone" className="contact-field-error" role="alert">
+                          <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
+                          {errors.phone}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="contact-intro-select-wrap">
-                    <select
-                      name="serviceCategory"
-                      defaultValue=""
-                      aria-label="Service Category"
-                    >
-                      <option value="" disabled>
-                        Service Category
-                      </option>
-                      {SERVICE_CATEGORIES.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
+                  <div className="contact-form-field">
+                    <div className="contact-intro-select-wrap">
+                      <select
+                        name="serviceCategory"
+                        value={formData.serviceCategory}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        aria-label="Service Category"
+                        className={errors.serviceCategory ? "is-invalid" : ""}
+                        aria-invalid={Boolean(errors.serviceCategory)}
+                        aria-describedby={errors.serviceCategory ? "error-serviceCategory" : undefined}
+                      >
+                        <option value="" disabled>
+                          Service Category *
                         </option>
-                      ))}
-                    </select>
+                        {SERVICE_CATEGORIES.map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {errors.serviceCategory && (
+                      <span id="error-serviceCategory" className="contact-field-error" role="alert">
+                        <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
+                        {errors.serviceCategory}
+                      </span>
+                    )}
                   </div>
 
-                  <div className="contact-intro-select-wrap">
-                    <select
-                      name="timeline"
-                      defaultValue=""
-                      aria-label="Project Timeline"
-                    >
-                      <option value="" disabled>
-                        Project Timeline
-                      </option>
-                      {TIMELINES.map((t) => (
-                        <option key={t} value={t}>
-                          {t}
+                  <div className="contact-form-field">
+                    <div className="contact-intro-select-wrap">
+                      <select
+                        name="timeline"
+                        value={formData.timeline}
+                        onChange={handleChange}
+                        aria-label="Project Timeline"
+                      >
+                        <option value="" disabled>
+                          Project Timeline
                         </option>
-                      ))}
-                    </select>
+                        {TIMELINES.map((t) => (
+                          <option key={t} value={t}>
+                            {t}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
-                  <textarea
-                    name="message"
-                    placeholder="Tell us about your requirements"
-                    rows={4}
-                  />
+                  <div className="contact-form-field">
+                    <textarea
+                      name="message"
+                      placeholder="Tell us about your requirements"
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows={4}
+                    />
+                  </div>
 
                   <input
                     type="text"
                     name="honeypot"
+                    value={formData.honeypot}
+                    onChange={handleChange}
                     style={{ display: "none" }}
                     tabIndex={-1}
                     autoComplete="off"
                   />
 
-                  {errorMessage && (
-                    <div
-                      style={{
-                        color: "#ef4444",
-                        fontSize: "13.5px",
-                        padding: "6px 0",
-                        fontWeight: 500,
-                      }}
-                    >
-                      {errorMessage}
+                  {generalError && (
+                    <div className="contact-general-error" role="alert">
+                      <AlertCircle size={16} strokeWidth={2} aria-hidden="true" />
+                      <span>{generalError}</span>
                     </div>
                   )}
 
