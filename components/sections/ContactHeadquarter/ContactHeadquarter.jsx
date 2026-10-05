@@ -1,6 +1,7 @@
-import { Handshake, Hammer } from "lucide-react";
+import { Handshake, Hammer, MapPin, ExternalLink } from "lucide-react";
 import Container from "@/components/common/Container/Container";
 import "./ContactHeadquarter.css";
+
 const ADDRESS = "412, Sumer Nagar, Mansarovar, Jaipur, Rajasthan, 302020";
 const INFO_CARDS = [
   {
@@ -14,7 +15,15 @@ const INFO_CARDS = [
     desc: "GateXPay merchant? For faster API, settlement, or dashboard queries, email your Merchant ID to support.",
   },
 ];
+
 export default function ContactHeadquarter() {
+  const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
+    ADDRESS
+  )}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    ADDRESS
+  )}`;
+
   return (
     <section className="contact-hq section">
       <Container>
@@ -43,13 +52,31 @@ export default function ContactHeadquarter() {
             </div>
           </div>
 
-          <div className="contact-hq-map">
-            <iframe
-              title="GateXPay Technologies Private Limited — office location"
-              src={`https://www.google.com/maps?q=${encodeURIComponent(ADDRESS)}&output=embed`}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          <div className="contact-hq-map-wrapper">
+            <div className="contact-hq-map">
+              <iframe
+                title="GateXPay Technologies Private Limited — office location"
+                src={mapEmbedUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
+            <div className="contact-hq-map-bar">
+              <span className="contact-hq-map-address">
+                <MapPin size={16} strokeWidth={2} aria-hidden="true" />
+                Mansarovar, Jaipur, Rajasthan
+              </span>
+              <a
+                href={directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-hq-directions-link"
+              >
+                Get Directions
+                <ExternalLink size={13} strokeWidth={2} aria-hidden="true" />
+              </a>
+            </div>
           </div>
         </div>
       </Container>
