@@ -1,0 +1,418 @@
+/* ==========================================================================
+   CTA Section — Fully Responsive, Every Screen Size
+   Layout: flex-row on ≥768px (content left | illustration right)
+           flex-col on <768px  (content top  | illustration bottom)
+   Illustration: uses next/image fill — zero crop at any breakpoint
+   ========================================================================== */
+
+/* ── Section ────────────────────────────────────────────────────────────── */
+.cta-section {
+  background: var(--color-bg);
+  padding-block: var(--section-py); /* Container handles horizontal padding */
+}
+
+/* ── Card ───────────────────────────────────────────────────────────────── */
+.cta-card {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;      /* side-by-side on desktop */
+  align-items: stretch;     /* both columns same height */
+  background-image: url('/assets/images/cta-banner-bg.png');
+  background-size: cover;
+  background-position: center center;
+  min-height: 400px;        /* reduced ~10% from 446px */
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   LEFT COLUMN — all text content
+   ════════════════════════════════════════════════════════════════════════════ */
+.cta-content {
+  flex: 0 0 auto;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: 40px 38px;
+  position: relative;
+  z-index: 5;
+}
+
+/* Heading ------------------------------------------------------------------ */
+.cta-heading {
+  font-family: 'Source Serif Pro', var(--font-heading), Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(22px, 2.7vw, 40px);
+  line-height: 1.32;
+  color: #FFFFFF;
+  margin: 0 0 18px;      /* increased by 10px (was 8px) */
+}
+
+/* Cyan line — must always sit on ONE line */
+.cta-heading-cyan {
+  color: #08B9F2;
+  white-space: nowrap;   /* prevents "payment infrastructure?" from wrapping */
+  display: block;        /* own line so white-space:nowrap works cleanly */
+}
+
+/* Description -------------------------------------------------------------- */
+.cta-desc {
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-weight: 500;
+  font-size: clamp(13px, 1.05vw, 15px);
+  line-height: 1.55;
+  color: #E1E0E0;
+  margin: 0 0 28px;      /* increased by 10px (was 18px) */
+  max-width: 430px;
+}
+
+.cta-desc a {
+  color: #08B9F2;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.cta-desc a:hover {
+  color: #ffffff;
+}
+
+/* CTA Button --------------------------------------------------------------- */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  min-width: 188px;
+  height: 44px;
+  background: #0284C7;
+  border-radius: 12px;
+  border: none;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+.cta-btn:hover {
+  background: #0369a1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.42);
+}
+.cta-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cta-btn--secondary {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+  backdrop-filter: blur(8px);
+  justify-content: center;
+}
+.cta-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #08B9F2;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(8, 185, 242, 0.35);
+}
+.cta-btn:active { transform: translateY(0); }
+
+/* Features row ------------------------------------------------------------- */
+.cta-features {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+  margin-top: 32px;
+}
+
+.cta-feature-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.cta-feature {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding-inline: 0;
+  flex-shrink: 0;
+}
+
+.cta-feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.cta-feature-bold {
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-weight: 700;
+  font-size: clamp(12.5px, 0.95vw, 14px);
+  line-height: 1.25;
+  color: #FFFFFF;
+  white-space: nowrap;
+  display: block;
+}
+
+.cta-feature-light {
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-weight: 500;
+  font-size: clamp(11.5px, 0.85vw, 13px);
+  line-height: 1.25;
+  color: #08B9F2;
+  white-space: nowrap;
+  display: block;
+}
+
+/* Vertical dividers between features --------------------------------------- */
+.cta-divider {
+  width: 1px;
+  height: 38px;
+  background: #E2E8F0;
+  opacity: 0.35;
+  flex-shrink: 0;
+  margin-inline: clamp(10px, 1.1vw, 16px);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   RIGHT COLUMN — illustration
+   Uses next/image fill: image auto-fits container, zero crop
+   ════════════════════════════════════════════════════════════════════════════ */
+.cta-illustration-wrap {
+  flex: 1 1 0;              /* takes remaining width */
+  position: relative;       /* required for next/image fill */
+  min-height: 100%;         /* stretch to card height */
+  overflow: hidden;
+  padding: 14px 18px;       /* 10% inward scaling for the illustration */
+  box-sizing: border-box;
+}
+
+/* next/image fill sets position:absolute internally.
+   object-fit:contain ensures full image is always visible */
+.cta-illustration {
+  object-fit: contain !important;
+  object-position: center center !important;
+}
+
+@media (max-width: 767px) {
+  .cta-illustration {
+    position: absolute !important;
+    height: 95% !important;
+    width: 85% !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 38px !important;
+    bottom: 0 !important;
+    color: transparent !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Large desktop ≥1280px: give generous room for 2-line trust points ── */
+@media (min-width: 1280px) {
+  .cta-content {
+    flex: 0 0 auto;
+    max-width: 780px;
+  }
+}
+
+/* ── Tablet landscape: 1024px – 1279px ── */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .cta-content {
+    flex: 0 0 auto;
+    max-width: 680px;
+    padding: 32px 32px;
+  }
+  .cta-desc { max-width: 100%; }
+
+  .cta-feature { gap: 8px; padding-inline: 0; }
+  .cta-feature svg { width: 24px; height: 24px; }
+  .cta-feature-bold { font-size: 12.5px; white-space: nowrap; }
+  .cta-feature-light { font-size: 11.5px; white-space: nowrap; }
+  .cta-divider { margin-inline: 10px; }
+}
+
+/* ── Tablet portrait: 768px – 1023px ── */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .cta-card { min-height: 340px; }
+
+  .cta-content {
+    flex: 0 0 auto;
+    max-width: 620px;
+    padding: 24px 24px;
+  }
+
+  .cta-heading {
+    font-size: clamp(20px, 2.7vw, 32px);
+    margin-bottom: 14px;
+  }
+
+  .cta-desc {
+    font-size: 13.5px;
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .cta-features { margin-top: 22px; }
+
+  .cta-feature { gap: 6px; padding-inline: 0; }
+  .cta-feature svg { width: 22px; height: 22px; }
+  .cta-feature-bold { font-size: 11.5px; white-space: nowrap; }
+  .cta-feature-light { font-size: 10.5px; white-space: nowrap; }
+
+  .cta-divider { margin-inline: 8px; }
+
+  .cta-illustration-wrap {
+    padding: 10px 14px;
+  }
+}
+
+/* ── Mobile: < 768px — vertical stack, CENTERED ── */
+@media (max-width: 767px) {
+  .cta-card {
+    flex-direction: column;
+    min-height: unset;
+    border-radius: 12px;
+  }
+
+  /* Content fills full width and is centered on both axes */
+  .cta-content {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+    padding: 32px 20px 28px;
+  }
+
+  .cta-heading {
+    font-size: clamp(32px, 9vw, 42px);
+    line-height: 1.16;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto 14px;
+  }
+  /* Allow wrap again on mobile where there is no room */
+  .cta-heading-cyan { white-space: normal; }
+
+  .cta-desc {
+    font-size: clamp(11px, 3.6vw, 15px);
+    line-height: 1.55;
+    font-weight: 500;
+    width: 100%;
+    max-width: 330px;
+    margin: 0 auto 22px;
+  }
+
+  /* Natural width, centered — NOT full-width by default */
+  .cta-btn {
+    width: auto;
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  /* All 3 features in a single compact row — sized down to guarantee a
+     fit down to 320px (verified: no wrap, no overflow). */
+  .cta-features {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-top: 26px;
+    width: 100%;
+  }
+
+  .cta-feature-group {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 118px;
+    justify-content: center;
+  }
+
+  /* Each feature is its own centered column: icon above text */
+  .cta-feature {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding-inline: 0;
+    width: 100%;
+  }
+
+  .cta-feature svg { width: 22px; height: 22px; }
+
+  .cta-feature-text { align-items: center; }
+
+  .cta-feature-bold,
+  .cta-feature-light {
+    font-size: 10.5px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  /* Hide vertical dividers — no room for them in a compact single row */
+  .cta-divider { display: none; }
+
+  /* Illustration: centered, responsive box below content */
+  .cta-illustration-wrap {
+    flex: none;
+    width: 100%;
+    max-width: 360px;
+    height: 234px;
+    min-height: unset;
+    position: relative;
+    margin-inline: auto;
+    padding: 8px 16px;
+  }
+}
+
+/* ── Small mobile: < 480px ── */
+@media (max-width: 480px) {
+  .cta-content { padding: 28px 16px 24px; }
+
+  .cta-illustration-wrap { height: 198px; }
+}
+
+/* ── Very small: <= 360px ── */
+@media (max-width: 360px) {
+  .cta-content { padding: 24px 14px 20px; }
+  .cta-heading { font-size: 24px; }
+  .cta-illustration-wrap { height: 170px; }
+
+  /* Full-width button only at the very narrowest sizes, per spec */
+  .cta-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .cta-features { gap: 6px; }
+  .cta-feature svg { width: 20px; height: 20px; }
+  .cta-feature-bold,
+  .cta-feature-light { font-size: 9.5px; }
+}

@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Blog Category Filter — pill row below the Featured Insight card
+   ========================================================================== */
+
+.blog-filter-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 32px;
+}
+
+.blog-filter-pill {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  background: #F0F9FF;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  white-space: nowrap;
+}
+.blog-filter-pill:hover { border-color: #0284C7; color: #0284C7; }
+.blog-filter-pill.active {
+  background: #0284C7;
+  border-color: #0284C7;
+  color: #FFFFFF;
+}
+
+/* ── Mobile: controlled horizontal scroll, page never overflows ── */
+@media (max-width: 767px) {
+  .blog-filter-row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 20px;
+  }
+  .blog-filter-row::-webkit-scrollbar { display: none; }
+  .blog-filter-pill { flex-shrink: 0; }
+}

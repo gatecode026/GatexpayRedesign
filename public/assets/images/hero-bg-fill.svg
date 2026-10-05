@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="2500" height="600" viewBox="0 0 2500 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Linear gradient matching 254.32deg, #0284C7 26.84%, #080D23 100% -->
+    <linearGradient id="heroGradient" x1="1600" y1="0" x2="0" y2="580.5" gradientUnits="userSpaceOnUse">
+      <stop offset="26.84%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#080D23"/>
+    </linearGradient>
+  </defs>
+  <!-- Curve matching Figma Ellipse 2 (left: 657px, top: 29px, width: 1309px, height: 580.5px) -->
+  <!-- Left curve rises from (0, 580.5) to (654.5, 0) and extends smoothly to 2500px to fill the right edge -->
+  <path d="M 0 580.5 C 0 504.268 16.9291 428.782 49.8208 358.352 C 82.7125 287.923 130.923 223.929 191.699 170.025 C 252.475 116.12 324.626 73.3608 404.034 44.1879 C 483.441 15.0151 568.55 0 654.5 0 L 2500 0 L 2500 600 L 0 600 Z" fill="url(#heroGradient)"/>
+</svg>

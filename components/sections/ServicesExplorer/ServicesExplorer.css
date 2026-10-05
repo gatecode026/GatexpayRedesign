@@ -1,0 +1,923 @@
+/* ==========================================================================
+   Services Explorer – Figma-accurate Layout & Interaction States
+   ========================================================================== */
+
+.services-explorer-section {
+  /* Height of the search bar below — keep in sync with its padding */
+  --explorer-bar-h: 84px;
+  /* Space above the sidebar/cards (the bar is out of flow, so no gap is
+     reserved for it). Must stay ≥ 24px: the bar appears once the section
+     top reaches navbar + bar, which is then ≤ where the sidebar sticks. */
+  --explorer-pad-top: 48px;
+  position: relative;
+  width: 100%;
+  background: #FFFFFF;
+  padding: 0 0 64px;
+  box-sizing: border-box;
+  /* Jumps to the explorer land its content 24px under the visible bar */
+  scroll-margin-top: calc(var(--navbar-h) + var(--explorer-bar-h) + 24px - var(--explorer-pad-top));
+}
+
+/* Same edges as the navbar (logo → CTA) */
+.services-explorer-container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding-inline: var(--page-gutter);
+  padding-top: var(--explorer-pad-top);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   SEARCH + POPULAR TAGS BAR
+   Hidden while the hero (which has its own search) is on screen. Once the
+   hero scrolls away it slides out from under the navbar and stays pinned
+   there while the explorer scrolls; it tucks back under the navbar when the
+   explorer ends or the hero returns. Fixed, so it never takes up space in
+   the page. Full-bleed white strip; content on the navbar's edges.
+   Search 539×44 left, Popular pills right.
+   ========================================================================== */
+
+.services-topbar-sticky {
+  position: fixed;
+  top: var(--navbar-h);
+  left: 0;
+  right: 0;
+  z-index: 900; /* under the navbar (999) and its menus, over the page */
+  background: #FFFFFF;
+  box-shadow: 0 1px 0 #E2E8F0, 0 8px 16px -12px rgba(15, 23, 42, 0.25);
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s var(--ease-out),
+    visibility 0s linear 0.3s;
+}
+
+.services-topbar-sticky.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s var(--ease-out),
+    visibility 0s;
+}
+
+.services-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding: 20px var(--page-gutter);
+  box-sizing: border-box;
+}
+
+.services-topbar-search-wrap {
+  position: relative;
+  flex: 0 1 539px;
+  min-width: 320px;
+}
+
+.services-topbar-search-form {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.services-topbar-search-wrap.is-focused .services-topbar-search-form {
+  border-color: #0284C7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.services-topbar-input-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 8px 12px 8px 20px;
+}
+
+.services-topbar-input {
+  width: 100%;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #0F172A;
+  text-overflow: ellipsis;
+}
+
+.services-topbar-input::placeholder {
+  color: #64748B;
+  opacity: 1;
+}
+
+.services-topbar-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: none;
+  width: 126px;
+  height: 100%;
+  padding: 12px 24px;
+  background: #0284C7;
+  border: none;
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.services-topbar-search-btn:hover {
+  background: #0369A1;
+}
+
+.services-topbar-search-btn:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: -4px;
+}
+
+.services-autocomplete-dropdown {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.services-autocomplete-item {
+  padding: 10px 18px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0F172A;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.services-autocomplete-item:hover,
+.services-autocomplete-item.is-selected {
+  background-color: #F1F5F9;
+}
+
+.services-suggestion-match {
+  color: #0F172A;
+  font-weight: 700;
+}
+
+/* "Popular:" + pills — gap 12, right-aligned */
+.services-topbar-popular {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: none;
+}
+
+.services-topbar-popular-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #0F172A;
+  white-space: nowrap;
+}
+
+.services-topbar-tags {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Pill — 34px, 1px #CBD5E1, fill #F0F9FF, 12/16 #0F172A */
+.services-topbar-tag {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 8px 12px;
+  background: #F0F9FF;
+  border: 1px solid #CBD5E1;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #0F172A;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.services-topbar-tag:hover {
+  border-color: #0284C7;
+}
+
+.services-topbar-tag:focus-visible {
+  outline: 2px solid #0284C7;
+  outline-offset: 2px;
+}
+
+/* Active pill — filled, larger 14px label, soft drop shadow */
+.services-topbar-tag.is-active {
+  height: 36px;
+  background: #0284C7;
+  border-color: #0284C7;
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16);
+}
+
+/* ==========================================================================
+   MAIN 2-COLUMN LAYOUT (SIDEBAR 304px + RIGHT 960px)
+   ========================================================================== */
+
+.services-layout {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   LEFT SIDEBAR (304px)
+   ========================================================================== */
+
+.services-sidebar {
+  width: 304px;
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(var(--navbar-h) + var(--explorer-bar-h) + 24px);
+  box-sizing: border-box;
+}
+
+.services-sidebar-inner {
+  width: 304px;
+  height: calc(100vh - var(--navbar-h) - var(--explorer-bar-h) - 48px);
+  min-height: fit-content;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.services-sidebar-header {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px 16px;
+  height: 61px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.services-sidebar-title {
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0F172A;
+  letter-spacing: 0.5px;
+}
+
+.services-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.services-sidebar-item {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  gap: 8px;
+  width: 100%;
+  height: 56px;
+  background: transparent;
+  border: none;
+  border-left: 5px solid transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #0F172A;
+}
+
+.services-sidebar-item:hover {
+  background: #F1F5F9;
+}
+
+.services-sidebar-item.is-active {
+  background: #F0F9FF;
+  border-left: 5px solid #0284C7;
+  padding: 16px 16px 16px 12px;
+}
+
+.services-sidebar-icon {
+  flex-shrink: 0;
+  color: #0F172A;
+}
+
+.services-sidebar-item-text {
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0F172A;
+}
+
+/* Need Help Card */
+.services-sidebar-help-card {
+  box-sizing: border-box;
+  margin: 32px 16px 16px;
+  padding: 20px 16px;
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.services-help-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  text-align: center;
+}
+
+.services-help-title {
+  margin: 0;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0F172A;
+}
+
+.services-help-desc {
+  margin: 0;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #64748B;
+}
+
+.services-help-btn {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 16px;
+  width: 100%;
+  height: 36px;
+  background: #0284C7;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.services-help-btn:hover {
+  background: #0369A1;
+}
+
+/* ==========================================================================
+   RIGHT CONTENT (960px)
+   ========================================================================== */
+
+.services-main-content {
+  width: 960px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  min-height: 600px;
+}
+
+/* Search Results Section */
+.services-search-results-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.services-search-results-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.services-search-results-title {
+  margin: 0;
+  font-family: var(--font-heading, "Source Serif 4", serif);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 44px;
+  color: #0F172A;
+}
+
+/* Empty State / No Solution Found */
+.services-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px 80px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.services-empty-visual {
+  width: 260px;
+  height: 170px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services-empty-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.services-empty-title {
+  margin: 0 0 12px;
+  font-family: var(--font-heading, "Source Serif 4", serif);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 44px;
+  color: #0F172A;
+}
+
+.services-empty-desc-primary {
+  margin: 0 0 4px;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0F172A;
+}
+
+.services-empty-desc-secondary {
+  margin: 0 0 28px;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #64748B;
+}
+
+.services-empty-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.services-clear-search-btn {
+  box-sizing: border-box;
+  padding: 10px 22px;
+  background: #0284C7;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.services-clear-search-btn:hover {
+  background: #0369A1;
+}
+
+.services-explore-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0284C7;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.services-explore-all-link:hover {
+  color: #0369A1;
+  text-decoration: underline;
+}
+
+/* Category Block */
+.services-category-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-margin-top: calc(var(--navbar-h) + var(--explorer-bar-h) + 24px);
+}
+
+.services-category-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.services-category-title {
+  margin: 0;
+  font-family: var(--font-heading, "Source Serif 4", serif);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 44px;
+  color: #0F172A;
+}
+
+.services-category-desc {
+  margin: 0;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #64748B;
+}
+
+/* Grid of 2 columns — Figma cards are 468px; they stretch so the grid ends
+   on the navbar's right edge (the card art is pinned right). */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* ==========================================================================
+   CARD STYLES (Frame 202 Specification)
+   Normal State: background #FFFFFF, border 1px solid #E2E8F0, subtle shadow
+   Hover State: background #F2FCFF, border 1px solid #00C0FD, shadow-md
+   ========================================================================== */
+
+/* Frame 202: Base / Normal Card State */
+.services-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 12px;
+  isolation: isolate;
+  position: relative;
+  width: 100%;
+  height: 230px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Frame 202: Hover State */
+.services-card:hover {
+  background: #F2FCFF !important;
+  border-color: #00C0FD !important;
+  /* shadow-md */
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-2px);
+}
+
+/* Frame 199: Badge Container */
+.services-card-badge-wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 8px;
+  gap: 10px;
+  width: auto;
+  min-width: 63px;
+  height: 24px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  z-index: 2;
+}
+
+/* Badge Text */
+.services-card-badge {
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 14px;
+  color: #00C0FD;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+}
+
+/* Frame 196: Text Container */
+.services-card-text {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 8px;
+  width: 200px;
+  height: 90px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  z-index: 2;
+}
+
+/* Title: e.g. Payment Gateway Integration / AEPS Services */
+.services-card-title {
+  box-sizing: border-box;
+  width: 200px;
+  height: 40px;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #0F172A;
+  margin: 0;
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Description: e.g. PCI-DSS compliant payment gateway... */
+.services-card-desc {
+  box-sizing: border-box;
+  width: 200px;
+  height: 42px;
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 14px;
+  color: #64748B;
+  margin: 0;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Buttons: CTA Link */
+.services-card-cta {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0px 8px 0px 0px;
+  gap: 4px;
+  width: 130px;
+  height: 20px;
+  border-radius: 8px;
+  flex: none;
+  order: 2;
+  flex-grow: 0;
+  z-index: 2;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.services-card-cta-text {
+  font-family: var(--font-body, "Poppins", sans-serif);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  color: #0284C7;
+  white-space: nowrap;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  transition: color 0.2s ease;
+}
+
+.services-card-arrow {
+  width: 14px;
+  height: 14px;
+  color: #0284C7;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  transition: transform 0.2s ease;
+}
+
+.services-card:hover .services-card-arrow,
+.services-card-cta:hover .services-card-arrow {
+  transform: translateX(3px);
+}
+
+.services-card-cta:hover .services-card-cta-text {
+  color: #0369A1;
+}
+
+/* Right Illustration: Exactly positioned beside the 200px text column */
+.services-card-visual {
+  position: absolute;
+  width: 250px;
+  height: 211px;
+  right: 0px;
+  top: calc(50% - 211px / 2 + 0.5px);
+  pointer-events: none;
+  flex: none;
+  order: 3;
+  flex-grow: 0;
+  z-index: 1;
+}
+
+.services-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 1288px) {
+  .services-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+  }
+  .services-card {
+    width: 100%;
+  }
+  .services-card-visual {
+    left: auto;
+    right: 0px;
+    max-width: 55%;
+  }
+}
+
+@media (max-width: 900px) {
+  .services-layout {
+    flex-direction: column;
+  }
+  .services-sidebar {
+    width: 100%;
+    position: static;
+  }
+  .services-sidebar-inner {
+    width: 100%;
+    height: auto;
+  }
+  .services-sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 8px;
+    gap: 8px;
+  }
+  .services-sidebar-item {
+    width: auto;
+    height: 44px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+  .services-sidebar-item.is-active {
+    border-left: none;
+    border-bottom: 3px solid #0284C7;
+    padding: 8px 12px;
+  }
+  .services-sidebar-help-card {
+    display: none;
+  }
+  .services-main-content {
+    width: 100%;
+    min-height: 0; /* desktop keeps 600px so search mode doesn't collapse beside the sidebar */
+  }
+}
+
+/* Sticky bar ≤1023: search full width, pills on their own row */
+@media (max-width: 1023.98px) {
+  .services-explorer-section { --explorer-bar-h: 116px; }
+  .services-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-block: 12px;
+  }
+  .services-topbar-search-wrap {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+  .services-topbar-popular { min-height: 36px; }
+}
+
+/* ≤767: pills scroll sideways (edge to edge) so the bar stays one row tall */
+@media (max-width: 767.98px) {
+  .services-explorer-section {
+    --explorer-bar-h: 118px;
+    --explorer-pad-top: 32px;
+  }
+  .services-topbar { padding-bottom: 2px; }
+  .services-topbar-popular {
+    min-height: 48px; /* 36px active pill + its shadow room: height never changes */
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--page-gutter));
+    padding: 2px var(--page-gutter) 10px;
+    scrollbar-width: none;
+  }
+  .services-topbar-popular::-webkit-scrollbar { display: none; }
+  .services-topbar-search-btn {
+    width: auto;
+    padding-inline: 16px;
+  }
+}

@@ -1,0 +1,414 @@
+/* ==========================================================================
+   Infrastructure Built for Your Industry — light section
+   ========================================================================== */
+
+.industry-section { background: var(--color-bg); }
+
+.industry-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(28px, 3.6vw, 54px);
+  line-height: 1.15;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 10px;
+}
+
+/* Sentinel to trigger sticky behavior */
+.industry-sticky-sentinel {
+  height: 1px;
+  width: 100%;
+  pointer-events: none;
+  margin-top: -1px;
+}
+
+/* ── Sticky Tab Nav Bar ─────────────────────────────────────────────── */
+.industry-tabs-sticky-wrap {
+  position: sticky;
+  top: var(--navbar-h, 80px);
+  z-index: 100;
+  width: 100%;
+  background: var(--color-bg);
+  padding-top: 4px;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, padding 0.2s ease;
+}
+
+.industry-tabs-sticky-wrap.is-sticky {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+/* When sticky, hide the "Industries We Offer:" heading label — only show tabs */
+.industry-tabs-sticky-wrap.is-sticky .industry-tabs-label {
+  display: none;
+}
+
+.industry-tabs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.industry-tabs-label {
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #0F172A;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+
+.industry-tabs-scroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 2px;
+  flex: 1;
+}
+.industry-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.industry-tab {
+  position: relative;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #475569;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 100px;
+  padding: 7px 16px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.22s var(--ease-out);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.industry-tab:hover {
+  background: #EEF4FF;
+  color: var(--color-blue);
+  border-color: rgba(26, 93, 200, 0.35);
+  transform: translateY(-1px);
+}
+
+.industry-tab.active {
+  background: var(--color-blue);
+  color: #FFFFFF;
+  font-weight: 600;
+  border-color: var(--color-blue);
+  box-shadow: 0 4px 14px rgba(26, 93, 200, 0.28);
+  transform: translateY(-1px);
+}
+
+/* ── Feature Card — matches Figma "Component 1" spec exactly ─────────────
+   Desktop reference: 1288px canvas, 24px card padding, 32px image/content
+   gap, 28px card radius, 12px image radius. Recalibrated proportionally
+   for this project's ~1260px container; mobile stacks the same structure
+   vertically rather than shrinking it. ── */
+.industry-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .industry-card {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 32px;
+  }
+}
+
+/* Image */
+.industry-card-img-wrap {
+  position: relative;
+  min-height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .industry-card-img-wrap {
+    width: 37.6%;
+    min-height: 300px;
+    align-self: stretch;
+  }
+}
+
+.industry-card-img {
+  transition: transform 0.5s var(--ease-out);
+}
+.industry-card:hover .industry-card-img { transform: scale(1.03); }
+
+/* Content */
+.industry-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Shared small muted label — used for the industry tag, "Use Cases", and
+   "Powered By" (identical styling for all three in the Figma spec). */
+.industry-card-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #CBD5E1;
+}
+
+.industry-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.industry-card-title {
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 700;
+  color: var(--color-heading);
+  line-height: 1.375;
+}
+
+.industry-card-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.industry-card-usecases {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.industry-card-usecases p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #64748B;
+}
+
+/* Pills */
+.industry-card-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.industry-pill {
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  color: #0F172A;
+  background: #F0F9FF;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 8px 12px;
+  transition: background 0.2s, color 0.2s;
+}
+.industry-pill:hover { background: var(--color-blue); color: #fff; cursor: pointer; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   Scroll-driven stacked cards (last 3 real industries), rising directly
+   over the tab card above — that card is the base of this same stack.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Reduced-motion fallback: plain stacked cards, normal document flow */
+.industry-stack-static {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Tall scroll track — its height provides the scroll distance the
+   animation maps to. Sticky child locks in place while scrolling through it. */
+.industry-stack-wrap {
+  position: relative;
+  margin-top: var(--space-6);
+}
+
+/* Fitted to content (stage + dots + padding), not 100vh — a full-viewport
+   sticky leaves a lot of dead space above/below the centered stage. Capped
+   by the viewport too, for short/landscape screens. */
+.industry-stack-sticky {
+  position: sticky;
+  top: calc(var(--navbar-h) + 78px);
+  height: min(calc(100vh - var(--navbar-h) - 90px), 960px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+@media (min-width: 375px) {
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 920px); }
+}
+@media (min-width: 414px) {
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 860px); }
+}
+@media (min-width: 480px) {
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 830px); }
+}
+@media (min-width: 768px) {
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 620px); }
+}
+@media (min-width: 1024px) {
+  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h) - 90px), 580px); }
+}
+
+.industry-stack-stage-outer {
+  width: 100%;
+}
+
+.industry-stack-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 40px;
+  position: relative;
+  z-index: 20;
+}
+
+.industry-stack-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #CBD5E1;
+  transition: background 0.3s var(--ease-out), width 0.3s var(--ease-out);
+  cursor: pointer;
+}
+.industry-stack-dot.active {
+  width: 28px;
+  background: var(--color-blue);
+}
+
+/* Card content is a row (image beside text) at >=768px but stacks
+   vertically (image above text) below that, so mobile needs far more
+   height. Stage has +56px height to accommodate the 3 peeking cards
+   stacked above the front card (-15px, -30px, -45px) with full visibility
+   under the sticky tab bar, while overflow:hidden strictly hides all
+   incoming cards and bottom edges from overflowing. */
+.industry-stack-stage {
+  position: relative;
+  width: 100%;
+  height: 884px; /* 828 + 56 */
+  overflow: hidden;
+  border-radius: 28px;
+  /* overflow:hidden alone intermittently fails to clip the absolutely-
+     positioned, translateY-animated cards in Chromium (confirmed via an
+     isolated element screenshot — cards bled past this box's own bottom
+     edge, fully unclipped, even with will-change/border-radius removed).
+     clip-path is a hard, GPU-composited-safe clip that doesn't have this
+     issue — kept alongside overflow:hidden as the real fix. */
+  clip-path: inset(0 round 28px);
+}
+@media (min-width: 375px) {
+  .industry-stack-stage { height: 830px; } /* 774 + 56 */
+}
+@media (min-width: 414px) {
+  .industry-stack-stage { height: 767px; } /* 711 + 56 */
+}
+@media (min-width: 480px) {
+  .industry-stack-stage { height: 740px; } /* 684 + 56 */
+}
+@media (min-width: 768px) {
+  .industry-stack-stage { height: 506px; } /* 450 + 56 */
+}
+@media (min-width: 1024px) {
+  .industry-stack-stage { height: 470px; } /* 414 + 56 */
+}
+
+.industry-stack-card {
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  /* Each card contains its OWN content — if a particular industry's text
+     (e.g. a wrapped pill row) is taller than the fixed stage height, this
+     stops it from spilling past the card's own box, independent of the
+     (separately unreliable) parent-clip situation handled in JS. */
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: top center;
+  transform: translateY(100%);
+}
+
+/* ── Mobile: tabs become a contained horizontal scroller ──────────────────
+   Page itself must never scroll horizontally — only this strip does. ── */
+@media (max-width: 767px) {
+  .industry-tabs {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+  }
+
+  .industry-tabs-label {
+    padding-top: 6px;
+  }
+
+  .industry-tabs-scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+    padding-bottom: 2px;
+    margin-right: calc(-1 * var(--container-pad));
+    padding-right: var(--container-pad);
+  }
+  .industry-tabs-scroll::-webkit-scrollbar { display: none; }
+
+  .industry-tab {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    padding: 7px 14px;
+  }
+}
+
+/* ── Very narrow phones only (≤375px): after the 10% stack-height
+   reduction, the longest card content ("Industries We Offer") overflows
+   by up to 12px here specifically. Tighten a few gaps slightly — desktop
+   and the rest of mobile keep the exact Figma spacing untouched. ── */
+@media (max-width: 375px) {
+  .industry-card.industry-stack-card {
+    gap: 18px;
+  }
+  .industry-stack-card .industry-card-content {
+    gap: 18px;
+  }
+  .industry-stack-card .industry-card-block {
+    gap: 6px;
+  }
+  .industry-stack-card .industry-card-usecases {
+    gap: 6px;
+  }
+}

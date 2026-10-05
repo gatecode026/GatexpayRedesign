@@ -1,0 +1,163 @@
+/* ==========================================================================
+   Featured Insight — single spotlight card above the category filter
+   Exact match to Figma Frame 193 spec:
+   1288x430 card, 595x428 image (46.2%), 691x428 content (53.8%),
+   32px padding, 20px gap, 627px content box.
+   Proportional flex-basis ensures content column is never starved on
+   typical laptop resolutions (1280px-1366px or 125%/150% display scaling).
+   ========================================================================== */
+
+.featured-label {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: #64748B;
+  margin: 0 0 16px;
+}
+
+.featured-card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 430px;
+  width: 1288px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.featured-img-wrap {
+  position: relative;
+  /* Proportional 46.2% base (595/1288) capped at 595px per Figma spec */
+  flex: 0 0 46.2%;
+  max-width: 595px;
+  min-height: 428px;
+  align-self: stretch;
+}
+.featured-img { object-fit: cover; }
+
+.featured-content {
+  flex: 1 1 53.8%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: clamp(24px, 2.5vw, 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.featured-meta-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 24px;
+}
+
+.featured-meta {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #CBD5E1;
+}
+
+.featured-title {
+  font-family: var(--font-blog-heading);
+  font-weight: 700;
+  /* Fluid 24px -> 32px ensures the 3-line heading fits reliably across all PC screen scaling */
+  font-size: clamp(22px, 2.22vw, 32px);
+  line-height: clamp(30px, 3.05vw, 44px);
+  letter-spacing: -0.015em;
+  color: #0F172A;
+  margin: 0;
+  width: 100%;
+  max-width: 627px;
+}
+
+.featured-title-line {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .featured-title-line {
+    display: block;
+    white-space: nowrap;
+  }
+}
+
+.featured-desc {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: clamp(23px, 1.95vw, 28px);
+  color: #64748B;
+  margin: 0;
+  width: 100%;
+  max-width: 627px;
+}
+
+.featured-link {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  width: 140px;
+  height: 36px;
+  background: #0284C7;
+  color: #FFFFFF;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+.featured-link:hover { background: #0369A1; transform: translateY(-2px); }
+.featured-link svg { transition: transform 0.2s; flex-shrink: 0; }
+.featured-link:hover svg { transform: translateX(3px); }
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  .featured-title-line {
+    display: inline;
+    white-space: normal;
+  }
+  .featured-card {
+    height: auto;
+    min-height: 430px;
+  }
+  .featured-img-wrap {
+    flex: 0 0 44%;
+    width: 44%;
+    height: auto;
+  }
+  .featured-content {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+  }
+  .featured-title { font-size: 24px; line-height: 1.3; }
+  .featured-desc { font-size: 15px; line-height: 1.55; }
+}
+
+@media (max-width: 767px) {
+  .featured-card { flex-direction: column; height: auto; min-height: 0; }
+  .featured-img-wrap { flex: none; width: 100%; max-width: 100%; height: 240px; min-height: 240px; }
+  .featured-content { width: 100%; padding: 24px 20px; }
+  .featured-title { font-size: 20px; line-height: 1.3; }
+  .featured-desc { font-size: 14px; line-height: 1.5; }
+  .featured-link { width: auto; padding-inline: 20px; }
+}

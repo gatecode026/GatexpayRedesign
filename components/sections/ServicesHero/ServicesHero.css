@@ -1,0 +1,436 @@
+/* ==========================================================================
+   ServicesHero — Figma "Frame 9" (1440×602) on the Services page.
+
+   Figma values are used as-is at ≥1440px, with one deliberate change: the
+   side padding is the navbar's gutter (--page-gutter) instead of Figma's
+   76px, so the text starts under the navbar logo and the illustration's
+   visible right edge ends under the "Talk to an Expert" button.
+   1024–1439px scales the text in vw from those same values (1vw = 14.4px
+   at 1440); the illustration is set smaller there (55.97vw). Below 1024px
+   the illustration stacks under the text.
+   ========================================================================== */
+
+.services-hero {
+  /* Figma palette for this frame — defined once, reused below */
+  --sh-bg:           #0F172A;
+  --sh-grid:         #182034;  /* faint 50px grid in the reference */
+  --sh-text:         #E2E8F0;
+  --sh-pill-text:    #F8FAFC;
+  --sh-placeholder:  #64748B;
+  --sh-cta:          #0284C7;
+  --sh-cta-hover:    #0369A1;
+  --sh-cyan:         #00C0FD;
+  --sh-gradient:     linear-gradient(90deg, var(--sh-cta) 0%, var(--sh-cyan) 100%);
+
+  position: relative;
+  overflow: hidden;
+  padding-top: var(--navbar-h);
+  background-color: var(--sh-bg);
+  background-image:
+    linear-gradient(to right, var(--sh-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--sh-grid) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 var(--navbar-h);
+}
+
+/* Frame 9 box: padding 80 / gutter / 48, content vertically centred */
+.services-hero-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: var(--page-max);
+  min-height: 602px;
+  margin-inline: auto;
+  padding: 80px var(--page-gutter) 48px;
+}
+
+/* ── Frame 43 — text column ─────────────────────────────────────────────── */
+.services-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 48px;
+  width: 665px;
+}
+
+/* Source Serif 700 62/84. The gradient spans the title box, as in Figma;
+   "for Every Business" is painted white on top of it. */
+.services-hero-title {
+  width: fit-content;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 62px;
+  line-height: 84px;
+  white-space: nowrap;
+  background: var(--sh-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--sh-cyan);
+}
+
+.services-hero-title-plain {
+  -webkit-text-fill-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+/* Poppins 400 24/36 */
+.services-hero-desc {
+  width: 100%;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 36px;
+  color: var(--sh-text);
+}
+
+/* ── Frame 191 — search + popular ───────────────────────────────────────── */
+.services-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  max-width: 100%;
+}
+
+/* Frame 172 — 539×44, white, radius 16 */
+.services-hero-search {
+  display: flex;
+  align-items: center;
+  width: 539px;
+  max-width: 100%;
+  height: 44px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.services-hero-search:focus-within {
+  outline: 2px solid var(--sh-cyan);
+  outline-offset: 3px;
+}
+
+/* Frame 174 — padding 8 12 8 20 */
+.services-hero-field {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 32px;
+  padding: 8px 12px 8px 20px;
+}
+
+/* Poppins 400 12/16 */
+.services-hero-input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--sh-bg);
+  text-overflow: ellipsis;
+}
+
+.services-hero-input::placeholder {
+  color: var(--sh-placeholder);
+  opacity: 1;
+}
+
+/* Frame 175 — 126×44, padding 12 24, gap 8, Poppins 500 14/20 */
+.services-hero-submit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  width: 126px;
+  height: 44px;
+  padding: 12px 24px;
+  background: var(--sh-cta);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  white-space: nowrap;
+  transition: background-color 0.2s var(--ease-out);
+}
+
+.services-hero-submit:hover {
+  background: var(--sh-cta-hover);
+}
+
+.services-hero-submit:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: -4px;
+}
+
+.services-hero-submit svg {
+  flex: none;
+}
+
+/* Frame 180 — "Popular:" + pills, gap 8 */
+.services-hero-popular {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 100%;
+}
+
+/* 16px text centred in the 34px row */
+.services-hero-popular-label {
+  flex: none;
+  padding-block: 9px;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--sh-text);
+}
+
+/* Frame 179 — gap 12 */
+.services-hero-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Pills — 34px tall, padding 8 12, 1px #E2E8F0, radius 20 */
+.services-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 8px 12px;
+  border: 1px solid var(--sh-text);
+  border-radius: 20px;
+  background: transparent;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--sh-pill-text);
+  white-space: nowrap;
+  transition: background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.services-hero-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--sh-cyan);
+  color: #FFFFFF;
+}
+
+.services-hero-pill:focus-visible {
+  outline: 2px solid var(--sh-cyan);
+  outline-offset: 2px;
+}
+
+/* Phones (≤767) swap the pills for a native dropdown with the same tags,
+   styled like a pill. Shown only in the ≤767 block below. */
+.services-hero-popular-mobile {
+  display: none;
+}
+
+.services-hero-select-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.services-hero-select {
+  width: 100%;
+  height: 40px;
+  padding: 0 44px 0 16px;
+  border: 1px solid var(--sh-text);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--sh-pill-text);
+  color-scheme: dark; /* native option list matches the dark hero */
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px; /* ≥16px so iOS Safari doesn't zoom in on tap */
+  line-height: 24px;
+  text-overflow: ellipsis;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+
+.services-hero-select.is-placeholder {
+  color: var(--color-text-muted);
+}
+
+.services-hero-select:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--sh-cyan);
+}
+
+.services-hero-select:focus-visible {
+  outline: 2px solid var(--sh-cyan);
+  outline-offset: 2px;
+}
+
+.services-hero-select option {
+  background: var(--sh-bg);
+  color: var(--sh-pill-text);
+}
+
+.services-hero-select-icon {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  color: var(--sh-pill-text);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ── image 30 — 950×633 illustration ─────────────────────────────────────
+   Figma: top = 50% − height/2 + 11.5. The PNG has 133.5/950 of transparent
+   margin on its right, so right = gutter − 0.1405·width puts the visible
+   artwork's edge exactly on the navbar's right edge.
+   Width is 950px until the gutter grows past ~53px (wide screens); then it
+   shrinks just enough to keep ≥40px between the title's 'for' and the
+   'Payment Gateways' card: 676 + 40 + 0.64·width ≤ 1440 − 2·gutter. */
+.services-hero-art {
+  --sh-art-w: min(950px, calc(1131px - 3.125 * var(--page-gutter)));
+  position: absolute;
+  z-index: 1;
+  top: calc(50% + 11.5px - var(--sh-art-w) * 0.3332);
+  right: calc(var(--page-gutter) - var(--sh-art-w) * 0.1405);
+  width: var(--sh-art-w);
+  pointer-events: none;
+}
+
+.services-hero-illustration {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ==========================================================================
+   1024–1439: the 1440 text, scaled (Figma px ÷ 14.4 = vw); smaller art
+   ========================================================================== */
+@media (min-width: 1024px) and (max-width: 1439.98px) {
+  .services-hero-inner {
+    min-height: 41.8056vw;
+    padding-top: 5.5556vw;
+    padding-bottom: 3.3333vw;
+  }
+  .services-hero-content {
+    width: 46.1806vw;
+    gap: 3.3333vw;
+  }
+  .services-hero-title {
+    font-size: 4.3056vw;
+    line-height: 5.8333vw;
+  }
+  .services-hero-desc {
+    font-size: 1.6667vw;
+    line-height: 2.5vw;
+  }
+  .services-hero-art { --sh-art-w: 55.9722vw; }
+}
+
+/* Under 1200 the fixed-size pill row would reach the illustration: let it
+   wrap inside the text column. */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .services-hero-tags { flex-wrap: wrap; }
+}
+
+/* ==========================================================================
+   ≤1023: stacked — text, then the illustration cropped to its artwork
+   ========================================================================== */
+@media (max-width: 1023.98px) {
+  .services-hero-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+    min-height: 0;
+    padding-top: 56px;
+  }
+  .services-hero-content {
+    width: 100%;
+    max-width: 665px;
+    gap: 32px;
+  }
+  .services-hero-title {
+    font-size: 52px;
+    line-height: 70px;
+  }
+  .services-hero-desc {
+    font-size: 20px;
+    line-height: 30px;
+  }
+  .services-hero-tags { flex-wrap: wrap; }
+
+  /* Crop box = the artwork's visible bounds (+8px) inside the 950×633 PNG:
+     x 80.5–824.5, y 18–597.5. Percent margins resolve against width. */
+  .services-hero-art {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    max-width: 600px;
+    margin-inline: auto;
+    aspect-ratio: 744 / 579.5;
+    overflow: hidden;
+  }
+  .services-hero-illustration {
+    width: 127.688%;
+    max-width: none;
+    margin-left: -10.82%;
+    margin-top: -2.419%;
+  }
+}
+
+/* ≤767: mobile */
+@media (max-width: 767.98px) {
+  .services-hero-inner {
+    gap: 32px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .services-hero-content { gap: 24px; }
+
+  /* Let the title reflow: "Payment Solutions / for Every Business" */
+  .services-hero-title {
+    max-width: 100%;
+    font-size: clamp(30px, 9.4vw, 40px);
+    line-height: 1.35;
+    white-space: normal;
+    text-wrap: balance;
+  }
+  .services-hero-title-break { display: none; }
+
+  .services-hero-desc {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  .services-hero-submit {
+    width: auto;
+    padding-inline: 16px;
+  }
+
+  /* Pills → dropdown; same width as the search bar so their edges line up */
+  .services-hero-popular { display: none; }
+  .services-hero-popular-mobile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 539px;
+    max-width: 100%;
+  }
+  .services-hero-popular-mobile .services-hero-popular-label {
+    padding-block: 0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}

@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Gate X Pay Insights — blog listing page shell + shared utilities.
+   1440px is the design lock: 1288px content width via a 76px side pad on a
+   1440px-capped container. Padding tiers down only below that per spec.
+   ========================================================================== */
+
+.blog-page {
+  background: #F8FAFC;
+}
+
+/* Aligned with sitewide navbar and hero container layout (1440px max width,
+   clamp(20px, 3.5vw, 80px) side padding, responsive tiers matching Navbar.css). */
+.blog-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 3.5vw, 80px);
+  box-sizing: border-box;
+}
+@media (max-width: 1024px) {
+  .blog-container { padding-inline: 20px; }
+}
+@media (max-width: 768px) {
+  .blog-container { padding-inline: 16px; }
+}
+
+/* Shared vertical section rhythm, reused by Featured Insight + Newsletter */
+.blog-section { padding-block: 32px; }
+
+.blog-filter-section { padding-block: 0 8px; }
+.blog-grid-section { padding-block: 8px 56px; }
+
+/* Category badge base — color/bg set inline per-category from CATEGORY_BADGE */
+.blog-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  border-radius: 12px;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Solutions Built for your Business — light section, 3 cards
+   ========================================================================== */
+
+.solutions { background: var(--color-bg); }
+
+.solutions-heading {
+  font-family: var(--font-heading);
+  font-size: clamp(32px, 3.3vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-heading);
+  margin-bottom: var(--space-8);
+}
+
+/* 3-column grid */
+.solutions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-7);
+}
+
+@media (min-width: 640px) {
+  .solutions-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1200px) {
+  .solutions-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── Card ──────────────────────────────────────────────────────────────── */
+.sol-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: var(--color-card-bg);
+  border: 1px solid rgba(7, 17, 38, 0.1);
+  border-radius: 16px;
+  padding: 28px;
+  overflow: hidden;
+  transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out), border-color 0.28s var(--ease-out);
+  min-height: 280px;
+}
+
+.sol-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(26, 93, 200, 0.28);
+}
+
+/* top */
+.sol-card-top {
+  flex: 1;
+}
+
+.sol-card-title {
+  font-family: var(--font-body);
+  color: var(--color-heading);
+  margin-bottom: var(--space-4);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.sol-card-points {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sol-card-points li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14.5px;
+  font-weight: 400;
+  color: #5a6580;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.sol-bullet {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-blue);
+  background: transparent;
+  opacity: 0.75;
+}
+
+/* bottom — min-height reserves room for the absolutely-positioned image
+   so it stays contained here instead of reaching up into the list above */
+.sol-card-bottom {
+  position: relative;
+  margin-top: var(--space-6);
+  min-height: 96px;
+}
+
+.sol-card-img-wrap {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  pointer-events: none;
+}
+
+.sol-card-img {
+  width: auto;
+  height: 90px;
+  object-fit: contain;
+  transform: scale(1);
+  transform-origin: bottom right;
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* Cards are 2-up from 640px, still fairly narrow — only go back to the
+   full-size image once the grid reaches 3 columns (1200px) and each card
+   has real width to spare. */
+@media (min-width: 1200px) {
+  .sol-card-img { height: 117px; }
+  .sol-card-bottom { min-height: 122px; }
+}
+
+/* No room for the decorative icon on mobile — hide it rather than keep
+   fighting for space against the list and the link. */
+@media (max-width: 767px) {
+  .sol-card-img-wrap { display: none; }
+  .sol-card-bottom { min-height: auto; }
+}
+
+.sol-card:hover .sol-card-img {
+  transform: scale(1.3);
+}
+
+.sol-card-link {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.sol-card-link:hover { color: var(--color-blue-mid); }
+
+.sol-link-arrow {
+  display: inline-block;
+  font-size: 15px;
+  line-height: 1;
+  transition: transform 0.25s var(--ease-out);
+}
+.sol-card-link:hover .sol-link-arrow,
+.sol-card:hover .sol-link-arrow {
+  transform: translateX(5px);
+}
