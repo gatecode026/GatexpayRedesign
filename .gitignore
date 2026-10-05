@@ -51,3 +51,4 @@ test-*.png
 
 # Deployment
 .vercel
+node_modules
