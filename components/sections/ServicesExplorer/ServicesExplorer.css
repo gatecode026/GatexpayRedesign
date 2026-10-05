@@ -367,15 +367,19 @@
 /* Need Help Card */
 .services-sidebar-help-card {
   box-sizing: border-box;
-  margin: 32px 16px 16px;
+  margin-top: auto;
+  margin-inline: 0;
+  margin-bottom: 0;
   padding: 20px 16px;
   background: #F0F9FF;
-  border: 1px solid #BAE6FD;
-  border-radius: 12px;
+  border: none;
+  border-top: 1px solid #BAE6FD;
+  border-radius: 0 0 16px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
+  width: 100%;
 }
 
 .services-help-text-wrap {

@@ -27,7 +27,7 @@ body.navbar--hidden .navbar {
 
 .navbar-container {
   align-items: center;
-  column-gap: 28px;
+  column-gap: 40px;
   grid-template-columns: auto 1fr auto;
   max-width: var(--page-max);
   height: 100%;
@@ -55,7 +55,7 @@ body.navbar--hidden .navbar {
   display: none;
   align-items: center;
   justify-self: end;
-  gap: 28px;
+  gap: 40px;
 }
 
 @media (min-width: 769px) {

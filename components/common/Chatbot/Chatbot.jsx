@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import {
-  MessageCircle,
   X,
   Send,
   Bot,
@@ -377,7 +376,7 @@ export default function Chatbot() {
         {isOpen ? (
           <X size={22} className="cb-launcher-icon" />
         ) : (
-          <MessageCircle size={24} className="cb-launcher-icon" />
+          <Bot size={26} className="cb-launcher-icon" />
         )}
 
 
