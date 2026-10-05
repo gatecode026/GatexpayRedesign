@@ -274,12 +274,6 @@ export default function IndustrySection() {
       const continuous = progress * n;
       // Active card index follows the card that is most dominant
       const activeIdx = Math.min(Math.round(continuous), n - 1);
-      // When reaching the last card (index n-1), behind cards fade away completely
-      // As Card 9 enters and settles (continuous 8.3 -> 9.0), lastCardFadeOut goes 0 -> 1
-      const lastCardFadeOut =
-        continuous >= n - 1.7
-          ? Math.min(Math.max((continuous - (n - 1.7)) / 0.7, 0), 1)
-          : 0;
       stackCardRefs.current.forEach((card, i) => {
         if (!card) return;
         // 1) Card hasn't entered yet
@@ -298,18 +292,6 @@ export default function IndustrySection() {
           card.style.pointerEvents = "auto";
           card.style.zIndex = String(10 + i * 2);
           card.style.transform = `translateY(${y}%) scale(1)`;
-          // Self-clip instead of relying on the stage's overflow/clip-path to
-          // contain this transformed child — Chromium intermittently fails
-          // to clip a translateY-animated absolutely-positioned descendant
-          // against an ancestor's overflow:hidden/clip-path/overflow:clip
-          // during continuous scroll-driven updates (verified: all three
-          // failed to contain it during a real scroll simulation). Clipping
-          // the card's OWN box (pre-transform coordinate space) doesn't
-          // depend on that ancestor relationship at all, so it can't have
-          // the same failure mode. The card is shifted DOWN by y% (of its
-          // own height) via translateY, so the portion that ends up below
-          // the stage's bottom edge is exactly the BOTTOM y% of the card's
-          // own (pre-transform) box — clip that off, not the top.
           card.style.clipPath = `inset(0 0 ${y}% 0)`;
           return;
         }
@@ -326,9 +308,11 @@ export default function IndustrySection() {
           return;
         }
         // 4) Card i is BEHIND the front card (i < continuous)
-        const stepsBehind = continuous - i;
-        // Max 3 cards can peek from behind. If stepsBehind >= 3.5 or last card has settled, it disappears completely
-        if (stepsBehind >= 3.5 || lastCardFadeOut >= 1) {
+        // Clamp effective continuous to n - 1 so the last card keeps its 3 recent peeking cards
+        const effectiveContinuous = Math.min(continuous, n - 1);
+        const stepsBehind = effectiveContinuous - i;
+        // Max 3 cards can peek from behind. If stepsBehind >= 3.5, it disappears completely
+        if (stepsBehind >= 3.5) {
           card.style.opacity = "0";
           card.style.pointerEvents = "none";
           card.style.transform = "translateY(-48px) scale(0.9)";
@@ -340,12 +324,9 @@ export default function IndustrySection() {
         const peekY = -15 * slot;
         const peekScale = 1 - 0.025 * slot;
         // Smoothly fade out older cards that move past slot 3 (between 3.0 and 3.5)
-        let baseOpacity =
+        const baseOpacity =
           stepsBehind > 3 ? Math.max(1 - (stepsBehind - 3) * 2, 0) : 1;
-        // When last card settles, fade out all cards behind it so it overlaps everything
-        if (lastCardFadeOut > 0) {
-          baseOpacity *= 1 - lastCardFadeOut;
-        }
+
         card.style.opacity = String(baseOpacity);
         card.style.pointerEvents = "none";
         card.style.zIndex = String(10 + i * 2);
