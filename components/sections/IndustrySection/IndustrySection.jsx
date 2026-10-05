@@ -1,7 +1,21 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useSyncExternalStore } from "react";
 import "./IndustrySection.css";
+
+function subscribeReducedMotion(callback) {
+  if (typeof window === "undefined") return () => {};
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+function getReducedMotionSnapshot() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+function getReducedMotionServerSnapshot() {
+  return false;
+}
 const TABS = [
   "Real Estate",
   "Travel & Tourism",
@@ -204,15 +218,12 @@ export default function IndustrySection() {
   const stackStickyRef = useRef(null);
   const stackCardRefs = useRef([]);
   const [stackActiveIndex, setStackActiveIndex] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot
+  );
   const [wrapHeightPx, setWrapHeightPx] = useState(null);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const handler = (e) => setReducedMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
   useLayoutEffect(() => {
     if (reducedMotion) return;
     const measure = () => {

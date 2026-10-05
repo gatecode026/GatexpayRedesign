@@ -1,86 +1,113 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { Enquiry } from "@/models/enquiry.model";
-import { verifyAdminToken, COOKIE_NAME } from "@/lib/auth";
+import { authenticateAdminRequest } from "@/lib/auth";
+
 const UpdateEnquirySchema = z.object({
   status: z.enum(["new", "in_progress", "contacted", "closed"]).optional(),
   notes: z.string().max(1000).optional(),
 });
+
 export async function PATCH(req, { params }) {
   try {
-    const token = req.cookies.get(COOKIE_NAME)?.value;
-    const session = token ? await verifyAdminToken(token) : null;
-    if (!session) {
+    const auth = await authenticateAdminRequest(req, ["superadmin", "admin"]);
+    if (!auth.authorized) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { success: false, error: auth.error },
+        { status: auth.status }
       );
     }
+
     const { id } = await params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid enquiry ID format" },
+        { status: 400 }
+      );
+    }
+
     const body = await req.json();
     const parsed = UpdateEnquirySchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "Invalid status" },
+        {
+          success: false,
+          error: parsed.error.issues[0]?.message || "Invalid update payload",
+        },
         { status: 400 }
       );
     }
+
     await connectDB();
     const updated = await Enquiry.findByIdAndUpdate(
       id,
       { $set: parsed.data },
       { new: true }
-    );
+    ).lean();
+
     if (!updated) {
       return NextResponse.json(
         { success: false, error: "Enquiry not found" },
         { status: 404 }
       );
     }
+
     return NextResponse.json({
       success: true,
-      message: "Enquiry status updated successfully",
+      message: "Enquiry updated successfully",
       enquiry: updated,
     });
   } catch (error) {
+    console.error("[Update Enquiry Error]:", error);
     return NextResponse.json(
       {
         success: false,
         error: "Failed to update enquiry",
-        details: error instanceof Error ? error.message : "Error",
       },
       { status: 500 }
     );
   }
 }
+
 export async function DELETE(req, { params }) {
   try {
-    const token = req.cookies.get(COOKIE_NAME)?.value;
-    const session = token ? await verifyAdminToken(token) : null;
-    if (!session || session.role !== "superadmin") {
+    const auth = await authenticateAdminRequest(req, ["superadmin"]);
+    if (!auth.authorized) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized. Superadmin only." },
-        { status: 403 }
+        { success: false, error: auth.error },
+        { status: auth.status }
       );
     }
+
     const { id } = await params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid enquiry ID format" },
+        { status: 400 }
+      );
+    }
+
     await connectDB();
-    const deleted = await Enquiry.findByIdAndDelete(id);
+    const deleted = await Enquiry.findByIdAndDelete(id).lean();
     if (!deleted) {
       return NextResponse.json(
         { success: false, error: "Enquiry not found" },
         { status: 404 }
       );
     }
+
     return NextResponse.json({
       success: true,
       message: "Enquiry deleted successfully",
     });
   } catch (error) {
+    console.error("[Delete Enquiry Error]:", error);
     return NextResponse.json(
       { success: false, error: "Failed to delete enquiry" },
       { status: 500 }
     );
   }
 }
+

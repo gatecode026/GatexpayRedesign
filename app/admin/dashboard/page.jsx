@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Users,
   Clock,
@@ -35,6 +36,7 @@ import BlogArticlesTable from "@/components/admin/BlogArticlesTable";
 import CookieConsentsTable from "@/components/admin/CookieConsentsTable";
 import "./dashboard.css";
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [leads, setLeads] = useState([]);
   const [blogPosts, setBlogPosts] = useState([]);
   const [cookieLogs, setCookieLogs] = useState([]);
@@ -86,7 +88,7 @@ export default function AdminDashboardPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const prevLeadsCountRef = useRef(null);
   // ── FETCH DATABASE STATUS ──────────────────────────────────────────
-  const checkDbHealth = async () => {
+  const checkDbHealth = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/health");
       const data = await res.json();
@@ -99,10 +101,10 @@ export default function AdminDashboardPage() {
     } catch {
       setDbStatus("offline");
     }
-  };
+  }, []);
+
   // ── FETCH ALL DASHBOARD DATA ───────────────────────────────────────
-  const fetchData = async () => {
-    setRefreshing(true);
+  const fetchData = useCallback(async () => {
     try {
       await checkDbHealth();
       const [leadsRes, analyticsRes, notifRes, cookieRes, blogRes] =
@@ -183,14 +185,31 @@ export default function AdminDashboardPage() {
       console.error("Dashboard fetch error:", err);
     } finally {
       setLoading(false);
+    }
+  }, [checkDbHealth]);
+
+  const handleManualRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await fetchData();
+    } finally {
       setRefreshing(false);
     }
-  };
+  }, [fetchData]);
+
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 25000);
-    return () => clearInterval(interval);
-  }, []);
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 0);
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      fetchData();
+    }, 25000);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, [fetchData]);
   // Escape key handler
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -318,9 +337,9 @@ export default function AdminDashboardPage() {
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-      window.location.href = "/admin/login";
+      router.push("/admin/login");
     } catch {
-      window.location.href = "/admin/login";
+      router.push("/admin/login");
     }
   };
   // CSV Export for Leads
@@ -543,7 +562,7 @@ export default function AdminDashboardPage() {
           onSearchSubmit={handleGlobalSearchSubmit}
           dbStatus={dbStatus}
           refreshing={refreshing}
-          onRefresh={fetchData}
+          onRefresh={handleManualRefresh}
           notifications={notifications}
           unreadNotifCount={unreadNotifCount}
           onMarkNotificationsRead={handleMarkAllNotificationsRead}

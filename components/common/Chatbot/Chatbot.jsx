@@ -97,10 +97,6 @@ const STARTER_QUESTIONS = [
 ];
 export default function Chatbot() {
   const pathname = usePathname();
-  // Hide chatbot on admin pages
-  if (pathname?.startsWith("/admin")) {
-    return null;
-  }
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState([WELCOME]);
@@ -111,7 +107,8 @@ export default function Chatbot() {
   const chatbotWindowRef = useRef(null);
   const chatEndRef = useRef(null);
   const inputRef = useRef(null);
-  const prevOpenRef = useRef(isOpen);
+  const isRequestPending = useRef(false);
+
   // Scroll lock for chatbot body to avoid scrolling the background page
   useEffect(() => {
     const windowEl = chatbotWindowRef.current;
@@ -145,22 +142,21 @@ export default function Chatbot() {
     windowEl.addEventListener("wheel", handleWheel, { passive: false });
     return () => windowEl.removeEventListener("wheel", handleWheel);
   }, [isOpen, isMinimized]);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading, suggestions]);
+
   useEffect(() => {
     if (isOpen && !isMinimized) {
       inputRef.current?.focus();
-      setShowBadge(false);
     }
   }, [isOpen, isMinimized]);
-  useEffect(() => {
-    if (prevOpenRef.current && !isOpen) {
-      // closed
-    }
-    prevOpenRef.current = isOpen;
-  }, [isOpen]);
-  const isRequestPending = useRef(false);
+
+  // Hide chatbot on admin pages
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
   const send = async (text) => {
     const msg = (text || input).trim();
     if (!msg || isLoading || isRequestPending.current) return;
@@ -368,7 +364,11 @@ export default function Chatbot() {
         type="button"
         className={`cb-launcher-btn ${isOpen ? "is-open" : ""}`}
         onClick={() => {
-          setIsOpen((prev) => !prev);
+          setIsOpen((prev) => {
+            const next = !prev;
+            if (next) setShowBadge(false);
+            return next;
+          });
           setIsMinimized(false);
         }}
         aria-label={isOpen ? "Close AI Chatbot" : "Open GateXPay AI Assistant"}
@@ -380,12 +380,7 @@ export default function Chatbot() {
           <MessageCircle size={24} className="cb-launcher-icon" />
         )}
 
-        {!isOpen && showBadge && (
-          <span className="cb-launcher-badge">
-            <span className="cb-badge-pulse" />
-            <span>AI Help</span>
-          </span>
-        )}
+
       </button>
     </div>
   );

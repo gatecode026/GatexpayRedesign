@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="8" fill="#ECEFF1"/>
+  <ellipse cx="16" cy="16" rx="12" ry="7.5" fill="#777BB4"/>
+  <text x="16" y="19" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="800" font-style="italic" fill="#FFFFFF" text-anchor="middle">PHP</text>
+</svg>

@@ -77,17 +77,20 @@ export default function ServiceDetailHero({ detail }) {
 
         {/* Container — 1288×122 trust strip */}
         <ul className="sd-highlights">
-          {highlights.map((h) => (
-            <li key={h.title} className="sd-highlight">
-              <span className="sd-icon-box sd-icon-box--sm">
-                <ServiceDetailIcon name={h.icon} size={28} strokeWidth={2} />
-              </span>
-              <span className="sd-highlight-text">
-                <strong className="sd-highlight-title">{h.title}</strong>
-                <span className="sd-highlight-sub">{h.text}</span>
-              </span>
-            </li>
-          ))}
+          {highlights.map((h) => {
+            const displaySub = h.subtitle || (h.text ? h.text.split(/ — | – /)[0] : "");
+            return (
+              <li key={h.title} className="sd-highlight">
+                <span className="sd-icon-box sd-icon-box--sm">
+                  <ServiceDetailIcon name={h.icon} size={28} strokeWidth={2} />
+                </span>
+                <span className="sd-highlight-text">
+                  <strong className="sd-highlight-title">{h.title}</strong>
+                  <span className="sd-highlight-sub" title={displaySub}>{displaySub}</span>
+                </span>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>

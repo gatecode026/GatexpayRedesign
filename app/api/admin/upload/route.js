@@ -1,33 +1,78 @@
 import { NextResponse } from "next/server";
-import { verifyAdminToken, COOKIE_NAME } from "@/lib/auth";
+import { authenticateAdminRequest } from "@/lib/auth";
 import { uploadToImageKit } from "@/lib/imagekit";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB max
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/avif",
+]);
+const ALLOWED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "webp", "gif", "avif"]);
+
 export async function POST(req) {
   try {
-    const token = req.cookies.get(COOKIE_NAME)?.value;
-    const session = token ? await verifyAdminToken(token) : null;
-    if (!session) {
+    const auth = await authenticateAdminRequest(req, ["superadmin", "admin", "editor"]);
+    if (!auth.authorized) {
       return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { success: false, error: auth.error },
+        { status: auth.status }
       );
     }
+
     const formData = await req.formData();
     const file = formData.get("file");
-    const folder = formData.get("folder") || "blog";
-    if (!file) {
+    const rawFolder = formData.get("folder");
+    const folder = typeof rawFolder === "string" && /^[a-zA-Z0-9_-]{1,30}$/.test(rawFolder)
+      ? rawFolder
+      : "blog";
+
+    if (!file || typeof file === "string" || !file.name) {
       return NextResponse.json(
-        { success: false, error: "No file provided" },
+        { success: false, error: "A valid image file is required." },
         { status: 400 }
       );
     }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { success: false, error: "File exceeds maximum permitted size of 5 MB." },
+        { status: 400 }
+      );
+    }
+
+    if (!ALLOWED_MIME_TYPES.has(file.type)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid file type. Only JPEG, PNG, WebP, GIF, and AVIF are allowed.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const extension = file.name.split(".").pop()?.toLowerCase();
+    if (!extension || !ALLOWED_EXTENSIONS.has(extension)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid file extension." },
+        { status: 400 }
+      );
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_");
+    const sanitizedFileName = file.name
+      .replace(/[^a-zA-Z0-9.-]/g, "_")
+      .slice(0, 80);
+
     const uploaded = await uploadToImageKit(
       buffer,
       `${Date.now()}_${sanitizedFileName}`,
       folder
     );
+
     return NextResponse.json({
       success: true,
       url: uploaded.url,
@@ -39,8 +84,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to upload image",
-        details: error instanceof Error ? error.message : "Error",
+        error: "Failed to upload image. Please try again.",
       },
       { status: 500 }
     );

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { SOLUTIONS } from "@/components/layout/Navbar/SolutionsMegaMenu";
@@ -18,30 +18,31 @@ export default function ContactModal({ isOpen, onClose }) {
   const [errorMessage, setErrorMessage] = useState("");
   const dialogRef = useRef(null);
   const firstFieldRef = useRef(null);
+
+  const handleClose = useCallback(() => {
+    setSubmitted(false);
+    setIsSubmitting(false);
+    setErrorMessage("");
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = "hidden";
     firstFieldRef.current?.focus();
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.body.style.overflow = "";
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose]);
-  // Reset to a fresh form each time the modal is opened.
-  useEffect(() => {
-    if (isOpen) {
-      setSubmitted(false);
-      setIsSubmitting(false);
-      setErrorMessage("");
-    }
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
+
   if (!isOpen) return null;
   const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) onClose();
+    if (e.target === e.currentTarget) handleClose();
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,7 +93,7 @@ export default function ContactModal({ isOpen, onClose }) {
           type="button"
           className="contact-modal-close"
           aria-label="Close"
-          onClick={onClose}
+          onClick={handleClose}
         >
           <X size={18} />
         </button>
@@ -109,7 +110,7 @@ export default function ContactModal({ isOpen, onClose }) {
             <button
               type="button"
               className="contact-modal-submit"
-              onClick={onClose}
+              onClick={handleClose}
             >
               Close
             </button>

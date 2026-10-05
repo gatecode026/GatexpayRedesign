@@ -23,19 +23,23 @@ export default function CookieConsent() {
   const [isSaving, setIsSaving] = useState(false);
   useEffect(() => {
     // Check if consent has already been given
+    let timer;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) {
-        // Small delay so entrance animation feels natural after initial page load
-        const timer = setTimeout(() => {
+        timer = setTimeout(() => {
           setIsVisible(true);
         }, 800);
-        return () => clearTimeout(timer);
       }
     } catch {
-      // LocalStorage access failure fallback
-      setIsVisible(true);
+      // LocalStorage access failure fallback - trigger asynchronously
+      timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 800);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, []);
   const getOrCreateConsentId = () => {
     try {

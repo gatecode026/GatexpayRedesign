@@ -48,7 +48,7 @@ export default function Page() {
     name: "GateXPay Technologies Private Limited",
     alternateName: "GateXPay",
     url: "https://gatexpay.com",
-    logo: "https://gatexpay.com/assets/logo.png",
+    logo: "https://gatexpay.com/assets/images/logo.png",
     description:
       "GateXPay provides high-performance fintech infrastructure, digital banking services, and secure payment routing for modern businesses in India.",
     address: {

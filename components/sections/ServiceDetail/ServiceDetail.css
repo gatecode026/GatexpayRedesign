@@ -276,28 +276,64 @@
   font-size: 14px;
   line-height: 20px;
   color: var(--sd-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* ==========================================================================
    WHAT'S INCLUDED — Frame 196: #F8FAFC, 3 × 2 cards, gap 24
-   Card: padding 16, gap 20, radius 16; title 600 24/36, text 400 18/28
+   Card: #FFFFFF, radius 24, padding 32 28, 48px icon box in #F0F9FF with #0284C7 icon,
+   title 600 18/26 #0F172A, text 400 14/22 #64748B
    ========================================================================== */
-.sd-included { background: var(--sd-light); }
+.sd-included {
+  background: #F8FAFC;
+}
 
 .sd-included-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .sd-feature {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 16px;
-  background: #FFFFFF;
-  border-radius: 16px;
-  box-shadow: var(--sd-card-shadow);
+  padding: 32px 28px;
+  background: transparent;
+  border-radius: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: none;
+  transition: transform 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+}
+
+.sd-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: none;
+  border-color: rgba(2, 132, 199, 0.3);
+}
+
+.sd-feature-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #F0F9FF;
+  color: #0284C7;
+}
+
+.sd-feature-icon-box .sd-icon {
+  width: 24px;
+  height: 24px;
+  color: #0284C7;
 }
 
 .sd-feature-text {
@@ -309,17 +345,42 @@
 .sd-feature-title {
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 24px;
-  line-height: 36px;
-  color: var(--sd-text);
+  font-size: 18px;
+  line-height: 26px;
+  color: #0F172A;
+  margin: 0;
 }
 
 .sd-feature-desc {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 18px;
-  line-height: 28px;
-  color: var(--sd-muted);
+  font-size: 14px;
+  line-height: 22px;
+  color: #64748B;
+  margin: 0;
+}
+
+.sd-inline-link {
+  color: var(--color-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s var(--ease-out);
+}
+
+.sd-inline-link:hover {
+  color: var(--color-blue-mid);
+}
+
+.sd-tech-lead {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 26px;
+  color: var(--color-body);
+  max-width: 840px;
+  margin-top: -16px;
+  margin-bottom: 8px;
 }
 
 /* ==========================================================================
@@ -410,7 +471,47 @@
   flex: none;
   width: 32px;
   height: 32px;
+  object-fit: contain;
+  border-radius: 8px;
+  display: block;
 }
+
+.sd-tech-fade-in {
+  animation: sdTechFadeIn 0.35s ease-out forwards;
+}
+
+@keyframes sdTechFadeIn {
+  from {
+    opacity: 0.15;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sd-tech-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex: none;
+}
+
+.sd-icon-blue { background: #E0F2FE; color: #0284C7; }
+.sd-icon-sky { background: #E0F7FA; color: #0284C7; }
+.sd-icon-emerald { background: #ECFDF5; color: #10B981; }
+.sd-icon-indigo { background: #EEF2FF; color: #6366F1; }
+.sd-icon-amber { background: #FEF3C7; color: #D97706; }
+.sd-icon-cyan { background: #ECFEFF; color: #0891B2; }
+.sd-icon-purple { background: #F5F3FF; color: #8B5CF6; }
+.sd-icon-teal { background: #F0FDFA; color: #0D9488; }
+.sd-icon-pink { background: #FDF2F8; color: #DB2777; }
+.sd-icon-orange { background: #FFF7ED; color: #EA580C; }
+.sd-icon-slate { background: #F1F5F9; color: #475569; }
 
 .sd-tech-art {
   justify-self: end;
@@ -429,12 +530,15 @@
   gap: 24px;
 }
 .sd-tech-tab {
+  position: relative;
   width: 123px;
   min-width: 0;
   height: 24px;
   padding: 7px 0;
   border-radius: 999px;
   background: none;
+  cursor: pointer;
+  overflow: hidden;
 }
 .sd-tech-tab::before {
   content: "";
@@ -447,6 +551,26 @@
 .sd-tech-tab.is-active::before { background: var(--sd-blue); }
 .sd-tech-tab:hover:not(.is-active)::before { background: #94A3B8; }
 .sd-tech-tab:focus-visible { outline: 2px solid var(--sd-blue); outline-offset: 2px; }
+
+.sd-tech-progress {
+  position: absolute;
+  top: 7px;
+  left: 0;
+  height: 10px;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--sd-cyan);
+  pointer-events: none;
+}
+
+.sd-tech-progress.is-animating {
+  animation: sdProgressFill 3s linear forwards;
+}
+
+@keyframes sdProgressFill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
 
 /* ==========================================================================
    SHOWCASE SECTION — "Have Your Documents Ready", "Platforms We Master", etc.
@@ -572,6 +696,16 @@
   color: var(--sd-muted);
 }
 
+.sd-showcase-note {
+  margin: 14px 0 0 0;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #64748B;
+  font-style: italic;
+}
+
 .sd-showcase-art {
   display: flex;
   justify-content: center;
@@ -601,104 +735,201 @@
 }
 
 /* ==========================================================================
-   PROCESS — Frame 230: 64px numbered nodes (ring #00C0FD, blurred) joined by
-   #00C0FD arrows; cards #F0F9FF, radius 16, padding 24, gap 16
+   PROCESS — Frame 230:
+   Auto layout: flex-direction: column; align-items: center; padding: 64px 76px; gap: 32px;
+   width: 1440px; height: 584px;
+   Heading: 54px / 74px Source Serif Pro 700, #0F172A
+   Frame 244: column, gap 24px, 1288px wide
+   Frame 235: row, padding 0 144px, gap 12px, 1288px wide
+     Node: 64x64px, #0284C7, 9999px radius, isolation: isolate
+       Number: 32px / 44px, Source Serif Pro 700, #FFFFFF
+       Ellipse 10: 86x86px, border 2px solid #00C0FD, filter blur(2px)
+     Line: border 2px solid #00C0FD, filter blur(1px), flex-grow: 1, height: 0
+   Frame 240: row, gap 24px, 1288px wide
+     Frame 243 (Card): 304px, padding 24px, gap 16px, background #F0F9FF, radius 16px
+       Frame 241 (Header): justify-content: space-between, align-items: center, gap 10px
+         Title: Poppins 600, 16px / 24px, #0F172A
+         Icon: Lucide icon 24px, #0F172A
+       Description: Poppins 500, 14px / 20px, #64748B
    ========================================================================== */
-.sd-steps {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: start;
-  gap: 24px;
+.sd-process {
+  background: #FFFFFF;
 }
 
-.sd-step {
-  position: relative;
+.sd-process-frame {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+}
+
+.sd-process-heading {
+  font-family: var(--font-heading);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 74px;
+  text-align: center;
+  color: #0F172A;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.sd-process-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 24px;
+  width: 100%;
+  max-width: 1288px;
+  margin: 0 auto;
+}
+
+/* Frame 235 */
+.sd-process-timeline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 144px;
+  gap: 12px;
+  width: 100%;
+  max-width: 1288px;
+  height: 86px;
+  box-sizing: border-box;
+}
+
+.sd-step-node-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 14px;
+  gap: 10px;
+  isolation: isolate;
+  width: 64px;
+  height: 64px;
+  background: #0284C7;
+  border-radius: 9999px;
+  position: relative;
+  flex: none;
+  box-sizing: border-box;
 }
 
 .sd-step-node {
-  --node: 64px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
-  width: var(--node);
-  height: var(--node);
-  border-radius: 50%;
-  background: var(--sd-blue);
-  color: #FFFFFF;
   font-family: var(--font-heading);
+  font-style: normal;
   font-weight: 700;
   font-size: 32px;
   line-height: 44px;
-}
-/* Ellipse 10: 86px ring, 2px #00C0FD, layer blur 4 */
-.sd-step-node::before {
-  content: "";
-  position: absolute;
-  inset: -11px;
-  border: 2px solid var(--sd-cyan);
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 192, 253, 0.35);
-  filter: blur(1.5px);
+  color: #FFFFFF;
+  z-index: 2;
 }
 
-/* Arrow from 12px after this node to 12px before the next one */
-.sd-step-line {
+.sd-step-ellipse {
+  box-sizing: border-box;
   position: absolute;
-  top: 31px;
-  left: calc(50% + 44px);
-  width: calc(100% - 64px);
-  height: 2px;
-  border-radius: 1px;
-  background: var(--sd-cyan);
-  box-shadow: 0 0 4px rgba(0, 192, 253, 0.55);
-}
-.sd-step-line::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -2px;
-  transform: translateY(-50%);
-  border-left: 8px solid var(--sd-cyan);
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
+  width: 86px;
+  height: 86px;
+  left: calc(50% - 43px);
+  top: calc(50% - 43px);
+  border: 2px solid #00C0FD;
+  border-radius: 9999px;
+  filter: blur(2px);
+  z-index: 1;
+  pointer-events: none;
 }
 
+.sd-step-connector {
+  width: 224px;
+  height: 0px;
+  border-top: 2px solid #00C0FD;
+  filter: blur(1px);
+  flex-grow: 1;
+}
+
+/* Frame 240 */
+.sd-process-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+  max-width: 1288px;
+  box-sizing: border-box;
+}
+
+/* Frame 243 */
 .sd-step-card {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: flex-start;
   padding: 24px;
+  gap: 16px;
+  flex: 1 1 0;
+  min-width: 0;
+  background: #F0F9FF;
   border-radius: 16px;
-  background: var(--sd-tint);
+  border: 1px solid rgba(186, 230, 253, 0.4);
+  box-sizing: border-box;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
 }
 
+.sd-step-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px -4px rgba(2, 132, 199, 0.14);
+}
+
+.sd-step-mobile-badge {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #0284C7;
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: 0 0 0 3px rgba(0, 192, 253, 0.35);
+}
+
+/* Frame 241 */
 .sd-step-head {
   display: flex;
-  align-items: center;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  width: 100%;
   gap: 10px;
-  color: var(--sd-text);
 }
 
 .sd-step-title {
   font-family: var(--font-body);
+  font-style: normal;
   font-weight: 600;
-  font-size: 24px;
-  line-height: 36px;
-  color: var(--sd-text);
+  font-size: 16px;
+  line-height: 24px;
+  color: #0F172A;
+  margin: 0;
+}
+
+.sd-step-head .sd-icon {
+  width: 24px;
+  height: 24px;
+  color: #0F172A;
+  flex: none;
 }
 
 .sd-step-desc {
   font-family: var(--font-body);
+  font-style: normal;
   font-weight: 500;
-  font-size: 18px;
-  line-height: 28px;
-  color: var(--sd-muted);
+  font-size: 14px;
+  line-height: 20px;
+  color: #64748B;
+  margin: 0;
 }
 
 /* ==========================================================================
@@ -722,11 +953,11 @@
   .sd-icon-box--sm { width: clamp(48px, 3.8889vw, 56px); height: clamp(48px, 3.8889vw, 56px); }
   .sd-highlight-title { font-size: clamp(18px, 1.6667vw, 24px); line-height: 1.5; }
 
-  .sd-feature-title,
-  .sd-step-title { font-size: clamp(20px, 1.6667vw, 24px); line-height: 1.5; }
-  .sd-feature-desc,
-  .sd-step-desc { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.55; }
-  .sd-step-card { padding: clamp(20px, 1.6667vw, 24px); }
+  .sd-feature-title { font-size: 18px; line-height: 26px; }
+  .sd-feature-desc { font-size: 14px; line-height: 22px; }
+  .sd-step-title { font-size: 16px; line-height: 24px; }
+  .sd-step-desc { font-size: 14px; line-height: 20px; }
+  .sd-step-card { padding: 20px; }
 
   .sd-tech-row { grid-template-columns: minmax(0, 45.1389vw) minmax(0, 1fr); }
   .sd-tech-title { font-size: clamp(26px, 2.2222vw, 32px); line-height: 1.375; }
@@ -806,51 +1037,18 @@
 
   /* Cards: two columns */
   .sd-included-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-  .sd-feature { gap: 16px; padding: 20px; }
-  .sd-feature-title,
-  .sd-step-title { font-size: 20px; line-height: 30px; }
-  .sd-feature-desc,
-  .sd-step-desc { font-size: 16px; line-height: 24px; }
+  .sd-feature { gap: 16px; padding: 24px 20px; }
+  .sd-feature-title { font-size: 18px; line-height: 26px; }
+  .sd-feature-desc { font-size: 14px; line-height: 22px; }
 
-  /* Technology: narrower art column, compact badges */
-  .sd-tech-row { grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: 24px; }
-  .sd-tech-title { font-size: 26px; line-height: 36px; }
-  .sd-tech-desc { font-size: 18px; line-height: 28px; }
-  .sd-tech-label { font-size: 16px; line-height: 24px; }
-  .sd-tech-badges { gap: 8px; }
-  .sd-tech-badge { gap: 8px; padding: 8px 12px; font-size: 15px; line-height: 22px; }
-  .sd-tech-logo { width: 24px; height: 24px; }
-  .sd-tech-art { max-width: 520px; }
-  .sd-tech-tabs { gap: 12px; }
-  .sd-tech-tab { width: clamp(32px, 12vw, 96px); }
-
-  /* Process: vertical timeline — node, then its card; arrows point down */
-  .sd-steps { grid-template-columns: minmax(0, 1fr); }
-  .sd-step {
+  /* Process: 2-column cards on tablet */
+  .sd-process-timeline { display: none; }
+  .sd-process-cards {
     display: grid;
-    grid-template-columns: var(--node-col, 64px) minmax(0, 1fr);
-    align-items: start;
-    column-gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
   }
-  .sd-step-node { align-self: start; }
-  .sd-step-line {
-    top: calc(var(--node-col, 64px) + 12px);
-    bottom: -12px;
-    left: calc(var(--node-col, 64px) / 2 - 1px);
-    width: 2px;
-    height: auto;
-  }
-  .sd-step-line::after {
-    top: auto;
-    right: auto;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-top: 8px solid var(--sd-cyan);
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 0;
-  }
+  .sd-step-mobile-badge { display: inline-flex; }
   .sd-step-card { padding: 20px; }
 
   .sd-showcase-body {
@@ -905,10 +1103,23 @@
   .sd-tech-label { font-size: 14px; line-height: 20px; letter-spacing: 0.02em; }
   .sd-tech-art { justify-self: center; max-width: 420px; }
 
-  .sd-step { --node-col: 52px; column-gap: 16px; }
-  .sd-step-node { --node: 52px; font-size: 26px; line-height: 36px; }
-  .sd-step-node::before { inset: -9px; }
-  .sd-step-title { font-size: 18px; line-height: 28px; }
+  .sd-process-cards {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .sd-process-heading {
+    font-size: clamp(28px, 8.5vw, 36px);
+    line-height: 1.3;
+  }
+  .sd-step-mobile-badge {
+    display: inline-flex;
+    margin-bottom: 4px;
+  }
+  .sd-feature {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
 
   .sd-showcase-body {
     grid-template-columns: minmax(0, 1fr);

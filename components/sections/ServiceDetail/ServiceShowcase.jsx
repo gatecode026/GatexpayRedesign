@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
-import { SectionTitle, ServiceDetailIcon } from "./ServiceDetailParts";
+import { SectionTitle, ServiceDetailIcon, FormattedText } from "./ServiceDetailParts";
 export default function ServiceShowcase({ showcase }) {
   const { heading, description, checklist, callout, image } = showcase;
   return (
@@ -17,7 +17,11 @@ export default function ServiceShowcase({ showcase }) {
 
         <div className="sd-showcase-body reveal">
           <div className="sd-showcase-content">
-            {description && <p className="sd-showcase-desc">{description}</p>}
+            {description && (
+              <p className="sd-showcase-desc">
+                <FormattedText text={description} />
+              </p>
+            )}
 
             <ul className="sd-showcase-list" aria-label="Key items checklist">
               {checklist.map((item, idx) => (
@@ -31,7 +35,7 @@ export default function ServiceShowcase({ showcase }) {
                     </strong>
                     {item.detail && (
                       <span className="sd-showcase-item-detail">
-                        {item.detail}
+                        <FormattedText text={item.detail} />
                       </span>
                     )}
                   </div>
@@ -50,9 +54,17 @@ export default function ServiceShowcase({ showcase }) {
                 </span>
                 <div className="sd-callout-body">
                   <h4 className="sd-callout-title">{callout.title}</h4>
-                  <p className="sd-callout-text">{callout.text}</p>
+                  <p className="sd-callout-text">
+                    <FormattedText text={callout.text} />
+                  </p>
                 </div>
               </div>
+            )}
+
+            {showcase.note && (
+              <p className="sd-showcase-note">
+                <FormattedText text={showcase.note} />
+              </p>
             )}
           </div>
 

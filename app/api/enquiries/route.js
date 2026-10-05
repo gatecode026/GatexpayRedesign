@@ -3,6 +3,11 @@ import { z } from "zod";
 import { connectDB } from "@/lib/db";
 import { Enquiry } from "@/models/enquiry.model";
 import { sendAdminLeadNotification } from "@/lib/email";
+import { authenticateAdminRequest } from "@/lib/auth";
+
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 const EnquiryInputSchema = z.object({
   fullName: z
     .string()
@@ -136,6 +141,14 @@ export async function POST(req) {
 }
 export async function GET(req) {
   try {
+    const auth = await authenticateAdminRequest(req, ["superadmin", "admin"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, error: auth.error },
+        { status: auth.status }
+      );
+    }
+
     await connectDB();
     const { searchParams } = new URL(req.url);
     const limit = Math.min(
@@ -154,7 +167,8 @@ export async function GET(req) {
       query.source = source;
     }
     if (search) {
-      const regex = new RegExp(search, "i");
+      const safeSearch = escapeRegex(search.slice(0, 100));
+      const regex = new RegExp(safeSearch, "i");
       query.$or = [
         { fullName: regex },
         { companyName: regex },
@@ -164,23 +178,31 @@ export async function GET(req) {
         { source: regex },
       ];
     }
-    const totalMatching = await Enquiry.countDocuments(query);
     const skip = (page - 1) * limit;
-    const recent = await Enquiry.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .select("-userAgent -ipAddress");
-    // Compute global stats
-    const total = await Enquiry.countDocuments();
-    const newCount = await Enquiry.countDocuments({ status: "new" });
-    const inProgressCount = await Enquiry.countDocuments({
-      status: "in_progress",
-    });
-    const contactedCount = await Enquiry.countDocuments({
-      status: "contacted",
-    });
-    const closedCount = await Enquiry.countDocuments({ status: "closed" });
+
+    const [
+      totalMatching,
+      recent,
+      total,
+      newCount,
+      inProgressCount,
+      contactedCount,
+      closedCount,
+    ] = await Promise.all([
+      Enquiry.countDocuments(query),
+      Enquiry.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select("-userAgent -ipAddress")
+        .lean(),
+      Enquiry.countDocuments(),
+      Enquiry.countDocuments({ status: "new" }),
+      Enquiry.countDocuments({ status: "in_progress" }),
+      Enquiry.countDocuments({ status: "contacted" }),
+      Enquiry.countDocuments({ status: "closed" }),
+    ]);
+
     return NextResponse.json({
       success: true,
       total,
@@ -198,11 +220,11 @@ export async function GET(req) {
       recent,
     });
   } catch (error) {
+    console.error("[Enquiries GET Error]:", error);
     return NextResponse.json(
       {
         success: false,
-        error: "Database query error",
-        details: error instanceof Error ? error.message : "Internal error",
+        error: "Failed to retrieve enquiries",
       },
       { status: 500 }
     );

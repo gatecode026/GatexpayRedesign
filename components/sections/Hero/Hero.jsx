@@ -45,10 +45,12 @@ export default function Hero() {
         {/* ── Right visual (blue shape + devices) ──── */}
         <div className="hero-visual">
           {/* Ellipse 2 SVG from Figma */}
-          <img
+          <Image
             src="/assets/images/Ellipse%202.svg"
             alt=""
             aria-hidden="true"
+            width={783}
+            height={571}
             className="hero-glow-shape"
           />
           <div className="hero-device hero-device--ipad">
@@ -57,7 +59,6 @@ export default function Hero() {
               alt="GateXPay payment dashboard on tablet"
               width={900}
               height={840}
-              priority
               draggable={false}
               className="hero-device-img hero-device-img--ipad"
             />

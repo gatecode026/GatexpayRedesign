@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { connectDB } from "@/lib/db";
 import { CookieConsent } from "@/models/cookie-consent.model";
+import { authenticateAdminRequest } from "@/lib/auth";
 const ConsentSchema = z.object({
   consentId: z.string().min(1),
   decision: z.enum(["all", "essential_only", "custom"]),
@@ -82,14 +83,23 @@ export async function POST(req) {
     );
   }
 }
-export async function GET() {
+export async function GET(req) {
   try {
+    const auth = await authenticateAdminRequest(req, ["superadmin", "admin"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, error: auth.error },
+        { status: auth.status }
+      );
+    }
+
     await connectDB();
     const count = await CookieConsent.countDocuments();
     const recent = await CookieConsent.find()
       .sort({ updatedAt: -1 })
       .limit(25)
-      .select("-__v");
+      .select("-__v")
+      .lean();
     return NextResponse.json({
       success: true,
       status: "active",
@@ -97,11 +107,11 @@ export async function GET() {
       recent,
     });
   } catch (error) {
+    console.error("[Cookie Consent GET Error]:", error);
     return NextResponse.json(
       {
         success: false,
-        error: "Database error",
-        details: error instanceof Error ? error.message : "Internal error",
+        error: "Failed to retrieve consent records",
       },
       { status: 500 }
     );

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { SERVICES_FAQS } from "@/data/services-data";
+import { FormattedText } from "@/components/sections/ServiceDetail/ServiceDetailParts";
 import "./ServicesFAQ.css";
 export default function ServicesFAQ({
   items = SERVICES_FAQS,
@@ -59,7 +60,9 @@ export default function ServicesFAQ({
                   className="services-faq-panel"
                 >
                   <div className="services-faq-panel-inner">
-                    <p className="services-faq-answer">{item.a}</p>
+                    <p className="services-faq-answer">
+                      <FormattedText text={item.a} />
+                    </p>
                   </div>
                 </div>
               </div>

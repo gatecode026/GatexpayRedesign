@@ -335,7 +335,7 @@ export default function PolicyInfographics({ slug }) {
               <span className="pipeline-step-tag-pill">Step 01</span>
             </div>
             <div className="pipeline-step-content">
-              <h4>1. Entity Details</h4>
+              <h4>Entity Details</h4>
               <p>
                 Digital submission and automated validation of Certificate of
                 Incorporation, GSTIN, PAN, and Bank proofs.
@@ -357,7 +357,7 @@ export default function PolicyInfographics({ slug }) {
               <span className="pipeline-step-tag-pill">Step 02</span>
             </div>
             <div className="pipeline-step-content">
-              <h4>2. Automated C-KYC</h4>
+              <h4>Automated C-KYC</h4>
               <p>
                 Real-time Aadhaar OTP validation, MCA corporate registry
                 verification, and director identity corroboration.
@@ -379,7 +379,7 @@ export default function PolicyInfographics({ slug }) {
               <span className="pipeline-step-tag-pill">Step 03</span>
             </div>
             <div className="pipeline-step-content">
-              <h4>3. AML &amp; Risk Screening</h4>
+              <h4>AML &amp; Risk Screening</h4>
               <p>
                 Watchlist checks against UN/OFAC lists, PEP screening, sanctions
                 databases, and merchant category risk rating.
@@ -405,7 +405,7 @@ export default function PolicyInfographics({ slug }) {
               </span>
             </div>
             <div className="pipeline-step-content">
-              <h4>4. Production Activation</h4>
+              <h4>Production Activation</h4>
               <p>
                 Merchant agreement execution, sandbox API keys validation, and
                 live payment gateway activation for settlements.

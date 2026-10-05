@@ -25,28 +25,45 @@ export const SOLUTIONS = [
     id: "payments-banking",
     title: "Payments & Banking",
     description: "For businesses looking to move money or build fintech apps",
+    categoryHref: "/services#payments-cash",
     services: [
       {
         title: "Payment Gateway",
         description:
           "PCI-DSS compliant multi-currency & multi-method processing.",
         icon: CreditCard,
+        href: "/services/payment-gateway-integration",
       },
       {
         title: "Money Transfers & Payouts",
         description: "IMPS, NEFT, and RTGS real-time settlements.",
         icon: ArrowLeftRight,
+        href: "/services/money-transfer-services",
       },
       {
-        title: "Connected & Core Banking",
+        title: "Connected Banking Services",
         description:
           "Open banking APIs, account aggregation, and CBS solutions.",
         icon: Landmark,
+        href: "/services/connected-banking-services",
       },
       {
-        title: "Banking Partnerships",
-        description: "Co-branded products and strategic banking tie-ups.",
+        title: "Banking Tie-Up Services",
+        description: "API integrations, co-branded products, and banking tie-ups.",
         icon: Handshake,
+        href: "/services/banking-tie-up-services",
+      },
+      {
+        title: "Fintech Integration",
+        description: "APIs linking financial and business platforms securely.",
+        icon: Network,
+        href: "/services/fintech-financial-integration",
+      },
+      {
+        title: "Core Banking Systems",
+        description: "Centralized ledgers, reporting, and CBS modules.",
+        icon: Landmark,
+        href: "/services/core-banking-services",
       },
     ],
   },
@@ -54,22 +71,44 @@ export const SOLUTIONS = [
     id: "agent-csp",
     title: "Agent & CSP Services",
     description: "For agents providing rural/local financial services",
+    categoryHref: "/services#payments-cash",
     services: [
       {
-        title: "Micro ATM & AEPS",
+        title: "AEPS Services",
         description:
-          "Cash withdrawals, balance enquiries, and mini statements via card.",
+          "Aadhaar cash withdrawal, balance check, and biometric banking.",
         icon: Fingerprint,
+        href: "/services/aeps-services",
       },
       {
-        title: "Loans & Insurance",
-        description: "Personal/home loans, term plans, and health coverage.",
+        title: "Micro ATM Services",
+        description: "Debit card cash withdrawal and mini statements at CSPs.",
+        icon: Smartphone,
+        href: "/services/micro-atm-services",
+      },
+      {
+        title: "Loan & Insurance",
+        description: "Personal and business loan support, insurance services.",
         icon: UserRound,
+        href: "/services/loan-insurance-services",
       },
       {
-        title: "Investment Wealth",
-        description: "Mutual funds, SIPs, and fixed deposits.",
+        title: "Investment Services",
+        description: "Mutual funds, SIPs, fixed deposits, and eligible schemes.",
         icon: TrendingUp,
+        href: "/services/investment-services",
+      },
+      {
+        title: "Aadhaar Services",
+        description: "Aadhaar demographic assistance and verified citizen support.",
+        icon: Fingerprint,
+        href: "/services/aadhaar-services",
+      },
+      {
+        title: "Value-Added Services",
+        description: "Everyday financial, document, and assisted services in one spot.",
+        icon: Package,
+        href: "/services/value-added-services",
       },
     ],
   },
@@ -77,27 +116,43 @@ export const SOLUTIONS = [
     id: "egovernance-utilities",
     title: "E-Governance & Utilities",
     description: "For businesses offering citizen services and bill payments",
+    categoryHref: "/services#citizen-identity",
     services: [
       {
-        title: "Identity & Onboarding",
-        description:
-          "PAN card processing, Aadhaar authentication, and eKYC services.",
+        title: "PAN Card Services",
+        description: "New PAN registration, updates, corrections, and reissues.",
         icon: IdCard,
+        href: "/services/pan-card-services",
       },
       {
-        title: "Bill Payments & Recharge",
-        description: "BBPS utilities, mobile, DTH, and data card recharges.",
+        title: "Bill Payment Services",
+        description: "Electricity, water, gas, and utility bill payments via BBPS.",
         icon: Smartphone,
+        href: "/services/bill-payment-services",
       },
       {
-        title: "Government Schemes",
-        description: "NPS, PMJDY, APY, and certificate issuance.",
+        title: "Recharge Services",
+        description: "Prepaid, postpaid, DTH, and FASTag recharges.",
+        icon: Smartphone,
+        href: "/services/recharge-services",
+      },
+      {
+        title: "Pension & Government Schemes",
+        description: "Social security schemes, documentation, and welfare assistance.",
         icon: Network,
+        href: "/services/pension-government-schemes",
       },
       {
-        title: "Travel Bookings",
-        description: "Bus, train, and flight ticket integrations.",
+        title: "E-Governance Services",
+        description: "Assisted citizen service filings and official portal guidance.",
+        icon: Network,
+        href: "/services/e-governance-services",
+      },
+      {
+        title: "Travel Booking Services",
+        description: "Train, flight, bus, and hotel booking with guided CSP support.",
         icon: Globe,
+        href: "/services/travel-booking-services",
       },
     ],
   },
@@ -105,27 +160,43 @@ export const SOLUTIONS = [
     id: "business-it",
     title: "Business & IT Infrastructure",
     description: "For enterprises needing tech, marketing, and logistics",
+    categoryHref: "/services#enterprise-tech",
     services: [
       {
         title: "Web & App Development",
-        description: "Custom platforms and cloud SaaS implementations.",
+        description: "Custom web applications, portals, and mobile app solutions.",
         icon: Code2,
+        href: "/services/web-app-development",
+      },
+      {
+        title: "IT & Cloud Services",
+        description: "Cloud infrastructure, DevOps, migration, and managed IT.",
+        icon: Network,
+        href: "/services/it-cloud-services",
       },
       {
         title: "Business Automation",
-        description: "AI-driven process optimization and RPA.",
+        description: "Automate repetitive workflows, CRM, and operational processes.",
         icon: Bot,
+        href: "/services/business-automation",
       },
       {
-        title: "E-Commerce & Logistics",
-        description:
-          "Storefront platforms, inventory, and real-time courier APIs.",
+        title: "Digital & IT Services",
+        description: "Full-spectrum digital engineering, marketing, and IT consulting.",
+        icon: Code2,
+        href: "/services/digital-it-services",
+      },
+      {
+        title: "E-Commerce Services",
+        description: "Online store setup, Shopify, WooCommerce, and checkout APIs.",
         icon: Package,
+        href: "/services/e-commerce-services",
       },
       {
-        title: "Digital Marketing",
-        description: "SEO, paid campaigns, and brand growth strategies.",
-        icon: Megaphone,
+        title: "Shipping & Logistics Integration",
+        description: "Multi-carrier shipping APIs, label printing, and live tracking.",
+        icon: Package,
+        href: "/services/shipping-logistics-integration",
       },
     ],
   },
@@ -173,10 +244,11 @@ export default function SolutionsMegaMenu({ id }) {
         >
           {active.services.map((service) => {
             const Icon = service.icon;
+            const href = service.href || SERVICE_HREF;
             return (
               <Link
                 key={service.title}
-                href={SERVICE_HREF}
+                href={href}
                 className="service-card"
                 role="menuitem"
               >
@@ -194,7 +266,7 @@ export default function SolutionsMegaMenu({ id }) {
           })}
         </div>
 
-        <Link href={SERVICE_HREF} className="mega-view-all">
+        <Link href={active.categoryHref || SERVICE_HREF} className="mega-view-all">
           <span>View all {active.title} Solutions</span>
           <ArrowRight size={15} aria-hidden="true" />
         </Link>

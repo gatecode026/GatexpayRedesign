@@ -30,13 +30,13 @@
    LEFT COLUMN — all text content
    ════════════════════════════════════════════════════════════════════════════ */
 .cta-content {
-  flex: 0 0 54%;            /* left 54% for content */
-  max-width: 620px;
+  flex: 0 0 auto;
+  max-width: 720px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  padding: 40px 44px;       /* reduced proportionally from 48px */
+  padding: 40px 38px;
   position: relative;
   z-index: 5;
 }
@@ -69,6 +69,18 @@
   max-width: 430px;
 }
 
+.cta-desc a {
+  color: #08B9F2;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.cta-desc a:hover {
+  color: #ffffff;
+}
+
 /* CTA Button --------------------------------------------------------------- */
 .cta-btn {
   display: inline-flex;
@@ -96,6 +108,26 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(2, 132, 199, 0.42);
 }
+.cta-actions-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.cta-btn--secondary {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+  backdrop-filter: blur(8px);
+  justify-content: center;
+}
+.cta-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: #08B9F2;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(8, 185, 242, 0.35);
+}
 .cta-btn:active { transform: translateY(0); }
 
 /* Features row ------------------------------------------------------------- */
@@ -105,7 +137,7 @@
   align-items: center;
   flex-wrap: nowrap;
   gap: 0;
-  margin-top: 32px;      /* increased by ~8-10px (was 24px) */
+  margin-top: 32px;
 }
 
 .cta-feature-group {
@@ -113,6 +145,7 @@
   flex-direction: row;
   align-items: center;
   gap: 0;
+  flex-shrink: 0;
 }
 
 .cta-feature {
@@ -120,29 +153,35 @@
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  padding-inline: 4px;
+  padding-inline: 0;
+  flex-shrink: 0;
 }
 
 .cta-feature-text {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 2px;
+  white-space: nowrap;
 }
 
 .cta-feature-bold {
   font-family: 'Poppins', var(--font-body), sans-serif;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: clamp(12.5px, 0.95vw, 14px);
+  line-height: 1.25;
   color: #FFFFFF;
+  white-space: nowrap;
+  display: block;
 }
 
 .cta-feature-light {
   font-family: 'Poppins', var(--font-body), sans-serif;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: clamp(11.5px, 0.85vw, 13px);
+  line-height: 1.25;
   color: #08B9F2;
+  white-space: nowrap;
+  display: block;
 }
 
 /* Vertical dividers between features --------------------------------------- */
@@ -152,7 +191,7 @@
   background: #E2E8F0;
   opacity: 0.35;
   flex-shrink: 0;
-  margin-inline: 16px;
+  margin-inline: clamp(10px, 1.1vw, 16px);
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -192,26 +231,27 @@
    RESPONSIVE BREAKPOINTS
    ════════════════════════════════════════════════════════════════════════════ */
 
-/* ── Large desktop ≥1280px: give a bit more heading room ── */
+/* ── Large desktop ≥1280px: give generous room for 2-line trust points ── */
 @media (min-width: 1280px) {
-  .cta-content { flex: 0 0 50%; }
+  .cta-content {
+    flex: 0 0 auto;
+    max-width: 780px;
+  }
 }
 
 /* ── Tablet landscape: 1024px – 1279px ── */
 @media (max-width: 1279px) and (min-width: 1024px) {
   .cta-content {
-    flex: 0 0 56%;
-    padding: 34px 38px;
+    flex: 0 0 auto;
+    max-width: 680px;
+    padding: 32px 32px;
   }
   .cta-desc { max-width: 100%; }
 
-  /* The narrower content column here doesn't leave enough room for the
-     features row at its full desktop size — "User-Friendly" was wrapping
-     mid-word. Shrink just enough to keep every label on one line. */
-  .cta-feature { gap: 6px; padding-inline: 0; }
-  .cta-feature svg { width: 22px; height: 22px; }
-  .cta-feature-bold,
-  .cta-feature-light { font-size: 12px; white-space: nowrap; }
+  .cta-feature { gap: 8px; padding-inline: 0; }
+  .cta-feature svg { width: 24px; height: 24px; }
+  .cta-feature-bold { font-size: 12.5px; white-space: nowrap; }
+  .cta-feature-light { font-size: 11.5px; white-space: nowrap; }
   .cta-divider { margin-inline: 10px; }
 }
 
@@ -220,8 +260,9 @@
   .cta-card { min-height: 340px; }
 
   .cta-content {
-    flex: 0 0 58%;
-    padding: 26px 28px;
+    flex: 0 0 auto;
+    max-width: 620px;
+    padding: 24px 24px;
   }
 
   .cta-heading {
@@ -237,10 +278,12 @@
 
   .cta-features { margin-top: 22px; }
 
-  .cta-feature-bold,
-  .cta-feature-light { font-size: 12px; }
+  .cta-feature { gap: 6px; padding-inline: 0; }
+  .cta-feature svg { width: 22px; height: 22px; }
+  .cta-feature-bold { font-size: 11.5px; white-space: nowrap; }
+  .cta-feature-light { font-size: 10.5px; white-space: nowrap; }
 
-  .cta-divider { margin-inline: 10px; }
+  .cta-divider { margin-inline: 8px; }
 
   .cta-illustration-wrap {
     padding: 10px 14px;

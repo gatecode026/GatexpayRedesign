@@ -133,6 +133,18 @@
   color: #64748B;
 }
 
+.services-faq-answer a {
+  color: var(--color-blue, #1a5dc8);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.services-faq-answer a:hover {
+  color: var(--color-blue-mid, #1e6be0);
+}
+
 /* Responsive */
 @media (max-width: 991px) {
   .services-faq-section {

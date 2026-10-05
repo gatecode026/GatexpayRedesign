@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
       if (!res.ok || !data.success) {
         throw new Error(data.error || "Authentication failed");
       }
-      window.location.href = "/admin/dashboard";
+      router.push("/admin/dashboard");
     } catch (err) {
       setErrorMessage(
         err instanceof Error ? err.message : "Invalid credentials"

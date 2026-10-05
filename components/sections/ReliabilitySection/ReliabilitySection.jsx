@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import "./ReliabilitySection.css";
 const CARDS = [
@@ -62,9 +63,9 @@ export default function ReliabilitySection() {
               <div className="rel-card-body">
                 <h3 className="rel-card-title">{card.title}</h3>
                 <p className="rel-card-desc">{card.desc}</p>
-                <a href="/services" className="rel-card-link">
+                <Link href="/services" className="rel-card-link">
                   Explore More <span>›</span>
-                </a>
+                </Link>
               </div>
             </div>
           ))}

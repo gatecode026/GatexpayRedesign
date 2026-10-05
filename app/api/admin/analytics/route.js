@@ -2,8 +2,18 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Enquiry } from "@/models/enquiry.model";
 import { CookieConsent } from "@/models/cookie-consent.model";
-export async function GET() {
+import { authenticateAdminRequest } from "@/lib/auth";
+
+export async function GET(req) {
   try {
+    const auth = await authenticateAdminRequest(req, ["superadmin", "admin"]);
+    if (!auth.authorized) {
+      return NextResponse.json(
+        { success: false, error: auth.error },
+        { status: auth.status }
+      );
+    }
+
     await connectDB();
     const now = new Date();
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -57,8 +67,16 @@ export async function GET() {
       CookieConsent.countDocuments({
         updatedAt: { $gte: fourteenDaysAgo, $lt: sevenDaysAgo },
       }),
-      Enquiry.find().sort({ createdAt: -1 }).limit(100),
-      CookieConsent.find().sort({ updatedAt: -1 }).limit(20),
+      Enquiry.find()
+        .sort({ createdAt: -1 })
+        .limit(100)
+        .select("fullName status serviceCategory createdAt updatedAt")
+        .lean(),
+      CookieConsent.find()
+        .sort({ updatedAt: -1 })
+        .limit(20)
+        .select("consentId decision createdAt updatedAt")
+        .lean(),
     ]);
     // Helper to calculate real percentage trend
     function calculateTrend(current, prior) {

@@ -53,7 +53,7 @@ export default function ArticleTOC({ items }) {
       rafRef.current = requestAnimationFrame(updateProgress);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    updateProgress();
+    rafRef.current = requestAnimationFrame(updateProgress);
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);

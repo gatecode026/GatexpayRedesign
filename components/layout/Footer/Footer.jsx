@@ -3,62 +3,62 @@ import Link from "next/link";
 import Image from "next/image";
 import { Instagram } from "lucide-react";
 import "./Footer.css";
-const toLinks = (labels) => labels.map((label) => ({ label, href: "#" }));
 const CITIZEN_IDENTITY = {
   heading: "Citizen & Identity",
-  links: toLinks([
-    "PAN Card Services",
-    "Aadhaar Services",
-    "E-Governance Services",
-    "Pension & Governance Services",
-  ]),
+  links: [
+    { label: "PAN Card Services", href: "/services/pan-card-services" },
+    { label: "Aadhaar Services", href: "/services/aadhaar-services" },
+    { label: "E-Governance Services", href: "/services/e-governance-services" },
+    { label: "Pension & Governance Services", href: "/services/pension-government-schemes" },
+  ],
 };
 const PAYMENTS_CASH = {
   heading: "Payments & Cash",
-  links: toLinks([
-    "Payment Gateway Integration",
-    "AEPS Services",
-    "Micro ATM Services",
-    "Money Transfer Services",
-  ]),
+  links: [
+    { label: "Payment Gateway Integration", href: "/services/payment-gateway-integration" },
+    { label: "AEPS Services", href: "/services/aeps-services" },
+    { label: "Micro ATM Services", href: "/services/micro-atm-services" },
+    { label: "Money Transfer Services", href: "/services/money-transfer-services" },
+  ],
 };
 const BANKING_FINANCIAL = {
   heading: "Banking & Financial",
-  links: toLinks([
-    "Core Banking Services",
-    "Connected Banking Services",
-    "Banking Tie-Up Services",
-    "Loan & Insurance Services",
-    "Investment Services",
-    "Fintech & Financial Integration",
-  ]),
+  links: [
+    { label: "Core Banking Services", href: "/services/core-banking-services" },
+    { label: "Connected Banking Services", href: "/services/connected-banking-services" },
+    { label: "Banking Tie-Up Services", href: "/services/banking-tie-up-services" },
+    { label: "Loan & Insurance Services", href: "/services/loan-insurance-services" },
+    { label: "Investment Services", href: "/services/investment-services" },
+    { label: "Fintech & Financial Integration", href: "/services/fintech-financial-integration" },
+  ],
 };
 const RETAIL_COMMERCE = {
   heading: "Retail & Commerce",
-  links: toLinks([
-    "Bill Payment Services",
-    "Recharge Services",
-    "Travel Services",
-    "E-Commerce Services",
-    "E-Commerce Solutions",
-    "Shipping & Logistics Integration",
-  ]),
+  links: [
+    { label: "Bill Payment Services", href: "/services/bill-payment-services" },
+    { label: "Recharge Services", href: "/services/recharge-services" },
+    { label: "Travel Services", href: "/services/travel-booking-services" },
+    { label: "E-Commerce Services", href: "/services/e-commerce-services" },
+    { label: "E-Commerce Solutions", href: "/services/e-commerce-solutions" },
+    { label: "Shipping & Logistics Integration", href: "/services/shipping-logistics-integration" },
+  ],
 };
 const ENTERPRISE_TECH = {
   heading: "Enterprise Tech",
-  links: toLinks([
-    "Web & App Development",
-    "IT & Cloud Services",
-    "Business Automation",
-    "Digital & IT Services",
-    "Digital Marketing Services",
-    "Other Value-Added Services",
-  ]),
+  links: [
+    { label: "Web & App Development", href: "/services/web-app-development" },
+    { label: "IT & Cloud Services", href: "/services/it-cloud-services" },
+    { label: "Business Automation", href: "/services/business-automation" },
+    { label: "Digital & IT Services", href: "/services/digital-it-services" },
+    { label: "Digital Marketing Services", href: "/services/digital-marketing-services" },
+    { label: "Other Value-Added Services", href: "/services/value-added-services" },
+  ],
 };
 const COMPANY = {
   heading: "Company",
   links: [
     { label: "About Us", href: "/about" },
+    { label: "All Services", href: "/services" },
     { label: "Blog", href: "/blog" },
     { label: "Contact Us", href: "/contact" },
   ],

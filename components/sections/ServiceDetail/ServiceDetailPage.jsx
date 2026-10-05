@@ -17,8 +17,8 @@ export default function ServiceDetailPage({ detail }) {
         {detail.technology && <ServiceTechnology detail={detail} />}
         <ServiceProcess detail={detail} />
       </RevealOnScroll>
-      <ServicesFAQ items={detail.faqs} idPrefix="sd-faq" size="lg" />
-      <CTASection alignToNavbar />
+      <ServicesFAQ items={detail.faqs} idPrefix="sd-faq" />
+      <CTASection alignToNavbar customCta={detail.finalCta} />
     </div>
   );
 }

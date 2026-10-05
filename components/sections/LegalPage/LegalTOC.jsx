@@ -1,9 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 export default function LegalTOC({ items }) {
   const [activeId, setActiveId] = useState(items[0]?.id ?? "");
-  const activeIdRef = useRef(activeId);
-  activeIdRef.current = activeId;
   useEffect(() => {
     const elements = items
       .map((item) => document.getElementById(item.id))

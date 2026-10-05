@@ -187,7 +187,7 @@ export default function Navbar() {
                       {cat.services.map((service) => (
                         <Link
                           key={service.title}
-                          href="/services"
+                          href={service.href || "/services"}
                           onClick={closeMenu}
                           className="mobile-accordion__service"
                         >

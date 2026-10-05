@@ -96,6 +96,11 @@ const EnquirySchema = new Schema(
     timestamps: true,
   }
 );
+
+EnquirySchema.index({ createdAt: -1 });
+EnquirySchema.index({ status: 1, createdAt: -1 });
+EnquirySchema.index({ source: 1, createdAt: -1 });
+
 export const Enquiry =
   mongoose.models.Enquiry || mongoose.model("Enquiry", EnquirySchema);
 export default Enquiry;

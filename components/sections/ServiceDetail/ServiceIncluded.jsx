@@ -1,5 +1,6 @@
 import {
   BrokenLines,
+  FormattedText,
   SectionTitle,
   ServiceDetailIcon,
 } from "./ServiceDetailParts";
@@ -23,18 +24,20 @@ export default function ServiceIncluded({ detail }) {
               key={item.title}
               className={`sd-feature reveal reveal-delay-${(i % 3) + 1}`}
             >
-              <span className="sd-icon-box">
+              <span className="sd-feature-icon-box">
                 <ServiceDetailIcon
                   name={item.icon}
-                  size={38}
-                  strokeWidth={1.9}
+                  size={24}
+                  strokeWidth={1.8}
                 />
               </span>
               <div className="sd-feature-text">
                 <h3 className="sd-feature-title">
                   <BrokenLines text={item.title} />
                 </h3>
-                <p className="sd-feature-desc">{item.text}</p>
+                <p className="sd-feature-desc">
+                  <FormattedText text={item.text} />
+                </p>
               </div>
             </li>
           ))}

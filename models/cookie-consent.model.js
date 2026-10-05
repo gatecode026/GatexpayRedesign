@@ -48,6 +48,9 @@ const CookieConsentSchema = new Schema(
     timestamps: true,
   }
 );
+
+CookieConsentSchema.index({ createdAt: -1 });
+
 // Prevent recompilation in Next.js development hot-reloading
 export const CookieConsent =
   mongoose.models.CookieConsent ||
