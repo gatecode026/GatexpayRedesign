@@ -18,6 +18,8 @@ export function generateStaticParams() {
   params.push({ slug: "other-value-added-services" });
   params.push({ slug: "value-added" });
   params.push({ slug: "loan-credit-services" });
+  params.push({ slug: "loan-credit-integration" });
+  params.push({ slug: "digital-lending-integration" });
   params.push({ slug: "insurance-services" });
   params.push({ slug: "web-development" });
   params.push({ slug: "app-development" });
@@ -33,6 +35,9 @@ export function generateStaticParams() {
   params.push({ slug: "ecommerce-services" });
   params.push({ slug: "e-commerce-development" });
   params.push({ slug: "online-store-development" });
+  params.push({ slug: "ecommerce-solutions" });
+  params.push({ slug: "cybersecurity" });
+  params.push({ slug: "cybersecurity-services" });
   params.push({ slug: "digital-services" });
   params.push({ slug: "software-development-services" });
   return params;

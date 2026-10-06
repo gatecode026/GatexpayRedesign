@@ -87,8 +87,8 @@ export const SOLUTIONS = [
         href: "/services/micro-atm-services",
       },
       {
-        title: "Loan & Insurance",
-        description: "Personal and business loan support, insurance services.",
+        title: "Loan & Credit Integration",
+        description: "Loan origination, credit scoring, KYC, and repayment systems.",
         icon: UserRound,
         href: "/services/loan-insurance-services",
       },

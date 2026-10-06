@@ -48,6 +48,15 @@ const nextConfig = {
     ],
   },
   devIndicators: false,
+  async redirects() {
+    return [
+      {
+        source: "/contact-us",
+        destination: "/contact",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

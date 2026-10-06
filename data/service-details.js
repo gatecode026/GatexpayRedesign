@@ -922,97 +922,196 @@ export const SERVICE_DETAILS = [
     },
   },
 
-  // 8. Loan & Insurance Services
+  // 8. Loan & Credit Integration Services
   {
     slug: "loan-insurance-services",
     categoryId: "banking-financial",
-    name: "Loan & Insurance Services",
-    metaTitle: "Loan & Insurance Services | Digital Financial Solutions",
-    metaDescription: "Access reliable Loan & Insurance Services with GateXPay. Get financial service assistance, documentation support, and digital solutions designed for individuals and businesses.",
+    name: "Loan & Credit Integration Services",
+    metaTitle: "Digital Lending & Loan Integration Services | GateXPay",
+    metaDescription:
+      "Build secure digital lending workflows with loan origination, KYC, credit assessment, loan management, repayment and integration services from GateXPay.",
     hero: {
-      titleLead: "Simplify Financial Access With",
-      titleAccent: "Reliable Loan & Insurance Solutions",
-      description: "Managing financial requirements often involves understanding multiple options, completing documentation, and choosing suitable solutions based on individual needs. GateXPay provides Loan & Insurance Services that help individuals and businesses access financial service support through guided assistance, secure processes, and technology-enabled solutions. From loan-related support to insurance service assistance, our solutions help simplify financial journeys and improve access to essential financial products.",
+      titleLead: "Loan & Credit",
+      titleAccent: "Integration Services",
+      description:
+        "Build secure digital lending journeys with integrated loan origination, credit assessment, verification, repayment workflows, and scalable financial technology infrastructure.",
       ctaLabel: "Talk to an Expert",
-      secondaryAction: { text: "View Similar Services", href: "/services#banking-financial" },
+      secondaryAction: {
+        text: "View Similar Services",
+        href: "/services",
+      },
       image: {
         src: "/assets/services-detail/loan-insurance/hero-loan-insurance-illustration.png",
         width: 1536,
         height: 1024,
-        alt: "Illustration of loan and insurance financial ecosystem",
+        alt: "Illustration of digital loan and credit integration workflow, verification, and financial systems",
       },
     },
     highlights: [
-      { icon: "hand-coins", title: "Simplified Financial Access", subtitle: "Guided Financial Solutions", text: "Help customers navigate loan and insurance-related processes with proper guidance and support." },
-      { icon: "shield-check", title: "Secure Documentation Process", subtitle: "Protected Customer Information", text: "Handle financial information and required documents through secure and responsible workflows." },
-      { icon: "target", title: "Customer-Focused Solutions", subtitle: "Tailored to Your Requirements", text: "Provide convenient access to financial services designed around customer requirements." },
+      {
+        icon: "shield-check",
+        title: "Secure Lending Workflows",
+        subtitle: "Protect Sensitive Financial Data",
+        text: "Protect Sensitive Financial Data — Support digital lending operations through secure integrations, controlled access, encrypted data exchange, and structured verification workflows.",
+      },
+      {
+        icon: "zap",
+        title: "Faster Loan Processing",
+        subtitle: "Streamline Credit Journeys",
+        text: "Streamline Credit Journeys — Automate application intake, document verification, credit checks, approval workflows, disbursement coordination, and repayment processes.",
+      },
+      {
+        icon: "trending-up",
+        title: "Scalable Credit Infrastructure",
+        subtitle: "Built for Banks, NBFCs & Fintechs",
+        text: "Built for Banks, NBFCs & Fintechs — Create flexible lending infrastructure that supports growing application volumes, multiple loan products, and connected financial systems.",
+      },
     ],
     included: {
-      heading: { line1: "What's Included in", accent: "Loan & Insurance Services" },
+      heading: {
+        line1: "What’s Included in",
+        accent: "Loan & Credit Services",
+      },
       items: [
-        { icon: "hand-coins", title: "Loan Assistance\\nServices", text: "Get support throughout the loan process with assistance related to requirements, documentation, and application workflows." },
-        { icon: "file-text", title: "Personal Loan\\nSupport", text: "Help individuals explore personal financial solutions with proper guidance throughout the application process." },
-        { icon: "briefcase", title: "Business Loan\\nAssistance", text: "Businesses can get assistance with financial service requirements designed to support operational and growth needs." },
-        { icon: "shield-check", title: "Insurance Service\\nAssistance", text: "Get assistance in understanding and accessing insurance-related services through a simplified process." },
-        { icon: "refresh-cw", title: "Insurance Renewal\\nSupport", text: "Support customers with insurance renewal processes, policy info, and related service reminders." },
-        { icon: "code-xml", title: "Financial Service\\nIntegration", text: "Enable smoother financial service experiences by connecting loan and insurance workflows with digital systems." },
+        {
+          icon: "file-text",
+          title: "Loan Origination\nIntegration",
+          text: "Digitize application intake, verification, assessment, approval, and loan onboarding workflows.",
+        },
+        {
+          icon: "bar-chart-3",
+          title: "Credit Assessment\nIntegration",
+          text: "Connect eligible credit bureau and assessment systems for informed lending decisions.",
+        },
+        {
+          icon: "shield-check",
+          title: "KYC & Identity\nVerification",
+          text: "Integrate identity verification and KYC workflows into digital credit journeys.",
+        },
+        {
+          icon: "layout-dashboard",
+          title: "Loan Management\nWorkflows",
+          text: "Manage repayment schedules, account servicing, status updates, and lending operations centrally.",
+        },
+        {
+          icon: "credit-card",
+          title: "Credit Card\nManagement",
+          text: "Support card lifecycle workflows, transaction visibility, limits, controls, and account servicing.",
+        },
+        {
+          icon: "refresh-cw",
+          title: "Repayment & Collection\nIntegration",
+          text: "Automate repayment tracking, payment reminders, reconciliation, and collection workflow integrations.",
+        },
       ],
     },
-    technology: {
-      heading: { line1: "Technology That Powers", accent: "Financial Service Solutions" },
-      slides: [
-        {
-          number: "01",
-          title: "Frontend Development",
-          text: "User-Friendly Financial Interfaces. We create simple and responsive interfaces that help customers access financial services easily.",
-          technologies: [{ name: "React.js", logo: LOGOS.react }, { name: "JavaScript", logo: LOGOS.js }, { name: "HTML5", logo: LOGOS.html5 }, { name: "CSS3", logo: LOGOS.css3 }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Loan and insurance frontend architecture" },
-        },
-        {
-          number: "02",
-          title: "Backend Development",
-          text: "Reliable Systems Behind Financial Workflows. Our backend infrastructure supports secure data processing, service workflows, and platform connectivity.",
-          technologies: [{ name: "Node.js", logo: "/assets/tech-icons/node.svg" }, { name: "Java", logo: "/assets/tech-icons/java.svg" }, { name: "Python", logo: "/assets/tech-icons/python.svg" }, { name: ".NET", logo: "/assets/tech-icons/dotnet.svg" }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Backend infrastructure for loans and insurance" },
-        },
-        {
-          number: "03",
-          title: "API & Integration Technology",
-          text: "Connecting Financial Platforms Seamlessly. Secure integrations help connect financial systems, customer platforms, and service applications.",
-          technologies: [{ name: "REST APIs", logo: "/assets/tech-icons/api.svg" }, { name: "API Gateways", logo: "/assets/tech-icons/gateway.svg" }, { name: "Authentication Systems", logo: "/assets/tech-icons/auth.svg" }, { name: "Data Integration Frameworks", logo: "/assets/tech-icons/integration.svg" }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "API integrations for financial platforms" },
-        },
-        {
-          number: "04",
-          title: "Cloud & Security Infrastructure",
-          text: "Protecting Financial Information With Reliable Technology. Cloud-based infrastructure supports scalability, security, and efficient financial operations.",
-          technologies: [{ name: "Cloud deployment", logo: "/assets/tech-icons/cloud.svg" }, { name: "Data protection", logo: "/assets/tech-icons/security.svg" }, { name: "Encryption systems", logo: "/assets/tech-icons/security.svg" }, { name: "Secure access management", logo: "/assets/tech-icons/access.svg" }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Security and cloud infrastructure" },
-        },
+    showcase: {
+      heading: { line1: "Have Your Integration", accent: "Requirements Ready" },
+      description:
+        "We can help map the technical architecture, integrations, workflows, and implementation requirements for your digital lending ecosystem.",
+      checklist: [
+        { label: "Existing loan or credit product details" },
+        { label: "Current lending or loan management system" },
+        { label: "Available APIs and technical documentation" },
+        { label: "KYC and identity verification requirements" },
+        { label: "Credit bureau or assessment integrations" },
+        { label: "Repayment and collection workflow requirements" },
+        { label: "User roles and access-control requirements" },
+        { label: "Reporting and reconciliation requirements" },
       ],
+      callout: {
+        icon: "workflow",
+        title: "Planning a New Lending Product?",
+        text: "We can help map the technical architecture, integrations, workflows, and implementation requirements for your digital lending ecosystem. Explore our [Web & App Development Services](/services/web-app-development) for custom lending platforms, portals, and dashboards.",
+      },
+      image: {
+        src: "/assets/services-detail/loan-insurance/lending-integration-showcase-graphic.png",
+        width: 1536,
+        height: 1024,
+        alt: "GateXPay digital lending and credit assessment integration architecture diagram showing loan origination, credit scoring, KYC verification, and instant disbursement",
+      },
     },
     process: {
-      heading: { line1: "From Requirement", line2Lead: "to ", accent: "Financial Solution" },
+      heading: {
+        line1: "From Lending Requirements to",
+        accent: "Live Integration",
+      },
       steps: [
-        { icon: "scan-search", title: "Understand", text: "We understand customer needs, financial objectives, service requirements, and documentation needs." },
-        { icon: "workflow", title: "Evaluate", text: "Our team helps identify suitable service options based on requirements and eligibility factors." },
-        { icon: "file-text", title: "Process", text: "We assist with required documentation and support the application process." },
-        { icon: "rocket", title: "Confirm", text: "Customers receive relevant updates throughout the process for better transparency." },
+        {
+          icon: "scan-search",
+          title: "Understand",
+          text: "Define Lending Requirements — We assess your loan products, user journeys, existing systems, integrations, operational workflows, and technical requirements.",
+        },
+        {
+          icon: "workflow",
+          title: "Architect",
+          text: "Design the Lending Workflow — Our team maps application flows, verification steps, credit assessment integrations, data exchange, repayment logic, and system architecture.",
+        },
+        {
+          icon: "code-xml",
+          title: "Integrate",
+          text: "Connect Lending Systems — We integrate lending applications, loan management systems, verification services, credit assessment tools, payments, and supporting platforms.",
+        },
+        {
+          icon: "rocket",
+          title: "Launch",
+          text: "Test, Deploy & Support — We test workflows, integrations, security controls, data synchronization, exception handling, and production readiness before deployment.",
+        },
       ],
     },
     faqs: [
-      { q: "What are Loan & Insurance Services?", a: "Loan & Insurance Services provide assistance related to financial products such as loan solutions and insurance services through guided support and digital processes." },
-      { q: "What type of loan assistance is available?", a: "Support may include loan application guidance, documentation assistance, process understanding, and application-related support." },
-      { q: "Why is insurance assistance useful?", a: "Insurance assistance helps customers understand requirements, complete documentation, and manage insurance-related processes more efficiently." },
-      { q: "Are financial service processes secure?", a: "Yes. Secure workflows, responsible information handling, and controlled access practices help protect customer information." },
-      { q: "Can businesses use Loan & Insurance Services?", a: "Yes. Businesses can access financial service support based on their operational and financial requirements." },
+      {
+        q: "What are Loan & Credit Integration Services?",
+        a: "Loan and credit integration services connect digital applications, loan origination systems, verification tools, credit assessment systems, payment infrastructure, and loan management platforms into a coordinated lending workflow. These integrations help financial institutions reduce manual processes and improve operational visibility across the lending lifecycle.",
+      },
+      {
+        q: "What is a loan origination system?",
+        a: "A loan origination system supports the early stages of lending, including application intake, identity verification, document collection, eligibility assessment, credit evaluation, approval workflows, and customer onboarding. GateXPay can help integrate compatible loan origination systems with other financial and operational platforms.",
+      },
+      {
+        q: "Can GateXPay integrate with an existing loan management system?",
+        a: "Yes, where supported by the existing platform. Integration can be implemented through APIs, webhooks, middleware, secure data exchange, or other supported mechanisms. The exact architecture depends on your current loan management system and technology environment.",
+      },
+      {
+        q: "Can you integrate KYC and credit bureau services?",
+        a: "Yes. GateXPay can help integrate compatible KYC, identity verification, and credit assessment services into a digital lending workflow. Actual lending decisions, eligibility criteria, underwriting rules, and regulatory obligations remain with the relevant regulated financial institution.",
+      },
+      {
+        q: "Can banks and NBFCs use these services?",
+        a: "Yes. The integration architecture can be designed for banks, NBFCs, fintech companies, credit platforms, and other financial service businesses that require connected digital lending workflows. Learn more about our [Banking Technology Services](/services/connected-banking-services).",
+      },
+      {
+        q: "Can repayment workflows be automated?",
+        a: "Yes. Depending on the connected systems, lending platforms can automate repayment schedules, payment reminders, transaction-status updates, reconciliation, and collection-related workflows. For payment connectivity, explore our [Payment Gateway Integration Services](/services/payment-gateway-integration).",
+      },
     ],
     finalCta: {
-      titleLead: "Ready To Simplify Your",
-      titleAccent: "Financial Service Journey?",
-      description: "Access reliable loan and insurance solutions with secure processes and guided financial assistance. GateXPay helps businesses and customers connect with financial services through technology-enabled solutions.",
+      titleLead: "Ready to Modernize Your",
+      titleAccent: "Lending Infrastructure?",
+      description:
+        "Connect loan origination, verification, credit assessment, repayment, and loan management workflows through secure, scalable digital infrastructure.",
       ctaLabel: "Talk to an Expert",
-      ctaHref: "/contact-us",
+      secondaryAction: {
+        text: "Explore Financial Technology Services",
+        href: "/services",
+      },
+      features: [
+        {
+          icon: "shield-check",
+          bold: "Secure Integrations",
+          light: "Controlled financial data exchange",
+        },
+        {
+          icon: "workflow",
+          bold: "Flexible Architecture",
+          light: "Built around your lending workflows",
+        },
+        {
+          icon: "trending-up",
+          bold: "Scalable Systems",
+          light: "Support growing digital operations",
+        },
+      ],
     },
   },
 
@@ -2454,12 +2553,15 @@ export const SERVICE_DETAILS = [
     metaDescription:
       "Build and scale your online store with GateXPay e-commerce development services, payment integration, inventory workflows, shipping and SEO support.",
     hero: {
-      titleLead: "Launch, Manage & Scale Online Stores Designed to",
-      titleAccent: "Sell Better",
+      titleLead: "E-Commerce",
+      titleAccent: "Services",
       description:
         "Launch, manage, and scale your online store with secure payments, optimized storefronts, inventory workflows, marketing, and commerce integrations.",
       ctaLabel: "Talk to an Expert",
-      secondaryAction: { text: "View Similar Services", href: "/services" },
+      secondaryAction: {
+        text: "View Similar Services",
+        href: "/services",
+      },
       image: {
         src: "/assets/services-detail/ecommerce-services/hero-ecommerce-services-illustration.png",
         width: 1536,
@@ -2469,29 +2571,32 @@ export const SERVICE_DETAILS = [
     },
     highlights: [
       {
-        icon: "shopping-cart",
+        icon: "shopping-bag",
         title: "Conversion-Focused Stores",
+        subtitle: "Built to Sell Better",
         text: "Built to Sell Better — Create responsive, easy-to-navigate storefronts designed around product discovery, checkout usability, and a smoother customer buying experience.",
       },
       {
-        icon: "shield-check",
+        icon: "credit-card",
         title: "Secure Payment Integration",
+        subtitle: "Enable Convenient Checkout",
         text: "Enable Convenient Checkout — Connect compatible payment gateways, UPI, cards, net banking, and other supported payment methods through secure checkout workflows.",
       },
       {
         icon: "trending-up",
         title: "Scalable Commerce Setup",
+        subtitle: "Ready for Business Growth",
         text: "Ready for Business Growth — Build commerce infrastructure that can support expanding product catalogs, increasing orders, additional channels, and future integrations.",
       },
     ],
     included: {
       heading: {
-        line1: "What's Included in Our",
+        line1: "What’s Included in Our",
         accent: "E-Commerce Services",
       },
       items: [
         {
-          icon: "globe",
+          icon: "store",
           title: "E-Commerce Website\nDevelopment",
           text: "Build responsive online stores with structured catalogs, checkout flows, and customer-friendly navigation. Explore [Web & App Development](/services/web-app-development).",
         },
@@ -2506,7 +2611,7 @@ export const SERVICE_DETAILS = [
           text: "Integrate compatible payment gateways for secure and convenient online checkout experiences. Learn more with our [Payment Gateway Integration](/services/payment-gateway-integration).",
         },
         {
-          icon: "boxes",
+          icon: "package",
           title: "Product & Inventory\nManagement",
           text: "Organize product catalogs, stock information, variants, pricing, and inventory workflows efficiently.",
         },
@@ -2527,22 +2632,10 @@ export const SERVICE_DETAILS = [
       description:
         "We work with proven e-commerce platforms, payment systems, analytics tools, and integrations to build stores around your operational requirements.",
       checklist: [
-        {
-          label: "E-Commerce Platforms",
-          detail: "Shopify, WooCommerce, Custom Commerce Solutions — Managed storefronts, flexible WordPress-based stores, and custom purpose-built commerce workflows",
-        },
-        {
-          label: "Payments & Checkout",
-          detail: "Payment Gateway APIs, Secure Checkout Workflows — Integrated UPI, cards, net banking, wallets, transaction confirmation, and failure recovery",
-        },
-        {
-          label: "Marketing & Analytics",
-          detail: "Google Analytics, Google Search Console, Google Ads & Meta Ads — Traffic acquisition, buyer journey insights, search indexing, and performance campaigns",
-        },
-        {
-          label: "Operations & Integrations",
-          detail: "Shipping APIs, Inventory Integrations, CRM & Communication Tools — Logistics synchronization, stock automation, customer retention, and multi-channel fulfillment",
-        },
+        { label: "E-Commerce Platforms" },
+        { label: "Payments & Checkout" },
+        { label: "Marketing & Analytics" },
+        { label: "Operations & Integrations" },
       ],
       callout: {
         icon: "shield-check",
@@ -2624,17 +2717,17 @@ export const SERVICE_DETAILS = [
         {
           icon: "shield-check",
           bold: "Secure Checkout",
-          light: " — Integrated payment workflows",
+          light: "Integrated payment workflows",
         },
         {
           icon: "layers",
           bold: "Flexible Platforms",
-          light: " — Shopify, WooCommerce & custom",
+          light: "Shopify, WooCommerce & custom",
         },
         {
           icon: "trending-up",
           bold: "Growth Ready",
-          light: " — Built for expanding operations",
+          light: "Built for expanding operations",
         },
       ],
     },
@@ -2645,91 +2738,188 @@ export const SERVICE_DETAILS = [
     slug: "e-commerce-solutions",
     categoryId: "retail-commerce",
     name: "E-Commerce Solutions",
-    metaTitle: "E-Commerce Solutions | Scalable Digital Commerce Platforms",
-    metaDescription: "Build scalable E-Commerce Solutions with GateXPay. Create powerful online commerce platforms with payment integration, inventory management, automation, and digital growth capabilities.",
+    metaTitle: "E-Commerce Development Services | GateXPay",
+    metaDescription:
+      "Build scalable e-commerce websites with custom development, payment gateway integration, inventory management, mobile commerce and API integrations from GateXPay.",
     hero: {
-      titleLead: "Build Complete Digital Commerce Solutions To",
-      titleAccent: "Scale Your Online Business",
-      description: "Running a successful online business requires more than just a website. Businesses need a complete digital commerce ecosystem where products, customers, payments, inventory, and operations work together seamlessly. GateXPay provides E-Commerce Solutions that help businesses create scalable online commerce platforms with powerful integrations, secure payment capabilities, and efficient business workflows. From launching a new online store to improving existing commerce operations, our solutions help businesses deliver better shopping experiences and build stronger digital sales channels.",
+      titleLead: "E-Commerce",
+      titleAccent: "Solutions",
+      description:
+        "Build secure, scalable online stores with seamless payments, inventory management, order automation, mobile commerce, and customer-focused shopping experiences.",
       ctaLabel: "Talk to an Expert",
-      secondaryAction: { text: "View Similar Services", href: "/services#retail-commerce" },
+      secondaryAction: {
+        text: "View Similar Services",
+        href: "/services",
+      },
       image: {
         src: "/assets/services-detail/ecommerce-solutions/hero-ecommerce-solutions-illustration.png",
         width: 1536,
         height: 1024,
-        alt: "Illustration of end-to-end digital e-commerce business solutions ecosystem",
+        alt: "GateXPay E-Commerce Solutions showing secure online storefront, mobile commerce, checkout and inventory automation",
       },
     },
     highlights: [
-      { icon: "layers", title: "End-to-End Digital Commerce", subtitle: "Complete Selling Ecosystems", text: "Build complete online selling ecosystems that connect customers, products, payments, and business operations." },
-      { icon: "workflow", title: "Seamless Integrations", subtitle: "Connected Business Tools", text: "Connect your commerce platform with essential business tools including payment, inventory, CRM, and logistics systems." },
-      { icon: "trending-up", title: "Growth-Ready Infrastructure", subtitle: "Built for Scalable Expansion", text: "Create flexible digital commerce solutions that support increasing customers, products, and business expansion." },
+      {
+        icon: "shopping-bag",
+        title: "Conversion-Focused Commerce",
+        subtitle: "Built to Turn Visitors Into Customers",
+        text: "Built to Turn Visitors Into Customers — Create intuitive shopping journeys with responsive interfaces, streamlined checkout experiences, and customer-focused e-commerce functionality.",
+      },
+      {
+        icon: "credit-card",
+        title: "Secure Payment Integration",
+        subtitle: "Make Checkout Simple",
+        text: "Make Checkout Simple — Connect compatible payment gateways, UPI, cards, wallets, and transaction workflows through secure digital payment integrations.",
+      },
+      {
+        icon: "trending-up",
+        title: "Built for Growth",
+        subtitle: "Scale Beyond Your First Store",
+        text: "Scale Beyond Your First Store — Develop commerce infrastructure that can support expanding product catalogues, increasing orders, integrations, traffic, and customer demand.",
+      },
     ],
     included: {
-      heading: { line1: "What's Included in", accent: "E-Commerce Solutions" },
+      heading: {
+        line1: "What’s Included in Our",
+        accent: "E-Commerce Solutions",
+      },
       items: [
-        { icon: "shopping-bag", title: "Online Store\\nDevelopment", text: "Build professional online stores that provide smooth browsing, purchasing, and customer interaction experiences." },
-        { icon: "globe", title: "Multi-Channel\\nCommerce", text: "Help businesses manage sales across multiple online channels and marketplaces through connected commerce solutions." },
-        { icon: "credit-card", title: "Payment & Checkout\\nSolutions", text: "Deliver secure and convenient purchase experiences with integrated payment gateway technologies." },
-        { icon: "layers", title: "Inventory & Order\\nManagement", text: "Manage inventory synchronization, order processing workflows, and stock management through connected systems." },
-        { icon: "user-check", title: "Customer Relationship\\nSolutions", text: "Improve customer engagement through personalized digital experiences and connected customer management systems." },
-        { icon: "bar-chart-3", title: "Commerce Analytics\\n& Optimization", text: "Understand customer behaviour and business performance through data-driven sales and conversion insights." },
+        {
+          icon: "store",
+          title: "E-Commerce Website\nDevelopment",
+          text: "Build responsive, SEO-ready online stores designed around your products and customers. Explore our [Web & App Development](/services/web-app-development) services.",
+        },
+        {
+          icon: "code-xml",
+          title: "Custom Commerce\nDevelopment",
+          text: "Develop custom storefronts, business workflows, features, and integrations around operational requirements.",
+        },
+        {
+          icon: "credit-card",
+          title: "Payment Gateway\nIntegration",
+          text: "Connect compatible payment gateways, UPI, wallets, cards, and secure checkout workflows. Explore our [Payment Gateway Integration Services](/services/payment-gateway-integration) for more information.",
+        },
+        {
+          icon: "package",
+          title: "Order & Inventory\nManagement",
+          text: "Synchronize products, stock, orders, fulfilment statuses, and operational data efficiently. Connect with [Shipping & Logistics Integration](/services/shipping-logistics-integration).",
+        },
+        {
+          icon: "smartphone",
+          title: "E-Commerce App\nDevelopment",
+          text: "Create mobile commerce experiences for customers across supported Android and iOS environments.",
+        },
+        {
+          icon: "network",
+          title: "Commerce API\nIntegration",
+          text: "Connect shipping, CRM, ERP, analytics, payment, marketplace, and third-party business systems. Learn more with our [API Integration Services](/services/api-integration).",
+        },
       ],
     },
-    technology: {
-      heading: { line1: "Technology That Powers", accent: "E-Commerce Solutions" },
-      slides: [
-        {
-          number: "01",
-          title: "Frontend Development",
-          text: "Creating Engaging Shopping Experiences. We develop responsive and user-friendly interfaces that help customers browse and purchase products easily.",
-          technologies: [{ name: "React.js", logo: LOGOS.react }, { name: "Next.js", logo: "/assets/tech-icons/nextjs.svg" }, { name: "JavaScript", logo: LOGOS.js }, { name: "HTML5", logo: LOGOS.html5 }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Commerce solution frontend architecture" },
-        },
-        {
-          number: "02",
-          title: "Backend Development",
-          text: "Strong Infrastructure Behind Commerce Operations. Our backend systems support products, orders, customers, integrations, and business workflows.",
-          technologies: [{ name: "Node.js", logo: "/assets/tech-icons/node.svg" }, { name: "Java", logo: "/assets/tech-icons/java.svg" }, { name: "Python", logo: "/assets/tech-icons/python.svg" }, { name: "PHP", logo: "/assets/tech-icons/php.svg" }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Commerce backend operations diagram" },
-        },
-        {
-          number: "03",
-          title: "Commerce Integration Technology",
-          text: "Connecting Your Digital Business Ecosystem. We integrate essential business systems to create smooth operational workflows.",
-          technologies: [{ name: "Payment platforms", logo: "/assets/tech-icons/payment.svg" }, { name: "CRM systems", logo: "/assets/tech-icons/crm.svg" }, { name: "ERP systems", logo: "/assets/tech-icons/erp.svg" }, { name: "Inventory tools", logo: "/assets/tech-icons/inventory.svg" }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Commerce integration ecosystem diagram" },
-        },
-        {
-          number: "04",
-          title: "Cloud & Security Infrastructure",
-          text: "Reliable Foundation For Growing Commerce Platforms. Cloud-based infrastructure supports scalability, performance, and secure online operations.",
-          technologies: [{ name: "Cloud deployment", logo: "/assets/tech-icons/cloud.svg" }, { name: "Database management", logo: "/assets/tech-icons/database.svg" }, { name: "Data security", logo: "/assets/tech-icons/security.svg" }, { name: "Secure authentication", logo: "/assets/tech-icons/auth.svg" }],
-          image: { src: ARCH_IMG, width: 1374, height: 1145, alt: "Cloud security for commerce platforms" },
-        },
+    showcase: {
+      heading: { line1: "Platforms & Tools", accent: "We Master" },
+      description:
+        "We work with modern commerce platforms, development frameworks, payment technologies, cloud services, and analytics tools to build connected e-commerce ecosystems.",
+      checklist: [
+        { label: "Commerce Platforms" },
+        { label: "Frontend & Application" },
+        { label: "Backend & APIs" },
+        { label: "Payments & Integrations" },
+        { label: "Cloud & Analytics" },
       ],
+      callout: {
+        icon: "shield-check",
+        title: "Production-Grade Commerce Stack",
+        text: "We only deploy and integrate verified technologies GateXPay engineering actively supports. Every store is built with secure checkout flows, inventory synchronization, and performance monitoring.",
+      },
+      image: {
+        src: "/assets/services-detail/ecommerce-solutions/ecommerce-solutions-platforms-graphic.png",
+        width: 1536,
+        height: 1024,
+        alt: "GateXPay E-Commerce Solutions architecture showing platforms, frontend, backend APIs, payments, and cloud analytics",
+      },
     },
     process: {
-      heading: { line1: "From Business Idea", line2Lead: "to ", accent: "Digital Commerce Solution" },
+      heading: {
+        line1: "From Commerce Idea to",
+        accent: "Live Store",
+      },
       steps: [
-        { icon: "scan-search", title: "Understand", text: "We understand your business model, products, customers, challenges, and growth objectives." },
-        { icon: "workflow", title: "Strategize", text: "Our team defines platform structure, required features, integrations, and technology approach." },
-        { icon: "code-xml", title: "Build & Integrate", text: "We create the solution and connect required systems including payments, inventory, and business tools." },
-        { icon: "rocket", title: "Launch & Scale", text: "After testing functionality and user experience, we launch and support ongoing improvements." },
+        {
+          icon: "scan-search",
+          title: "Understand",
+          text: "Define Your Commerce Goals — We understand your products, customers, business model, operational workflows, integration requirements, and growth objectives.",
+        },
+        {
+          icon: "workflow",
+          title: "Plan",
+          text: "Architect the Platform — We define storefront structure, user journeys, technology architecture, payment flows, integrations, inventory requirements, and development roadmap.",
+        },
+        {
+          icon: "code-xml",
+          title: "Build",
+          text: "Develop & Integrate — Our team develops the commerce platform and connects payments, inventory, shipping, analytics, and supported third-party systems.",
+        },
+        {
+          icon: "rocket",
+          title: "Launch",
+          text: "Test, Deploy & Optimize — We validate functionality, responsive behaviour, checkout flows, integrations, performance, and tracking before production deployment.",
+        },
       ],
     },
     faqs: [
-      { q: "What are E-Commerce Solutions?", a: "E-Commerce Solutions are complete digital commerce systems that help businesses sell products online, manage operations, process payments, and improve customer experiences." },
-      { q: "How are E-Commerce Solutions different from an online store?", a: "An online store focuses mainly on selling products, while e-commerce solutions include broader capabilities such as integrations, automation, analytics, inventory management, and business workflows." },
-      { q: "Can e-commerce solutions be customized?", a: "Yes. Solutions can be customized according to business size, industry, products, customer requirements, and operational processes." },
-      { q: "Can payment and logistics systems be integrated?", a: "Yes. E-commerce solutions can connect payment gateways, shipping platforms, inventory systems, and other business tools." },
-      { q: "Are e-commerce solutions suitable for growing businesses?", a: "Yes. Scalable e-commerce solutions help businesses expand operations, manage increasing demand, and improve online selling capabilities." },
+      {
+        q: "What are E-Commerce Development Services?",
+        a: "E-commerce development services involve designing, building, integrating, and maintaining digital platforms that enable businesses to sell products or services online. A modern e-commerce solution can include storefront development, product management, checkout, payment gateway integration, inventory management, order processing, shipping integrations, analytics, and customer account functionality.",
+      },
+      {
+        q: "Does GateXPay develop custom e-commerce websites?",
+        a: "Yes. GateXPay can develop customised e-commerce websites based on business requirements, customer journeys, product structures, payment needs, integrations, and operational workflows. Depending on the project, development may involve a commerce platform or a custom technology architecture. Explore our [Web & App Development](/services/web-app-development) services for more details.",
+      },
+      {
+        q: "Do you provide Shopify and WooCommerce development?",
+        a: "GateXPay can work with supported commerce platforms such as Shopify and WooCommerce where they are appropriate for the project. The recommended platform depends on catalogue size, required functionality, integrations, scalability needs, operational complexity, and long-term business goals.",
+      },
+      {
+        q: "Can you integrate payment gateways into an online store?",
+        a: "Yes. We can integrate compatible payment gateways and payment methods based on provider support and business requirements. This can include cards, UPI, wallets, payment status handling, transaction workflows, and supporting checkout integrations. Explore our [Payment Gateway Integration Services](/services/payment-gateway-integration) for more information.",
+      },
+      {
+        q: "Can you integrate inventory and order management systems?",
+        a: "Yes. We can connect compatible inventory, warehouse, ERP, order management, and fulfilment systems using available APIs or other supported integration methods. This helps businesses reduce manual updates and maintain better visibility across products, stock, orders, and fulfilment. Explore our [Shipping & Logistics Integration](/services/shipping-logistics-integration) solutions.",
+      },
+      {
+        q: "Are your e-commerce websites mobile-friendly?",
+        a: "Yes. Responsive design should be a standard requirement for modern e-commerce development. We design storefront experiences to work across commonly used desktop, tablet, and mobile screen sizes while maintaining usable navigation, product discovery, and checkout journeys.",
+      },
     ],
     finalCta: {
-      titleLead: "Ready To Build Your",
-      titleAccent: "Digital Commerce Ecosystem?",
-      description: "Create a powerful online business platform with secure technology, seamless integrations, and scalable commerce solutions. GateXPay helps businesses transform online selling challenges into efficient digital commerce experiences.",
+      titleLead: "Ready to Build an E-Commerce",
+      titleAccent: "Platform That Can Grow?",
+      description:
+        "Launch a secure, scalable commerce experience with integrated payments, order management, inventory, analytics, and customer-focused digital journeys.",
       ctaLabel: "Talk to an Expert",
+      secondaryAction: {
+        text: "Explore Technology Services",
+        href: "/services",
+      },
+      features: [
+        {
+          icon: "shield-check",
+          bold: "Secure Checkout",
+          light: "Integrated payment workflows",
+        },
+        {
+          icon: "workflow",
+          bold: "Flexible Integrations",
+          light: "Connect business systems",
+        },
+        {
+          icon: "layers",
+          bold: "Scalable Commerce",
+          light: "Built for growing operations",
+        },
+      ],
     },
   },
 
@@ -4510,14 +4700,24 @@ export function getServiceDetail(slug) {
   }
   if (
     normalized === "ecommerce-services" ||
+    normalized === "e-commerce-services" ||
     normalized === "ecommerce-development" ||
     normalized === "e-commerce-development" ||
     normalized === "online-store-development"
   ) {
     return SERVICE_DETAILS.find((s) => s.slug === "e-commerce-services");
   }
-  if (normalized === "ecommerce-solutions") {
+  if (
+    normalized === "ecommerce-solutions" ||
+    normalized === "e-commerce-solutions"
+  ) {
     return SERVICE_DETAILS.find((s) => s.slug === "e-commerce-solutions");
+  }
+  if (normalized === "cybersecurity" || normalized === "cybersecurity-services") {
+    return (
+      SERVICE_DETAILS.find((s) => s.slug === "digital-it-services") ||
+      SERVICE_DETAILS.find((s) => s.slug === "it-cloud-services")
+    );
   }
   if (normalized === "aadhaar-services-assistance") {
     return SERVICE_DETAILS.find((s) => s.slug === "aadhaar-services");
@@ -4566,6 +4766,10 @@ export function getServiceDetail(slug) {
   }
   if (
     normalized === "loan-credit-services" ||
+    normalized === "loan-credit-integration" ||
+    normalized === "digital-lending-integration" ||
+    normalized === "digital-lending" ||
+    normalized === "loan-integration" ||
     normalized === "insurance-services" ||
     normalized === "insurance" ||
     normalized === "loan-services"

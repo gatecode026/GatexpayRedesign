@@ -107,9 +107,9 @@ export const SERVICE_CATEGORIES = [
       },
       {
         id: "loan-insurance-services",
-        title: "Loan & Insurance Services",
+        title: "Loan & Credit Integration Services",
         description:
-          "Personal loans, home loans, crop insurance, term plans, and health coverage.",
+          "Build secure digital lending journeys with integrated loan origination, credit assessment, and repayment workflows.",
         badge: "BANK",
         badgeColor: "#046790",
         image: "/assets/services-listing/service-loan-and-insurance.png",
@@ -195,7 +195,7 @@ export const SERVICE_CATEGORIES = [
         id: "ecommerce-solutions",
         title: "E-Commerce Solutions",
         description:
-          "Full-stack e-commerce platforms with payment, inventory, and analytics built in.",
+          "Build secure, scalable online stores with seamless payments, inventory management, order automation, and mobile commerce.",
         badge: "COMMERCE",
         badgeColor: "#64748B",
         image: "/assets/services-listing/service-ecommerce-solutions.png",

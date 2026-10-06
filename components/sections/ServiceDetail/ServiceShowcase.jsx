@@ -33,11 +33,6 @@ export default function ServiceShowcase({ showcase }) {
                     <strong className="sd-showcase-item-label">
                       {item.label}
                     </strong>
-                    {item.detail && (
-                      <span className="sd-showcase-item-detail">
-                        <FormattedText text={item.detail} />
-                      </span>
-                    )}
                   </div>
                 </li>
               ))}

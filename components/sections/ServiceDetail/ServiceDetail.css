@@ -582,7 +582,7 @@
 .sd-showcase-body {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  align-items: center;
+  align-items: start;
   gap: 48px;
 }
 
@@ -611,8 +611,12 @@
 
 .sd-showcase-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 14px;
+}
+
+.sd-showcase-item:has(.sd-showcase-item-detail) {
+  align-items: flex-start;
 }
 
 .sd-check-icon {
@@ -622,8 +626,11 @@
   justify-content: center;
   width: 24px;
   height: 24px;
-  margin-top: 2px;
   color: var(--sd-cyan);
+}
+
+.sd-showcase-item:has(.sd-showcase-item-detail) .sd-check-icon {
+  margin-top: 2px;
 }
 
 .sd-showcase-item-text {
@@ -710,28 +717,33 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: sticky;
+  top: 96px;
+  align-self: start;
 }
 
 .sd-showcase-img-wrap {
   position: relative;
   width: 100%;
-  max-width: 580px;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 16px 36px -12px rgba(2, 132, 199, 0.18), 0 0 24px rgba(0, 192, 253, 0.12);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+  max-width: 600px;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+  transition: transform 0.35s var(--ease-out);
 }
 
 .sd-showcase-img-wrap:hover {
   transform: translateY(-4px);
-  box-shadow: 0 24px 48px -12px rgba(2, 132, 199, 0.24), 0 0 32px rgba(0, 192, 253, 0.18);
+  box-shadow: none;
 }
 
 .sd-showcase-img {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
+  filter: none;
 }
 
 /* ==========================================================================
@@ -772,8 +784,9 @@
   line-height: 74px;
   text-align: center;
   color: #0F172A;
-  max-width: 680px;
+  max-width: 780px;
   margin: 0 auto;
+  text-wrap: balance;
 }
 
 .sd-process-body {
@@ -1129,6 +1142,8 @@
     order: 2;
     max-width: 440px;
     margin: 0 auto;
+    position: static;
+    top: auto;
   }
   .sd-showcase-content {
     order: 1;

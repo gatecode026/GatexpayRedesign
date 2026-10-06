@@ -27,7 +27,7 @@ const BANKING_FINANCIAL = {
     { label: "Core Banking Services", href: "/services/core-banking-services" },
     { label: "Connected Banking Services", href: "/services/connected-banking-services" },
     { label: "Banking Tie-Up Services", href: "/services/banking-tie-up-services" },
-    { label: "Loan & Insurance Services", href: "/services/loan-insurance-services" },
+    { label: "Loan & Credit Integration Services", href: "/services/loan-insurance-services" },
     { label: "Investment Services", href: "/services/investment-services" },
     { label: "Fintech & Financial Integration", href: "/services/fintech-financial-integration" },
   ],
