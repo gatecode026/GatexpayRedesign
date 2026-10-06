@@ -6,9 +6,15 @@ export default function ArticleTOC({ items }) {
   const [progress, setProgress] = useState(0);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const rafRef = useRef(null);
+  const isClickScrollingRef = useRef(false);
+  const scrollEndTimerRef = useRef(null);
+
   // Track active section via IntersectionObserver
   useEffect(() => {
     const observerCallback = (entries) => {
+      // If user clicked a TOC link, do not jump through intermediate sections
+      if (isClickScrollingRef.current) return;
+
       // Find the first intersecting entry from top to bottom
       const visibleEntries = entries.filter((entry) => entry.isIntersecting);
       if (visibleEntries.length > 0) {
@@ -29,6 +35,7 @@ export default function ArticleTOC({ items }) {
     });
     return () => observer.disconnect();
   }, [items]);
+
   // Calculate reading progress based on article content container
   const updateProgress = useCallback(() => {
     const articleContainer = document.getElementById("article-content-body");
@@ -47,22 +54,67 @@ export default function ArticleTOC({ items }) {
     );
     setProgress(Math.round(percentage));
   }, []);
+
   useEffect(() => {
     const onScroll = () => {
+      if (isClickScrollingRef.current) {
+        if (scrollEndTimerRef.current) {
+          clearTimeout(scrollEndTimerRef.current);
+        }
+        scrollEndTimerRef.current = setTimeout(() => {
+          isClickScrollingRef.current = false;
+        }, 150);
+      }
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(updateProgress);
     };
+
+    const handleUserInteraction = () => {
+      if (isClickScrollingRef.current) {
+        isClickScrollingRef.current = false;
+        if (scrollEndTimerRef.current) {
+          clearTimeout(scrollEndTimerRef.current);
+        }
+      }
+    };
+
+    const handleScrollEnd = () => {
+      isClickScrollingRef.current = false;
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scrollend", handleScrollEnd, { passive: true });
+    window.addEventListener("wheel", handleUserInteraction, { passive: true });
+    window.addEventListener("touchmove", handleUserInteraction, { passive: true });
     rafRef.current = requestAnimationFrame(updateProgress);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scrollend", handleScrollEnd);
+      window.removeEventListener("wheel", handleUserInteraction);
+      window.removeEventListener("touchmove", handleUserInteraction);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (scrollEndTimerRef.current) clearTimeout(scrollEndTimerRef.current);
     };
   }, [updateProgress]);
+
   const scrollToSection = (e, id) => {
     e.preventDefault();
     const target = document.getElementById(id);
     if (!target) return;
+
+    // Lock scrollspy immediately to the clicked section
+    isClickScrollingRef.current = true;
+    setActiveId(id);
+    setIsMobileOpen(false);
+
+    if (scrollEndTimerRef.current) {
+      clearTimeout(scrollEndTimerRef.current);
+    }
+    scrollEndTimerRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 1200);
+
     const headerOffset = 100;
     const elementPosition = target.getBoundingClientRect().top;
     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -70,8 +122,6 @@ export default function ArticleTOC({ items }) {
       top: offsetPosition,
       behavior: "smooth",
     });
-    setActiveId(id);
-    setIsMobileOpen(false);
   };
   return (
     <aside className="article-toc-sidebar" aria-label="Table of contents">

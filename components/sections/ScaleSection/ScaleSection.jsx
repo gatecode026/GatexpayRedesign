@@ -47,7 +47,7 @@ export default function ScaleSection() {
   }, []);
   return (
     <section className="scale-section section" id="scale" ref={ref}>
-      <div className="container">
+      <div className="container container--page">
         <h2 className="scale-heading reveal">
           Everything Your Business Needs to Scale
         </h2>

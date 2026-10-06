@@ -297,87 +297,7 @@ export const SERVICE_DETAILS = [
     },
   },
 
-  // 4. Digital Marketing Services
-  {
-    slug: "digital-marketing-services",
-    categoryId: "enterprise-tech",
-    name: "Digital Marketing Services",
-    metaTitle: "Digital Marketing Services | SEO, Ads & Growth Solutions",
-    metaDescription: "Grow your online presence with GateXPay Digital Marketing Services including SEO, social media marketing, paid advertising, content strategy, and analytics-driven solutions.",
-    hero: {
-      titleLead: "Grow Your Online Presence With",
-      titleAccent: "Data-Driven Digital Marketing Strategies",
-      description: "In today's competitive digital landscape, businesses need more than just visibility — they need the right audience, meaningful engagement, and measurable growth. GateXPay helps businesses build stronger digital presence through strategic Digital Marketing Services that combine SEO, content, social media, paid advertising, and performance analytics to generate sustainable results.",
-      ctaLabel: "Talk to an Expert",
-      secondaryAction: { text: "View Similar Services", href: "/services#enterprise-tech" },
-      image: {
-        src: "/assets/services-detail/digital-marketing/hero-digital-marketing-illustration.png",
-        width: 1536,
-        height: 1024,
-        alt: "Illustration of digital marketing campaign optimization, analytics growth charts and multi-channel targeting",
-      },
-    },
-    highlights: [
-      { icon: "target", title: "Precision Targeting", subtitle: "Reach the Right Audience", text: "Reach the right audience by identifying customer intent, market opportunities, and relevant digital channels." },
-      { icon: "trending-up", title: "Know What Works", subtitle: "Meaningful Data Insights", text: "Track campaign performance, audience behaviour, and marketing results through meaningful data insights." },
-      { icon: "rocket", title: "Long-Term Growth", subtitle: "Continuous Brand Optimization", text: "Build stronger brand authority through consistent strategies, valuable content, and continuous optimization." },
-    ],
-    included: {
-      heading: { line1: "What's Included in", accent: "Our Digital Marketing Services" },
-      items: [
-        { icon: "search", title: "SEO & Organic\\nGrowth", text: "Improve search visibility with strategic SEO practices focusing on keyword research, technical SEO, and valuable content." },
-        { icon: "share-2", title: "Social Media\\nMarketing", text: "Build meaningful connections with your audience through engaging content, community interaction, and platform-specific campaigns." },
-        { icon: "mouse-pointer-click", title: "Performance\\nMarketing", text: "Generate measurable results through paid advertising on Google Ads, Meta Ads, and YouTube Ads." },
-        { icon: "file-text", title: "Content\\nMarketing", text: "Create high-quality content that educates, engages, and converts visitors into loyal customers." },
-        { icon: "mail", title: "Email Marketing &\\nCustomer Retention", text: "Develop targeted email campaigns and automated workflows that nurture leads and encourage repeat engagement." },
-        { icon: "bar-chart-3", title: "Analytics &\\nReporting", text: "Measure marketing performance through actionable insights, traffic analysis, and conversion tracking." },
-      ],
-    },
-    showcase: {
-      heading: { line1: "Platforms & Tools", accent: "We Master" },
-      description: "Data-driven marketing powered by reliable technology. We use industry-standard marketing platforms and analytics tools to optimize campaigns and make informed decisions.",
-      checklist: [
-        { label: "Google Ads & Meta Business Suite", detail: "Campaign setup, audience targeting, and budget optimization across Google, Facebook, and Instagram" },
-        { label: "LinkedIn & YouTube Advertising", detail: "B2B professional networking and engaging high-intent video campaigns" },
-        { label: "Google Analytics & Search Console", detail: "Comprehensive traffic analysis, keyword ranking insights, and search performance monitoring" },
-        { label: "Automated Communication & CRM", detail: "Lead nurturing sequences, customer journeys, and automated email workflows" },
-        { label: "Conversion Tracking & Reporting", detail: "End-to-end attribution, audience insights, and regular transparent growth reports" },
-      ],
-      callout: {
-        title: "Data-Driven Strategy",
-        text: "We don't rely on assumptions. Every optimization is backed by verified performance metrics and customer insights.",
-        icon: "bar-chart-3",
-      },
-      image: {
-        src: "/assets/services-detail/digital-marketing/marketing-platforms-graphic.png",
-        width: 1536,
-        height: 1024,
-        alt: "Marketing platforms and analytics graphic",
-      },
-    },
-    process: {
-      heading: { line1: "From Strategy", line2Lead: "to ", accent: "Digital Growth" },
-      steps: [
-        { icon: "scan-search", title: "Understand", text: "We discover your business objectives, target audience, competitors, and growth challenges before creating a strategy." },
-        { icon: "workflow", title: "Strategize", text: "We identify the right channels, content opportunities, campaign priorities, and measurable goals aligned with your business needs." },
-        { icon: "code-xml", title: "Execute & Optimize", text: "SEO improvements, content campaigns, advertising initiatives, and social strategies are implemented and refined." },
-        { icon: "rocket", title: "Measure & Scale", text: "We analyze performance data, identify opportunities, and refine strategies to improve long-term marketing outcomes." },
-      ],
-    },
-    faqs: [
-      { q: "What are Digital Marketing Services?", a: "Digital Marketing Services help businesses promote their products and services online through strategies like SEO, social media marketing, paid advertising, content marketing, and analytics." },
-      { q: "Does GateXPay provide SEO services?", a: "Yes, businesses can use SEO-focused strategies to improve online visibility, search rankings, website performance, and organic growth opportunities." },
-      { q: "Can businesses run paid advertising campaigns with GateXPay?", a: "Yes. We help businesses plan, create, and optimize paid campaigns across platforms such as Google, Meta, YouTube, and other relevant advertising channels." },
-      { q: "Are digital marketing services suitable for startups?", a: "Yes. Digital marketing helps startups establish online visibility, reach potential customers, test growth opportunities, and build brand awareness." },
-      { q: "Why is digital marketing important for businesses?", a: "Digital marketing allows businesses to connect with customers online, measure performance, improve customer engagement, and create scalable growth opportunities." },
-    ],
-    finalCta: {
-      titleLead: "Ready To Grow Your",
-      titleAccent: "Digital Presence?",
-      description: "Build a stronger online presence with marketing strategies designed around your business objectives. From SEO and content to paid campaigns and analytics, GateXPay helps businesses create measurable digital growth opportunities.",
-      ctaLabel: "Talk to an Expert",
-    },
-  },
+
 
 
   // 5. Core Banking Services
@@ -2623,7 +2543,7 @@ export const SERVICE_DETAILS = [
         {
           icon: "bar-chart-3",
           title: "E-Commerce SEO\n& Growth",
-          text: "Improve product visibility with technical SEO, optimized content, analytics, and growth-focused strategies. Explore our [Digital Marketing Services](/services/digital-marketing-services).",
+          text: "Improve product visibility with technical SEO, optimized content, analytics, and growth-focused strategies.",
         },
       ],
     },
@@ -2700,7 +2620,7 @@ export const SERVICE_DETAILS = [
       },
       {
         q: "Do you provide SEO for e-commerce stores?",
-        a: "Yes. E-commerce SEO can include technical optimization, category and product-page structure, metadata, internal linking, indexation review, content optimization, and performance measurement. For broader acquisition strategy, explore our [Digital Marketing Services](/services/digital-marketing-services).",
+        a: "Yes. E-commerce SEO can include technical optimization, category and product-page structure, metadata, internal linking, indexation review, content optimization, and performance measurement. For broader acquisition strategy, connect with our digital growth team.",
       },
     ],
     finalCta: {
@@ -3970,12 +3890,12 @@ export const SERVICE_DETAILS = [
         {
           icon: "trending-up",
           title: "SEO & Organic Growth",
-          text: "Improve search visibility through technical SEO, content optimization, and structured website improvements. Explore our [Digital Marketing Services](/services/digital-marketing-services).",
+          text: "Improve search visibility through technical SEO, content optimization, and structured website improvements.",
         },
         {
           icon: "megaphone",
           title: "Digital Marketing",
-          text: "Reach relevant audiences through search, social media, content, and performance marketing strategies. Learn more in our [Digital Marketing Services](/services/digital-marketing-services).",
+          text: "Reach relevant audiences through search, social media, content, and performance marketing strategies.",
         },
         {
           icon: "layers",
@@ -4066,7 +3986,7 @@ export const SERVICE_DETAILS = [
       },
       {
         q: "Does GateXPay provide SEO and digital marketing services?",
-        a: "Yes. Services may include technical SEO, on-page optimization, content strategy, search marketing, social media marketing, paid advertising, analytics, and campaign optimization. Explore our [Digital Marketing Services](/services/digital-marketing-services) for dedicated marketing support.",
+        a: "Yes. Services may include technical SEO, on-page optimization, content strategy, search marketing, social media marketing, paid advertising, analytics, and campaign optimization designed around your business growth goals.",
       },
       {
         q: "Can you develop mobile applications for Android and iOS?",

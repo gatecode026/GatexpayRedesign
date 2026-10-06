@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { Headset, Users, AlertCircle } from "lucide-react";
 import Container from "@/components/common/Container/Container";
 import { SOLUTIONS } from "@/components/layout/Navbar/SolutionsMegaMenu";
+import FloatingDropdown from "@/components/common/FloatingDropdown/FloatingDropdown";
 import "./ContactIntro.css";
 
 const SERVICE_CATEGORIES = [...SOLUTIONS.map((cat) => cat.title), "Other"];
@@ -21,6 +22,7 @@ const STATS = [
 export default function ContactIntro() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [errors, setErrors] = useState({});
   const formRef = useRef(null);
@@ -66,7 +68,7 @@ export default function ContactIntro() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
+    if (hasSubmitted) {
       const error = validateField(name, value);
       setErrors((prev) => {
         const next = { ...prev };
@@ -82,17 +84,22 @@ export default function ContactIntro() {
   };
 
   const handleBlur = (e) => {
+    if (!hasSubmitted) return;
     const { name, value } = e.target;
     if (["fullName", "phone", "email", "serviceCategory"].includes(name)) {
       const error = validateField(name, value);
-      if (error) {
-        setErrors((prev) => ({ ...prev, [name]: error }));
-      }
+      setErrors((prev) => {
+        const next = { ...prev };
+        if (error) next[name] = error;
+        else delete next[name];
+        return next;
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setHasSubmitted(true);
     setGeneralError("");
 
     // Validate all required fields inline
@@ -273,19 +280,25 @@ export default function ContactIntro() {
                 >
                   <div className="contact-intro-form-row">
                     <div className="contact-form-field">
-                      <input
-                        type="text"
-                        name="fullName"
-                        placeholder="Full Name *"
-                        value={formData.fullName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        autoComplete="name"
-                        className={errors.fullName ? "is-invalid" : ""}
-                        aria-invalid={Boolean(errors.fullName)}
-                        aria-describedby={errors.fullName ? "error-fullName" : undefined}
-                      />
-                      {errors.fullName && (
+                      <div className={`floating-field ${formData.fullName ? "has-value" : ""}`}>
+                        <input
+                          id="intro-fullName"
+                          type="text"
+                          name="fullName"
+                          placeholder=" "
+                          value={formData.fullName}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          autoComplete="name"
+                          className={hasSubmitted && errors.fullName ? "is-invalid" : ""}
+                          aria-invalid={Boolean(hasSubmitted && errors.fullName)}
+                          aria-describedby={hasSubmitted && errors.fullName ? "error-fullName" : undefined}
+                        />
+                        <label htmlFor="intro-fullName">
+                          Full Name <span className="floating-req">*</span>
+                        </label>
+                      </div>
+                      {hasSubmitted && errors.fullName && (
                         <span id="error-fullName" className="contact-field-error" role="alert">
                           <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
                           {errors.fullName}
@@ -294,32 +307,40 @@ export default function ContactIntro() {
                     </div>
 
                     <div className="contact-form-field">
-                      <input
-                        type="text"
-                        name="companyName"
-                        placeholder="Company Name"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                        autoComplete="organization"
-                      />
+                      <div className={`floating-field ${formData.companyName ? "has-value" : ""}`}>
+                        <input
+                          id="intro-companyName"
+                          type="text"
+                          name="companyName"
+                          placeholder=" "
+                          value={formData.companyName}
+                          onChange={handleChange}
+                          autoComplete="organization"
+                        />
+                        <label htmlFor="intro-companyName">Company Name</label>
+                      </div>
                     </div>
                   </div>
 
                   <div className="contact-intro-form-row">
                     <div className="contact-form-field">
-                      <input
-                        type="email"
-                        name="email"
-                        placeholder="Email Address"
-                        value={formData.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        autoComplete="email"
-                        className={errors.email ? "is-invalid" : ""}
-                        aria-invalid={Boolean(errors.email)}
-                        aria-describedby={errors.email ? "error-email" : undefined}
-                      />
-                      {errors.email && (
+                      <div className={`floating-field ${formData.email ? "has-value" : ""}`}>
+                        <input
+                          id="intro-email"
+                          type="email"
+                          name="email"
+                          placeholder=" "
+                          value={formData.email}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          autoComplete="email"
+                          className={hasSubmitted && errors.email ? "is-invalid" : ""}
+                          aria-invalid={Boolean(hasSubmitted && errors.email)}
+                          aria-describedby={hasSubmitted && errors.email ? "error-email" : undefined}
+                        />
+                        <label htmlFor="intro-email">Email Address</label>
+                      </div>
+                      {hasSubmitted && errors.email && (
                         <span id="error-email" className="contact-field-error" role="alert">
                           <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
                           {errors.email}
@@ -328,19 +349,25 @@ export default function ContactIntro() {
                     </div>
 
                     <div className="contact-form-field">
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="Phone Number *"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        autoComplete="tel"
-                        className={errors.phone ? "is-invalid" : ""}
-                        aria-invalid={Boolean(errors.phone)}
-                        aria-describedby={errors.phone ? "error-phone" : undefined}
-                      />
-                      {errors.phone && (
+                      <div className={`floating-field ${formData.phone ? "has-value" : ""}`}>
+                        <input
+                          id="intro-phone"
+                          type="tel"
+                          name="phone"
+                          placeholder=" "
+                          value={formData.phone}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          autoComplete="tel"
+                          className={hasSubmitted && errors.phone ? "is-invalid" : ""}
+                          aria-invalid={Boolean(hasSubmitted && errors.phone)}
+                          aria-describedby={hasSubmitted && errors.phone ? "error-phone" : undefined}
+                        />
+                        <label htmlFor="intro-phone">
+                          Phone Number <span className="floating-req">*</span>
+                        </label>
+                      </div>
+                      {hasSubmitted && errors.phone && (
                         <span id="error-phone" className="contact-field-error" role="alert">
                           <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
                           {errors.phone}
@@ -350,28 +377,35 @@ export default function ContactIntro() {
                   </div>
 
                   <div className="contact-form-field">
-                    <div className="contact-intro-select-wrap">
-                      <select
-                        name="serviceCategory"
-                        value={formData.serviceCategory}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        aria-label="Service Category"
-                        className={errors.serviceCategory ? "is-invalid" : ""}
-                        aria-invalid={Boolean(errors.serviceCategory)}
-                        aria-describedby={errors.serviceCategory ? "error-serviceCategory" : undefined}
-                      >
-                        <option value="" disabled>
-                          Service Category *
-                        </option>
-                        {SERVICE_CATEGORIES.map((cat) => (
-                          <option key={cat} value={cat}>
-                            {cat}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    {errors.serviceCategory && (
+                    <FloatingDropdown
+                      id="intro-serviceCategory"
+                      name="serviceCategory"
+                      label="Service Category"
+                      required
+                      value={formData.serviceCategory}
+                      options={SERVICE_CATEGORIES}
+                      onChange={(name, val) => {
+                        setFormData((prev) => ({ ...prev, [name]: val }));
+                        if (hasSubmitted) {
+                          const err = validateField(name, val);
+                          setErrors((prev) => {
+                            const next = { ...prev };
+                            if (!err) delete next[name];
+                            else next[name] = err;
+                            return next;
+                          });
+                        }
+                      }}
+                      onBlur={(name, val) => {
+                        if (hasSubmitted) {
+                          const err = validateField(name, val);
+                          if (err) setErrors((prev) => ({ ...prev, [name]: err }));
+                        }
+                      }}
+                      error={errors.serviceCategory}
+                      hasSubmitted={hasSubmitted}
+                    />
+                    {hasSubmitted && errors.serviceCategory && (
                       <span id="error-serviceCategory" className="contact-field-error" role="alert">
                         <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
                         {errors.serviceCategory}
@@ -380,33 +414,31 @@ export default function ContactIntro() {
                   </div>
 
                   <div className="contact-form-field">
-                    <div className="contact-intro-select-wrap">
-                      <select
-                        name="timeline"
-                        value={formData.timeline}
-                        onChange={handleChange}
-                        aria-label="Project Timeline"
-                      >
-                        <option value="" disabled>
-                          Project Timeline
-                        </option>
-                        {TIMELINES.map((t) => (
-                          <option key={t} value={t}>
-                            {t}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FloatingDropdown
+                      id="intro-timeline"
+                      name="timeline"
+                      label="Project Timeline"
+                      value={formData.timeline}
+                      options={TIMELINES}
+                      onChange={(name, val) => {
+                        setFormData((prev) => ({ ...prev, [name]: val }));
+                      }}
+                      hasSubmitted={hasSubmitted}
+                    />
                   </div>
 
                   <div className="contact-form-field">
-                    <textarea
-                      name="message"
-                      placeholder="Tell us about your requirements"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows={4}
-                    />
+                    <div className={`floating-field ${formData.message ? "has-value" : ""}`}>
+                      <textarea
+                        id="intro-message"
+                        name="message"
+                        placeholder=" "
+                        value={formData.message}
+                        onChange={handleChange}
+                        rows={4}
+                      />
+                      <label htmlFor="intro-message">Tell us about your requirements</label>
+                    </div>
                   </div>
 
                   <input

@@ -45,10 +45,17 @@
 .cta-heading {
   font-family: 'Source Serif Pro', var(--font-heading), Georgia, serif;
   font-weight: 700;
-  font-size: clamp(22px, 2.7vw, 40px);
-  line-height: 1.32;
+  font-size: clamp(28px, 3.8vw, 54px);
+  line-height: 1.25;
   color: #FFFFFF;
   margin: 0 0 18px;      /* increased by 10px (was 8px) */
+}
+
+@media (min-width: 1024px) {
+  .cta-heading {
+    font-size: 54px;
+    line-height: 1.2;
+  }
 }
 
 /* Cyan line — must always sit on ONE line */
@@ -101,12 +108,12 @@
   white-space: nowrap;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  transition: background 180ms ease;
 }
 .cta-btn:hover {
   background: #0369a1;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.42);
+  transform: none;
+  box-shadow: none !important;
 }
 .cta-actions-wrap {
   display: flex;

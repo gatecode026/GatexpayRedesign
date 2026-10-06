@@ -1,6 +1,16 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+function getBreadcrumbDisplayTitle(rawTitle) {
+  if (!rawTitle) return "";
+  const match = rawTitle.match(/^(.*?licensing)(?::.*)?$/i);
+  if (match) {
+    return `${match[1]}...`;
+  }
+  return rawTitle;
+}
+
 export default function ArticleHero({ image, title }) {
+  const displayTitle = getBreadcrumbDisplayTitle(title);
   return (
     <div
       className="article-hero"
@@ -31,7 +41,7 @@ export default function ArticleHero({ image, title }) {
             aria-current="page"
             title={title}
           >
-            {title}
+            {displayTitle}
           </span>
         </nav>
       </div>

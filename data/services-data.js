@@ -1,9 +1,9 @@
 export const POPULAR_TAGS = [
   "Payment Gateway",
-  "Custom Web App",
   "AEPS",
-  "API Integration",
-  "eKYC",
+  "PAN Card",
+  "Money Transfer",
+  "Micro ATM",
 ];
 export const SERVICE_CATEGORIES = [
   {
@@ -321,16 +321,7 @@ export const SERVICE_CATEGORIES = [
         image: "/assets/services-listing/service-digital-it-services.png",
         href: "/services/digital-it-services",
       },
-      {
-        id: "digital-marketing-services",
-        title: "Digital Marketing Services",
-        description:
-          "SEO, paid campaigns, social media, and content strategies to grow your brand.",
-        badge: "ENTERPRISE",
-        badgeColor: "#0284C7",
-        image: "/assets/services-listing/service-digital-marketing.png",
-        href: "/services/digital-marketing-services",
-      },
+
       {
         id: "value-added-services",
         title: "Value-Added Services",

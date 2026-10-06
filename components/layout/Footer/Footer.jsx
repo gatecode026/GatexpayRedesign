@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Instagram } from "lucide-react";
 import "./Footer.css";
 const CITIZEN_IDENTITY = {
   heading: "Citizen & Identity",
@@ -50,7 +49,6 @@ const ENTERPRISE_TECH = {
     { label: "IT & Cloud Services", href: "/services/it-cloud-services" },
     { label: "Business Automation", href: "/services/business-automation" },
     { label: "Digital & IT Services", href: "/services/digital-it-services" },
-    { label: "Digital Marketing Services", href: "/services/digital-marketing-services" },
     { label: "Other Value-Added Services", href: "/services/value-added-services" },
   ],
 };
@@ -90,7 +88,7 @@ const FOOTER_COLUMNS = [
 const SOCIAL_LINKS = [
   { label: "X", icon: "/assets/images/icon-x.svg" },
   { label: "LinkedIn", icon: "/assets/images/icon-linkedin.svg" },
-  { label: "Instagram", icon: null },
+  { label: "Instagram", icon: "/assets/images/icon-instagram.svg" },
   { label: "Facebook", icon: "/assets/images/icon-facebook.svg" },
 ];
 export default function Footer() {
@@ -226,17 +224,13 @@ export default function Footer() {
                   aria-label={social.label}
                   className="footer-social-icon"
                 >
-                  {social.icon ? (
-                    <Image
-                      src={social.icon}
-                      alt=""
-                      width={18}
-                      height={18}
-                      aria-hidden="true"
-                    />
-                  ) : (
-                    <Instagram size={18} strokeWidth={2} aria-hidden="true" />
-                  )}
+                  <Image
+                    src={social.icon}
+                    alt=""
+                    width={18}
+                    height={18}
+                    aria-hidden="true"
+                  />
                 </a>
               ))}
             </div>

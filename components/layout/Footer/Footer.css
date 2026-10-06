@@ -245,17 +245,19 @@ a.footer-contact-item:hover { color: #00C0FD; }
   justify-content: center;
   color: #ffffff;
   opacity: 0.9;
-  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .footer-social-icon:hover {
   opacity: 1;
-  color: #00C0FD;
   transform: translateY(-2px);
 }
 .footer-social-icon img {
   opacity: 0.9;
   filter: brightness(0) invert(1);
-  transition: filter 0.2s ease;
+  transition: opacity 0.2s ease;
+}
+.footer-social-icon:hover img {
+  opacity: 1;
 }
 
 /* ── Huge wordmark ─────────────────────────────────────────────────────── */

@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { X, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { SOLUTIONS } from "@/components/layout/Navbar/SolutionsMegaMenu";
+import FloatingDropdown from "@/components/common/FloatingDropdown/FloatingDropdown";
 import "./ContactModal.css";
 
 const SERVICE_CATEGORIES = [...SOLUTIONS.map((cat) => cat.title), "Other"];
@@ -17,10 +18,10 @@ const COUNTRY_CODES = [
 export default function ContactModal({ isOpen, onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [generalError, setGeneralError] = useState("");
   const [errors, setErrors] = useState({});
   const dialogRef = useRef(null);
-  const firstFieldRef = useRef(null);
   const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -35,6 +36,7 @@ export default function ContactModal({ isOpen, onClose }) {
   const handleClose = useCallback(() => {
     setSubmitted(false);
     setIsSubmitting(false);
+    setHasSubmitted(false);
     setGeneralError("");
     setErrors({});
     setFormData({
@@ -51,7 +53,6 @@ export default function ContactModal({ isOpen, onClose }) {
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = "hidden";
-    firstFieldRef.current?.focus();
     const handleKeyDown = (e) => {
       if (e.key === "Escape") handleClose();
     };
@@ -94,7 +95,7 @@ export default function ContactModal({ isOpen, onClose }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
+    if (hasSubmitted) {
       const error = validateField(name, value);
       setErrors((prev) => {
         const next = { ...prev };
@@ -107,17 +108,22 @@ export default function ContactModal({ isOpen, onClose }) {
   };
 
   const handleBlur = (e) => {
+    if (!hasSubmitted) return;
     const { name, value } = e.target;
     if (["fullName", "serviceCategory", "mobileNumber"].includes(name)) {
       const error = validateField(name, value);
-      if (error) {
-        setErrors((prev) => ({ ...prev, [name]: error }));
-      }
+      setErrors((prev) => {
+        const next = { ...prev };
+        if (error) next[name] = error;
+        else delete next[name];
+        return next;
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setHasSubmitted(true);
     setGeneralError("");
 
     const newErrors = {};
@@ -206,14 +212,7 @@ export default function ContactModal({ isOpen, onClose }) {
         aria-labelledby="contact-modal-title"
         ref={dialogRef}
       >
-        <button
-          type="button"
-          className="contact-modal-close"
-          aria-label="Close"
-          onClick={handleClose}
-        >
-          <X size={18} />
-        </button>
+
 
         {submitted ? (
           <div className="contact-modal-success">
@@ -249,20 +248,25 @@ export default function ContactModal({ isOpen, onClose }) {
               noValidate
             >
               <div className="contact-modal-field">
-                <input
-                  ref={firstFieldRef}
-                  type="text"
-                  name="fullName"
-                  placeholder="Full Name *"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  autoComplete="name"
-                  className={errors.fullName ? "is-invalid" : ""}
-                  aria-invalid={Boolean(errors.fullName)}
-                  aria-describedby={errors.fullName ? "modal-err-fullName" : undefined}
-                />
-                {errors.fullName && (
+                <div className={`floating-field ${formData.fullName ? "has-value" : ""}`}>
+                  <input
+                    id="modal-fullName"
+                    type="text"
+                    name="fullName"
+                    placeholder=" "
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    autoComplete="name"
+                    className={hasSubmitted && errors.fullName ? "is-invalid" : ""}
+                    aria-invalid={Boolean(hasSubmitted && errors.fullName)}
+                    aria-describedby={hasSubmitted && errors.fullName ? "modal-err-fullName" : undefined}
+                  />
+                  <label htmlFor="modal-fullName">
+                    Full Name <span className="floating-req">*</span>
+                  </label>
+                </div>
+                {hasSubmitted && errors.fullName && (
                   <span id="modal-err-fullName" className="contact-modal-field-error" role="alert">
                     <AlertCircle size={12} strokeWidth={2} aria-hidden="true" />
                     {errors.fullName}
@@ -271,28 +275,35 @@ export default function ContactModal({ isOpen, onClose }) {
               </div>
 
               <div className="contact-modal-field">
-                <div className="contact-modal-select-wrap">
-                  <select
-                    name="serviceCategory"
-                    value={formData.serviceCategory}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    aria-label="Service Category"
-                    className={errors.serviceCategory ? "is-invalid" : ""}
-                    aria-invalid={Boolean(errors.serviceCategory)}
-                    aria-describedby={errors.serviceCategory ? "modal-err-serviceCategory" : undefined}
-                  >
-                    <option value="" disabled>
-                      Service Category *
-                    </option>
-                    {SERVICE_CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {errors.serviceCategory && (
+                <FloatingDropdown
+                  id="modal-serviceCategory"
+                  name="serviceCategory"
+                  label="Service Category"
+                  required
+                  value={formData.serviceCategory}
+                  options={SERVICE_CATEGORIES}
+                  onChange={(name, val) => {
+                    setFormData((prev) => ({ ...prev, [name]: val }));
+                    if (hasSubmitted) {
+                      const err = validateField(name, val);
+                      setErrors((prev) => {
+                        const next = { ...prev };
+                        if (!err) delete next[name];
+                        else next[name] = err;
+                        return next;
+                      });
+                    }
+                  }}
+                  onBlur={(name, val) => {
+                    if (hasSubmitted) {
+                      const err = validateField(name, val);
+                      if (err) setErrors((prev) => ({ ...prev, [name]: err }));
+                    }
+                  }}
+                  error={errors.serviceCategory}
+                  hasSubmitted={hasSubmitted}
+                />
+                {hasSubmitted && errors.serviceCategory && (
                   <span id="modal-err-serviceCategory" className="contact-modal-field-error" role="alert">
                     <AlertCircle size={12} strokeWidth={2} aria-hidden="true" />
                     {errors.serviceCategory}
@@ -301,49 +312,55 @@ export default function ContactModal({ isOpen, onClose }) {
               </div>
 
               <div className="contact-modal-field">
-                <input
-                  type="text"
-                  name="companyName"
-                  placeholder="Company Name"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  autoComplete="organization"
-                />
+                <div className={`floating-field ${formData.companyName ? "has-value" : ""}`}>
+                  <input
+                    id="modal-companyName"
+                    type="text"
+                    name="companyName"
+                    placeholder=" "
+                    value={formData.companyName}
+                    onChange={handleChange}
+                    autoComplete="organization"
+                  />
+                  <label htmlFor="modal-companyName">Company Name</label>
+                </div>
               </div>
 
               <div className="contact-modal-field">
                 <div className="contact-modal-phone-row">
                   <div className="contact-modal-code-field">
-                    <label htmlFor="contact-modal-code">Code</label>
-                    <div className="contact-modal-select-wrap">
-                      <select
-                        id="contact-modal-code"
-                        name="countryCode"
-                        value={formData.countryCode}
-                        onChange={handleChange}
-                      >
-                        {COUNTRY_CODES.map((c) => (
-                          <option key={c.value} value={c.value}>
-                            {c.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <FloatingDropdown
+                      id="contact-modal-code"
+                      name="countryCode"
+                      label="Code"
+                      value={formData.countryCode}
+                      options={COUNTRY_CODES}
+                      onChange={(name, val) => {
+                        setFormData((prev) => ({ ...prev, [name]: val }));
+                      }}
+                      hasSubmitted={hasSubmitted}
+                    />
                   </div>
-                  <input
-                    type="tel"
-                    name="mobileNumber"
-                    placeholder="Mobile Number *"
-                    value={formData.mobileNumber}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    autoComplete="tel-national"
-                    className={errors.mobileNumber ? "is-invalid" : ""}
-                    aria-invalid={Boolean(errors.mobileNumber)}
-                    aria-describedby={errors.mobileNumber ? "modal-err-phone" : undefined}
-                  />
+                  <div className={`floating-field ${formData.mobileNumber ? "has-value" : ""}`} style={{ flex: 1 }}>
+                    <input
+                      id="modal-mobileNumber"
+                      type="tel"
+                      name="mobileNumber"
+                      placeholder=" "
+                      value={formData.mobileNumber}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      autoComplete="tel-national"
+                      className={hasSubmitted && errors.mobileNumber ? "is-invalid" : ""}
+                      aria-invalid={Boolean(hasSubmitted && errors.mobileNumber)}
+                      aria-describedby={hasSubmitted && errors.mobileNumber ? "modal-err-phone" : undefined}
+                    />
+                    <label htmlFor="modal-mobileNumber">
+                      Mobile Number <span className="floating-req">*</span>
+                    </label>
+                  </div>
                 </div>
-                {errors.mobileNumber && (
+                {hasSubmitted && errors.mobileNumber && (
                   <span id="modal-err-phone" className="contact-modal-field-error" role="alert">
                     <AlertCircle size={12} strokeWidth={2} aria-hidden="true" />
                     {errors.mobileNumber}

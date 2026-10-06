@@ -392,41 +392,43 @@ export default function IndustrySection() {
   };
   return (
     <section className="industry-section section" id="industries" ref={ref}>
-      <div className="container">
-        {/* Heading */}
-        <h2 className="industry-heading reveal">
-          Infrastructure Built for Your Industry
-        </h2>
-      </div>
-
       {/* Sentinel to toggle sticky state when top hits navbar */}
       <div ref={sentinelRef} className="industry-sticky-sentinel" />
 
-      {/* Sticky Tabs Navbar — sticks below main navbar, heading label hides when sticky */}
+      {/* Sticky Header + Tabs Bar — heading stays visible in sticky mode (Image 3), tabs match Image 2 & 3 */}
       <div
         className={`industry-tabs-sticky-wrap ${isSticky ? "is-sticky" : ""}`}
       >
-        <div className="container">
+        <div className="container container--page">
+          <h2 className="industry-heading reveal">
+            Infrastructure Built for Your Industry
+          </h2>
           <nav className="industry-tabs" aria-label="Industries We Offer">
             <span className="industry-tabs-label">Industries We Offer:</span>
             <div className="industry-tabs-scroll" ref={tabsScrollRef}>
-              {STACK_KEYS.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  aria-current={active === tab ? "true" : undefined}
-                  className={`industry-tab ${active === tab ? "active" : ""}`}
-                  onClick={() => handleTabClick(tab)}
-                >
-                  {tab}
-                </button>
+              {STACK_KEYS.map((tab, idx) => (
+                <div key={tab} className="industry-tab-item">
+                  {idx > 0 && (
+                    <span className="industry-tab-divider" aria-hidden="true">
+                      |
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    aria-current={active === tab ? "true" : undefined}
+                    className={`industry-tab ${active === tab ? "active" : ""}`}
+                    onClick={() => handleTabClick(tab)}
+                  >
+                    <span className="industry-tab-text">{tab}</span>
+                  </button>
+                </div>
               ))}
             </div>
           </nav>
         </div>
       </div>
 
-      <div className="container">
+      <div className="container container--page">
         {reducedMotion ? (
           <div className="industry-stack-static">
             {STACK_KEYS.map((key) => (

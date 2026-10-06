@@ -1,0 +1,240 @@
+/* ==========================================================================
+   GateXPay – Custom Floating Dropdown (Matched to Brand Button Color)
+   ========================================================================== */
+
+.floating-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.floating-dropdown-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-heading, #0F172A);
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  transition: border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.2s ease;
+}
+
+/* Specific heights when used inside contact intro vs modal */
+.contact-intro-form .floating-dropdown-trigger {
+  height: 50px;
+}
+.contact-intro-form .floating-dropdown-value {
+  line-height: 48px;
+}
+.contact-modal-form .floating-dropdown-trigger {
+  height: 44px;
+}
+.contact-modal-form .floating-dropdown-value {
+  line-height: 42px;
+}
+
+/* User Hover Highlight on Dropdown Trigger - Matches Button Color */
+.floating-dropdown:hover .floating-dropdown-trigger {
+  border-color: var(--color-blue, #1a5dc8);
+  box-shadow: none;
+}
+
+/* Open / Focused State - Matches Button Color (Border color only, no shadow) */
+.floating-dropdown.is-open .floating-dropdown-trigger,
+.floating-dropdown-trigger:focus-visible {
+  border-color: var(--color-blue, #1a5dc8);
+  box-shadow: none;
+}
+
+/* Displayed Value */
+.floating-dropdown-value {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  color: var(--color-heading, #0F172A);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Chevron Icon */
+.floating-dropdown-chevron {
+  flex-shrink: 0;
+  margin-left: 8px;
+  color: #64748B;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+  pointer-events: none;
+}
+.floating-dropdown:hover .floating-dropdown-chevron,
+.floating-dropdown.is-open .floating-dropdown-chevron {
+  color: var(--color-blue, #1a5dc8);
+}
+.floating-dropdown-chevron.is-rotated {
+  transform: rotate(180deg);
+}
+
+/* ── Floating Label Structure & Animation ──────────────────────────────── */
+.floating-dropdown-label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  color: #94A3B8;
+  pointer-events: none;
+  background: transparent;
+  padding: 0 4px;
+  line-height: 1;
+  z-index: 2;
+  transform-origin: left center;
+  transition: top 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              font-size 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s ease,
+              background-color 0.2s ease;
+  user-select: none;
+}
+
+/* When has value or open: label floats into top border notch */
+.floating-dropdown.has-value .floating-dropdown-label,
+.floating-dropdown.is-open .floating-dropdown-label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 500;
+  color: #64748B;
+  background: #ffffff;
+  padding: 0 5px;
+  border-radius: 2px;
+}
+
+/* Active Open / Focus Label Color - Matches Button Color */
+.floating-dropdown.is-open .floating-dropdown-label,
+.floating-dropdown-trigger:focus-visible .floating-dropdown-label {
+  color: var(--color-blue, #1a5dc8);
+}
+
+/* Required Indicator */
+.floating-req {
+  display: none;
+  color: #EF4444;
+  margin-left: 2px;
+  font-weight: 600;
+}
+
+/* Red star only shows when user clicks / opens / focuses dropdown */
+.floating-dropdown.is-open .floating-req,
+.floating-dropdown:focus-within .floating-req,
+.floating-dropdown-trigger:focus-visible .floating-req {
+  display: inline;
+}
+
+/* ── Redesigned Custom Dropdown Menu (Premium Fintech Style) ──────────── */
+.floating-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #DDE4F0;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px -8px rgba(9, 15, 34, 0.18),
+              0 6px 16px -4px rgba(9, 15, 34, 0.08);
+  list-style: none;
+  padding: 6px;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+  animation: dropdownMenuOpen 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownMenuOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Option Items */
+.floating-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: var(--font-body, system-ui, sans-serif);
+  color: #0F172A;
+  background: #ffffff;
+  border-radius: 8px;
+  margin: 2px 0;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.floating-dropdown-item-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.floating-dropdown-check {
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+/* Active / Hovered Option - Matches Exact Button Royal Blue (#1a5dc8) */
+.floating-dropdown-item.is-active {
+  background: var(--color-blue, #1a5dc8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(26, 93, 200, 0.32);
+  transform: translateX(2px);
+}
+
+.floating-dropdown-item.is-active .floating-dropdown-check {
+  color: #ffffff;
+}
+
+/* Invalid Error States */
+.floating-dropdown-trigger.is-invalid {
+  border-color: #EF4444 !important;
+  background-color: #FFF8F8 !important;
+}
+
+.floating-dropdown:hover .floating-dropdown-trigger.is-invalid {
+  border-color: #DC2626 !important;
+  box-shadow: none !important;
+}
+
+.floating-dropdown.is-open .floating-dropdown-trigger.is-invalid,
+.floating-dropdown-trigger.is-invalid:focus-visible {
+  border-color: #DC2626 !important;
+  box-shadow: none !important;
+}
+
+.floating-dropdown-trigger.is-invalid .floating-dropdown-label {
+  color: #EF4444 !important;
+}

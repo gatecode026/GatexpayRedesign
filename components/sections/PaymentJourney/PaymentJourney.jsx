@@ -80,7 +80,7 @@ export default function PaymentJourney() {
   }, [current, isPaused, next]);
   return (
     <section className="journey" ref={ref}>
-      <Container>
+      <Container className="container--page">
         <div className="journey-inner">
           {/* Header row */}
           <div className="journey-header">

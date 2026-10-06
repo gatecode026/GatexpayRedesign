@@ -16,7 +16,7 @@ export default function HomePage() {
       <IndustrySection />
       <ScaleSection />
       <PaymentJourney />
-      <CTASection />
+      <CTASection alignToNavbar />
     </>
   );
 }

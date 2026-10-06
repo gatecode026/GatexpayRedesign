@@ -1,15 +1,18 @@
 /* ==========================================================================
-   Solutions Built for your Business — light section, 3 cards
+   Solutions Built for your Business — Light blue cards with broken-out icons
    ========================================================================== */
 
-.solutions { background: var(--color-bg); }
+.solutions {
+  background: var(--color-bg);
+  overflow: visible;
+}
 
 .solutions-heading {
   font-family: var(--font-heading);
   font-size: clamp(32px, 3.3vw, 48px);
   font-weight: 700;
-  line-height: 1.1;
-  color: var(--color-heading);
+  line-height: 1.15;
+  color: #0F172A;
   margin-bottom: var(--space-8);
 }
 
@@ -17,137 +20,112 @@
 .solutions-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-7);
+  gap: 28px;
+  overflow: visible;
 }
 
 @media (min-width: 640px) {
   .solutions-grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (min-width: 1200px) {
+@media (min-width: 1080px) {
   .solutions-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ── Card ──────────────────────────────────────────────────────────────── */
 .sol-card {
   position: relative;
+  background: #F0F9FF;
+  border: 1px solid rgba(186, 230, 253, 0.5);
+  border-radius: 16px;
+  padding: 24px;
+  overflow: hidden; /* Icon is clipped/hidden at the card boundary */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  background: var(--color-card-bg);
-  border: 1px solid rgba(7, 17, 38, 0.1);
-  border-radius: 16px;
-  padding: 28px;
-  overflow: hidden;
   transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out), border-color 0.28s var(--ease-out);
-  min-height: 280px;
 }
 
 .sol-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card-hover);
-  border-color: rgba(26, 93, 200, 0.28);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px -4px rgba(2, 132, 199, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+  border-color: rgba(2, 132, 199, 0.35);
 }
 
-/* top */
+.sol-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  z-index: 2;
+}
+
 .sol-card-top {
-  flex: 1;
+  /* content hugs naturally without forcing link to bottom */
 }
 
 .sol-card-title {
-  font-family: var(--font-body);
-  color: var(--color-heading);
-  margin-bottom: var(--space-4);
-  font-size: 19px;
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  color: #0F172A;
+  margin-bottom: 14px;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
 .sol-card-points {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .sol-card-points li {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 14.5px;
-  font-weight: 400;
-  color: #5a6580;
+  font-family: 'Poppins', var(--font-body), sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
   line-height: 1.4;
   white-space: nowrap;
 }
 
+/* Hollow circle bullet matching Figma */
 .sol-bullet {
   flex-shrink: 0;
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  border: 1.5px solid var(--color-blue);
+  border: 1.5px solid #64748B;
   background: transparent;
-  opacity: 0.75;
 }
 
-/* bottom — min-height reserves room for the absolutely-positioned image
-   so it stays contained here instead of reaching up into the list above */
+/* Bottom link area: reduced gap to content */
 .sol-card-bottom {
-  position: relative;
-  margin-top: var(--space-6);
-  min-height: 96px;
-}
-
-.sol-card-img-wrap {
-  position: absolute;
-  right: -6px;
-  bottom: -6px;
-  pointer-events: none;
-}
-
-.sol-card-img {
-  width: auto;
-  height: 90px;
-  object-fit: contain;
-  transform: scale(1);
-  transform-origin: bottom right;
-  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
-  will-change: transform;
-}
-
-/* Cards are 2-up from 640px, still fairly narrow — only go back to the
-   full-size image once the grid reaches 3 columns (1200px) and each card
-   has real width to spare. */
-@media (min-width: 1200px) {
-  .sol-card-img { height: 117px; }
-  .sol-card-bottom { min-height: 122px; }
-}
-
-/* No room for the decorative icon on mobile — hide it rather than keep
-   fighting for space against the list and the link. */
-@media (max-width: 767px) {
-  .sol-card-img-wrap { display: none; }
-  .sol-card-bottom { min-height: auto; }
-}
-
-.sol-card:hover .sol-card-img {
-  transform: scale(1.3);
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .sol-card-link {
-  position: relative;
-  z-index: 1;
-  font-family: var(--font-body);
+  font-family: 'Poppins', var(--font-body), sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-blue);
+  color: #0284C7;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  text-decoration: none;
   transition: color 0.2s;
 }
 
-.sol-card-link:hover { color: var(--color-blue-mid); }
+.sol-card-link:hover {
+  color: #0369A1;
+}
 
 .sol-link-arrow {
   display: inline-block;
@@ -155,7 +133,49 @@
   line-height: 1;
   transition: transform 0.25s var(--ease-out);
 }
-.sol-card-link:hover .sol-link-arrow,
-.sol-card:hover .sol-link-arrow {
-  transform: translateX(5px);
+
+.sol-card:hover .sol-link-arrow,
+.sol-card-link:hover .sol-link-arrow {
+  transform: translateX(4px);
 }
+
+/* ── Broken-out 3D Icon at bottom right (140px width and height) ── */
+.sol-card-img-wrap {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Position right at bottom edge so translateY(40%) neatly hides 40% downwards */
+.sol-card-img-banking {
+  right: -8px;
+  bottom: 0px;
+}
+
+.sol-card-img-payments {
+  right: -16px;
+  bottom: 0px;
+}
+
+.sol-card-img-tech {
+  right: -10px;
+  bottom: 0px;
+}
+
+.sol-card-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  display: block;
+  transform: translateY(40%) scale(1);
+  transform-origin: bottom right;
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+/* On hover: fully pops up from the 40% submerged position and scales */
+.sol-card:hover .sol-card-img {
+  transform: translateY(0%) scale(1.1);
+}
+
+

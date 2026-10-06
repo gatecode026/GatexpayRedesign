@@ -1,30 +1,95 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
 import "./ReliabilitySection.css";
+
 const CARDS = [
   {
     id: "csp",
     title: "CSP & TSP Infrastructure",
     desc: "Scale transactions seamlessly with 99.99% uptime, without network bottlenecks.",
-    img: "/assets/images/new-icon-1e264d.svg",
+    video: "/assets/images/tsp.webm",
+    href: "/services",
   },
   {
     id: "protection",
     title: "Bank-Grade Protection",
     desc: "Tokenization, encryption, fraud protection, and PCI-DSS compliant deployment.",
-    img: "/assets/images/new-icon-1f3e9a.svg",
+    video: "/assets/images/tsp.webm",
+    href: "/services",
   },
   {
     id: "integration",
     title: "Unified Integration",
     desc: "Ecosystem integration, monitoring, settlements, and agent management.",
-    img: "/assets/images/new-icon-5630ea.svg",
+    video: "/assets/images/csp.webm",
+    href: "/services",
   },
 ];
+
+function AutoPlayVideo({ src }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.muted = true;
+    el.defaultMuted = true;
+
+    const tryPlay = () => {
+      el.muted = true;
+      const playPromise = el.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    };
+
+    tryPlay();
+
+    // In case browser policy initially blocks before any user gesture
+    const handleGesture = () => {
+      if (el && el.paused) {
+        tryPlay();
+      }
+    };
+    window.addEventListener("pointerdown", handleGesture, { once: true });
+    window.addEventListener("scroll", handleGesture, { once: true, passive: true });
+    window.addEventListener("keydown", handleGesture, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", handleGesture);
+      window.removeEventListener("scroll", handleGesture);
+      window.removeEventListener("keydown", handleGesture);
+    };
+  }, [src]);
+
+  return (
+    <video
+      ref={videoRef}
+      autoPlay
+      loop
+      muted
+      playsInline
+      preload="auto"
+      className="rel-card-video"
+      onLoadedData={(e) => {
+        e.currentTarget.muted = true;
+        e.currentTarget.play().catch(() => {});
+      }}
+      onCanPlay={(e) => {
+        e.currentTarget.muted = true;
+        e.currentTarget.play().catch(() => {});
+      }}
+    >
+      <source src={src} type="video/webm" />
+    </video>
+  );
+}
+
 export default function ReliabilitySection() {
   const ref = useRef(null);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -38,9 +103,10 @@ export default function ReliabilitySection() {
     el.querySelectorAll(".reveal").forEach((n) => obs.observe(n));
     return () => obs.disconnect();
   }, []);
+
   return (
-    <section className="reliability" ref={ref}>
-      <div className="container">
+    <section className="reliability" id="reliability" ref={ref}>
+      <div className="container container--page reliability-container">
         <h2 className="reliability-heading reveal">
           Engineered for Scale &amp; Reliability
         </h2>
@@ -51,20 +117,17 @@ export default function ReliabilitySection() {
               key={card.id}
               className={`rel-card reveal reveal-delay-${i + 1}`}
             >
-              <div className="rel-card-img-wrap">
-                <Image
-                  src={card.img}
-                  alt={card.title}
-                  width={180}
-                  height={120}
-                  className="rel-card-img"
-                />
+              <div className="rel-card-media">
+                <AutoPlayVideo src={card.video} />
               </div>
               <div className="rel-card-body">
-                <h3 className="rel-card-title">{card.title}</h3>
-                <p className="rel-card-desc">{card.desc}</p>
-                <Link href="/services" className="rel-card-link">
-                  Explore More <span>›</span>
+                <div className="rel-card-text">
+                  <h3 className="rel-card-title">{card.title}</h3>
+                  <p className="rel-card-desc">{card.desc}</p>
+                </div>
+                <Link href={card.href} className="rel-card-link">
+                  <span>Explore More</span>
+                  <ArrowRight size={18} className="rel-link-arrow" />
                 </Link>
               </div>
             </div>
@@ -74,3 +137,4 @@ export default function ReliabilitySection() {
     </section>
   );
 }
+

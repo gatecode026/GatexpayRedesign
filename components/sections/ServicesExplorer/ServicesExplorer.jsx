@@ -67,6 +67,8 @@ export default function ServicesExplorer({
   const stickyRef = useRef(null);
   const searchContainerRef = useRef(null);
   const categoryRefs = useRef({});
+  const isClickScrollingRef = useRef(false);
+  const scrollEndTimerRef = useRef(null);
   // Autocomplete suggestions (only while typing, and only while the bar shows)
   const suggestions =
     isBarVisible && showSuggestions && draft.trim()
@@ -130,6 +132,27 @@ export default function ServicesExplorer({
   useEffect(() => {
     if (isSearchMode) return;
     const handleScroll = () => {
+      // If user clicked a category link, prevent scrollspy from jumping
+      // through intermediate categories while smooth scrolling
+      if (isClickScrollingRef.current) {
+        if (scrollEndTimerRef.current) {
+          clearTimeout(scrollEndTimerRef.current);
+        }
+        scrollEndTimerRef.current = setTimeout(() => {
+          isClickScrollingRef.current = false;
+        }, 150);
+        return;
+      }
+
+      // If at bottom of page, highlight the last category
+      const isAtBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 60;
+      if (isAtBottom) {
+        setActiveCategory(SERVICE_CATEGORIES[SERVICE_CATEGORIES.length - 1].id);
+        return;
+      }
+
       const bar = stickyRef.current;
       const barBottom = bar
         ? (parseFloat(getComputedStyle(bar).top) || 0) + bar.offsetHeight
@@ -144,9 +167,35 @@ export default function ServicesExplorer({
       }
       setActiveCategory(currentId);
     };
+
+    const handleUserInteraction = () => {
+      if (isClickScrollingRef.current) {
+        isClickScrollingRef.current = false;
+        if (scrollEndTimerRef.current) {
+          clearTimeout(scrollEndTimerRef.current);
+        }
+      }
+    };
+
+    const handleScrollEnd = () => {
+      isClickScrollingRef.current = false;
+    };
+
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scrollend", handleScrollEnd, { passive: true });
+    window.addEventListener("wheel", handleUserInteraction, { passive: true });
+    window.addEventListener("touchmove", handleUserInteraction, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scrollend", handleScrollEnd);
+      window.removeEventListener("wheel", handleUserInteraction);
+      window.removeEventListener("touchmove", handleUserInteraction);
+      if (scrollEndTimerRef.current) {
+        clearTimeout(scrollEndTimerRef.current);
+      }
+    };
   }, [isSearchMode]);
   // Bring the explorer's top (the bar) up under the navbar — the section's
   // scroll-margin-top handles the navbar offset.
@@ -206,7 +255,18 @@ export default function ServicesExplorer({
       setSubmittedQuery("");
       if (onClearSearch) onClearSearch();
     }
+    // Lock scrollspy immediately so intermediate links don't activate during smooth scroll
+    isClickScrollingRef.current = true;
     setActiveCategory(catId);
+
+    if (scrollEndTimerRef.current) {
+      clearTimeout(scrollEndTimerRef.current);
+    }
+    // Fallback safety timeout to release scroll lock
+    scrollEndTimerRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 1200);
+
     // Wait a tick for DOM to restore normal categories if coming out of search;
     // the block's scroll-margin-top lands it just under the sticky bar.
     setTimeout(() => {

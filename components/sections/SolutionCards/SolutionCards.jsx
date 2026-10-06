@@ -1,7 +1,9 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import "./SolutionCards.css";
+
 const SOLUTIONS = [
   {
     id: "banking",
@@ -9,7 +11,7 @@ const SOLUTIONS = [
     points: [
       "Loan & Credit Integrations",
       "Domestic Money Transfers",
-      "e-Governance Services",
+      "Core Banking Services",
       "AEPS & Micro ATM Setup",
     ],
     linkLabel: "Explore Banking Solutions",
@@ -43,8 +45,10 @@ const SOLUTIONS = [
     href: "/services",
   },
 ];
+
 export default function SolutionCards() {
   const ref = useRef(null);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -58,9 +62,10 @@ export default function SolutionCards() {
     el.querySelectorAll(".reveal").forEach((n) => obs.observe(n));
     return () => obs.disconnect();
   }, []);
+
   return (
     <section className="solutions section" id="solutions" ref={ref}>
-      <div className="container">
+      <div className="container container--page">
         <h2 className="solutions-heading reveal">
           Solutions Built for your Business
         </h2>
@@ -70,33 +75,39 @@ export default function SolutionCards() {
               key={sol.id}
               className={`sol-card reveal reveal-delay-${i + 1}`}
             >
-              <div className="sol-card-top">
-                <h3 className="sol-card-title">{sol.title}</h3>
-                <ul className="sol-card-points">
-                  {sol.points.map((pt) => (
-                    <li key={pt}>
-                      <span className="sol-bullet" />
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="sol-card-bottom">
-                <div className="sol-card-img-wrap" aria-hidden="true">
-                  <Image
-                    src={sol.img}
-                    alt=""
-                    width={120}
-                    height={100}
-                    className="sol-card-img"
-                  />
+              <div className="sol-card-content">
+                <div className="sol-card-top">
+                  <h3 className="sol-card-title">{sol.title}</h3>
+                  <ul className="sol-card-points">
+                    {sol.points.map((pt) => (
+                      <li key={pt}>
+                        <span className="sol-bullet" />
+                        <span>{pt}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <a href={sol.href} className="sol-card-link">
-                  {sol.linkLabel}{" "}
-                  <span className="sol-link-arrow" aria-hidden="true">
-                    →
-                  </span>
-                </a>
+                <div className="sol-card-bottom">
+                  <Link href={sol.href} className="sol-card-link">
+                    <span>{sol.linkLabel}</span>
+                    <span className="sol-link-arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </Link>
+                </div>
+              </div>
+
+              <div
+                className={`sol-card-img-wrap sol-card-img-${sol.id}`}
+                aria-hidden="true"
+              >
+                <Image
+                  src={sol.img}
+                  alt=""
+                  width={140}
+                  height={140}
+                  className="sol-card-img"
+                />
               </div>
             </div>
           ))}
@@ -105,3 +116,4 @@ export default function SolutionCards() {
     </section>
   );
 }
+
