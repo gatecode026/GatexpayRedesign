@@ -1,13 +1,12 @@
 /* ==========================================================================
-   Service detail page — Figma "Services Detial Page (Payment Gateway
-   Integration)", 1440 wide. Values below are the Figma node values.
+   Service detail page — 1440 wide desktop reference.
 
    Tiers
-     ≥1440      Figma px as-is
-     1024–1439  the same composition scaled: Figma px ÷ 14.4 = vw
+     ≥1440      desktop px
+     1024–1439  the same composition scaled: px ÷ 14.4 = vw
      768–1023   tablet: two-column hero / 2-col cards / vertical timeline
      ≤767       mobile: stacked
-   Horizontal edges are the navbar's (.container--page), not Figma's 76px,
+   Horizontal edges are the navbar's (.container--page),
    so every section lines up with the navbar and footer.
    ========================================================================== */
 
@@ -142,7 +141,7 @@
 
 .sd-hero-content {
   position: relative;
-  z-index: 2; /* text sits over the art where they meet, as in Figma */
+  z-index: 2; /* text sits over the art where they meet */
   display: flex;
   flex-direction: column;
   align-items: flex-start;

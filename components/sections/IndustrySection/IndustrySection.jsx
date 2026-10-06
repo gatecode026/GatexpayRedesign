@@ -407,14 +407,14 @@ export default function IndustrySection() {
         className={`industry-tabs-sticky-wrap ${isSticky ? "is-sticky" : ""}`}
       >
         <div className="container">
-          <div className="industry-tabs" role="tablist">
+          <nav className="industry-tabs" aria-label="Industries We Offer">
             <span className="industry-tabs-label">Industries We Offer:</span>
             <div className="industry-tabs-scroll" ref={tabsScrollRef}>
               {STACK_KEYS.map((tab) => (
                 <button
                   key={tab}
-                  role="tab"
-                  aria-selected={active === tab}
+                  type="button"
+                  aria-current={active === tab ? "true" : undefined}
                   className={`industry-tab ${active === tab ? "active" : ""}`}
                   onClick={() => handleTabClick(tab)}
                 >
@@ -422,7 +422,7 @@ export default function IndustrySection() {
                 </button>
               ))}
             </div>
-          </div>
+          </nav>
         </div>
       </div>
 

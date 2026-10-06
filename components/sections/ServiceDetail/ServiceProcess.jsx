@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { SectionTitle, ServiceDetailIcon } from "./ServiceDetailParts";
 
-/* Figma "Frame 230" — centered heading, Frame 244 with Frame 235 (timeline nodes + glowing ellipse + cyan lines) and Frame 240 (4 cards) */
 export default function ServiceProcess({ detail }) {
   const { heading, steps } = detail.process;
   return (

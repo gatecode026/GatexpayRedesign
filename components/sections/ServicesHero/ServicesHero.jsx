@@ -26,7 +26,6 @@ export default function ServicesHero({ query = "", onSearch, onTagClick }) {
       (tag) => tag.toLowerCase() === query.trim().toLowerCase()
     ) ?? "";
   return (
-    /* Figma "Frame 9" — 1440×602, #0F172A */
     <section className="services-hero" aria-labelledby="services-hero-title">
       <div className="services-hero-inner">
         {/* Frame 43 — text column, gap 48px */}

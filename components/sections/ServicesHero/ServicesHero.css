@@ -1,17 +1,15 @@
 /* ==========================================================================
-   ServicesHero — Figma "Frame 9" (1440×602) on the Services page.
+   ServicesHero (1440×602) on the Services page.
 
-   Figma values are used as-is at ≥1440px, with one deliberate change: the
-   side padding is the navbar's gutter (--page-gutter) instead of Figma's
-   76px, so the text starts under the navbar logo and the illustration's
-   visible right edge ends under the "Talk to an Expert" button.
-   1024–1439px scales the text in vw from those same values (1vw = 14.4px
-   at 1440); the illustration is set smaller there (55.97vw). Below 1024px
-   the illustration stacks under the text.
+   Values are calibrated at ≥1440px with navbar gutter alignment (--page-gutter),
+   so the text starts under the navbar logo and the illustration's visible right
+   edge ends under the "Talk to an Expert" button.
+   1024–1439px scales the text in vw proportionally; the illustration is set smaller
+   there (55.97vw). Below 1024px the illustration stacks under the text.
    ========================================================================== */
 
 .services-hero {
-  /* Figma palette for this frame — defined once, reused below */
+  /* Color palette — defined once, reused below */
   --sh-bg:           #0F172A;
   --sh-grid:         #182034;  /* faint 50px grid in the reference */
   --sh-text:         #E2E8F0;
@@ -55,7 +53,7 @@
   width: 665px;
 }
 
-/* Source Serif 700 62/84. The gradient spans the title box, as in Figma;
+/* Source Serif 700 62/84. The gradient spans the title box;
    "for Every Business" is painted white on top of it. */
 .services-hero-title {
   width: fit-content;
@@ -293,7 +291,7 @@
 }
 
 /* ── image 30 — 950×633 illustration ─────────────────────────────────────
-   Figma: top = 50% − height/2 + 11.5. The PNG has 133.5/950 of transparent
+   top = 50% − height/2 + 11.5. The PNG has 133.5/950 of transparent
    margin on its right, so right = gutter − 0.1405·width puts the visible
    artwork's edge exactly on the navbar's right edge.
    Width is 950px until the gutter grows past ~53px (wide screens); then it
@@ -316,7 +314,7 @@
 }
 
 /* ==========================================================================
-   1024–1439: the 1440 text, scaled (Figma px ÷ 14.4 = vw); smaller art
+   1024–1439: the 1440 text, scaled (px ÷ 14.4 = vw); smaller art
    ========================================================================== */
 @media (min-width: 1024px) and (max-width: 1439.98px) {
   .services-hero-inner {

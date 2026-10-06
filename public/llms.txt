@@ -1,0 +1,35 @@
+# GateXPay
+
+> GateXPay provides enterprise payment infrastructure, payment gateway integration, digital banking solutions, and secure financial technology services for businesses, fintechs, and financial institutions.
+
+## Overview
+- [Home](https://gatexpay.com/): Official GateXPay homepage and enterprise payment solutions.
+- [About Us](https://gatexpay.com/about): GateXPay company overview, mission, leadership, and fintech ecosystem.
+- [Contact Us](https://gatexpay.com/contact): Connect with sales, support, and integration experts.
+- [All Services](https://gatexpay.com/services): Explore complete catalog of 26+ fintech and enterprise services.
+
+## Core Financial & Payment Services
+- [Payment Gateway Integration](https://gatexpay.com/services/payment-gateway-integration): Secure multi-mode checkout, UPI, cards, net banking, wallets, and payment APIs.
+- [Core Banking Solutions](https://gatexpay.com/services/core-banking-solutions): Scalable digital banking infrastructure, ledger management, and financial accounts.
+- [Loan & Credit Integration Services](https://gatexpay.com/services/loan-insurance-services): Digital lending journeys, loan origination, credit assessment, and repayment workflows.
+- [AePS Services](https://gatexpay.com/services/aeps-services): Aadhaar-enabled biometric cash withdrawal, balance enquiry, and mini statements.
+- [Micro ATM Services](https://gatexpay.com/services/micro-atm-services): Portable card-swipe terminals, cash withdrawal, and debit transactions.
+- [Money Transfer Services](https://gatexpay.com/services/money-transfer-services): Domestic money transfer (DMT), IMPS, NEFT, and RTGS payment rails.
+
+## Commerce & Business Solutions
+- [E-Commerce Services](https://gatexpay.com/services/e-commerce-services): Storefront optimization, inventory workflows, marketing, and commerce integrations.
+- [E-Commerce Solutions](https://gatexpay.com/services/e-commerce-solutions): End-to-end online store architecture, custom checkout, and scalable retail systems.
+- [Web & App Development](https://gatexpay.com/services/web-app-development): Scalable web applications, mobile platforms, and digital fintech software.
+- [Digital Marketing Services](https://gatexpay.com/services/digital-marketing-services): Performance marketing, SEO, paid media, and brand growth.
+
+## Citizen & Utility Services
+- [PAN Card Services](https://gatexpay.com/services/pan-card-services): UTI/NSDL authorized PAN verification, application, and correction workflows.
+- [Bill Payment Services](https://gatexpay.com/services/bill-payment-services): BBPS-integrated utility bill payments, electricity, water, gas, and fastag.
+- [Recharge Services](https://gatexpay.com/services/recharge-services): Real-time prepaid and postpaid mobile and DTH recharge APIs.
+- [Travel & Booking Services](https://gatexpay.com/services/travel-services): Flight, train, bus, and hotel reservation APIs.
+- [E-Governance Services](https://gatexpay.com/services/e-governance-services): Citizen service delivery and digital government portal integrations.
+
+## Developer & Technical Resources
+- [Blog & Insights](https://gatexpay.com/blog): Industry guides on RBI Payment Aggregator licensing, tokenization APIs, and fintech architectures.
+- [Privacy Policy](https://gatexpay.com/policy/privacy-policy): DPDP-aligned data privacy policy and data protection safeguards.
+- [Terms & Conditions](https://gatexpay.com/policy/terms-and-conditions): Platform terms of use and service level agreements.

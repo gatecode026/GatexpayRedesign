@@ -187,14 +187,14 @@ export default function PaymentJourney() {
             </div>
 
             {/* Dot indicators */}
-            <div className="journey-dots" role="tablist" aria-label="Steps">
+            <div className="journey-dots" role="group" aria-label="Step pagination">
               {STEPS.map((step, i) => (
                 <button
                   key={i}
+                  type="button"
                   className={`journey-dot${i === current ? " active" : ""}`}
                   onClick={() => setCurrent(i)}
-                  role="tab"
-                  aria-selected={i === current}
+                  aria-current={i === current ? "step" : undefined}
                   aria-label={`Go to step ${i + 1}: ${step.title}`}
                 />
               ))}

@@ -35,8 +35,7 @@
   /* --- Typography --- */
   --font-heading: var(--font-heading-src, 'Source Serif 4'), Georgia, 'Times New Roman', serif;
   --font-body:    var(--font-body-src, 'Poppins'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  /* Blog Insights page only — its Figma spec calls for Source Sans Pro on
-     the hero/featured/article headings specifically (not used elsewhere). */
+  /* Blog Insights page only — Source Sans Pro on the hero/featured/article headings specifically. */
   --font-blog-heading: var(--font-blog-heading-src, 'Source Sans Pro'), Arial, sans-serif;
 
   /* --- Spacing (4px unit) --- */

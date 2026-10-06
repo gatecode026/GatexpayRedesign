@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, ChevronRight } from "lucide-react";
 import { ServiceDetailIcon } from "./ServiceDetailParts";
 import TalkToExpertButton from "./TalkToExpertButton";
-/* Figma "Frame 9" — 1440×714, #F0F9FF */
 export default function ServiceDetailHero({ detail }) {
   const { hero, highlights } = detail;
   return (

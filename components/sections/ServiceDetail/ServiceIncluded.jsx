@@ -4,7 +4,6 @@ import {
   SectionTitle,
   ServiceDetailIcon,
 } from "./ServiceDetailParts";
-/* Figma "Frame 196" — #F8FAFC, 6 cards in 3 × 2 */
 export default function ServiceIncluded({ detail }) {
   const { heading, items } = detail.included;
   return (

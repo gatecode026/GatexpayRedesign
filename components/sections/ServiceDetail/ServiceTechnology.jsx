@@ -170,7 +170,7 @@ function TechIcon({ tech }) {
   );
 }
 
-/* Figma "Frame 197" — slide text + technology badges | ecosystem artwork,
+/* Slide text + technology badges | ecosystem artwork,
    progress bars below (one per slide) with 3s auto-rotation */
 export default function ServiceTechnology({ detail }) {
   const [index, setIndex] = useState(0);

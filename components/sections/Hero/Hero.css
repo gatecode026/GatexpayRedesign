@@ -1,8 +1,7 @@
 /* ==========================================================================
    Hero Section
    Primary design reference: 1440 × 600 desktop frame (below 80px fixed navbar).
-   100% pixel-perfect match to Figma reference at 1440px, aligned with navbar,
-   with wanted line-height & spacing, and 100% responsive on every screen.
+   Aligned with navbar, with wanted line-height & spacing, and 100% responsive.
    ========================================================================== */
 
 .hero {
@@ -44,7 +43,7 @@
   pointer-events: auto;
 }
 
-/* Heading from Figma: 62px / 84px (135%), width 767px, height 168px */
+/* Heading: 62px / 84px (135%), width 767px, height 168px */
 .hero-title {
   margin: 0;
   width: 767px;
@@ -77,7 +76,7 @@
   display: inline;
 }
 
-/* Description paragraph from Figma: 24px / 36px (150%), #64748B, width 612px, height 108px */
+/* Description paragraph: 24px / 36px (150%), #64748B, width 612px, height 108px */
 .hero-desc {
   margin: 0;
   margin-top: 24px;
@@ -178,7 +177,7 @@
   pointer-events: none;
 }
 
-/* ── Ellipse 2 (SVG from Figma) ────────────────────────────────────────── */
+/* ── Ellipse 2 (SVG Background) ────────────────────────────────────────── */
 .hero-glow-shape,
 .hero-ellipse {
   position: absolute;

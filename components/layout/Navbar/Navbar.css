@@ -86,7 +86,7 @@ body.navbar--hidden .navbar {
   opacity: 0.7;
 }
 
-/* --- Dropdown Panel (Figma Frame 40) --- */
+/* --- Dropdown Panel --- */
 .navbar-dropdown { position: relative; }
 
 .navbar-dropdown-panel {

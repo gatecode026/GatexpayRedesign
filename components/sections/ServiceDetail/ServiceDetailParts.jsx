@@ -128,9 +128,7 @@ const LUCIDE = {
   package: Package,
 };
 /**
- * Figma uses Lucide icons throughout. lucide-react 0.469 has no
- * "monitor-cloud", so that one is the Figma export of the same icon
- * (35×32 artwork inside the 38px icon box).
+ * Icon renderer with fallback for custom icons.
  */
 export function ServiceDetailIcon({ name, size, strokeWidth }) {
   if (name === "monitor-cloud") {
@@ -166,7 +164,7 @@ export function SectionTitle({ heading, id, className = "" }) {
     </h2>
   );
 }
-/** Renders Figma's forced "\n" breaks; CSS drops them on narrow screens. */
+/** Renders explicit line breaks; CSS drops them on narrow screens. */
 export function BrokenLines({ text }) {
   if (!text) return null;
   const parts = text.split(/\\n|\r?\n/);

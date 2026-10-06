@@ -44,7 +44,7 @@ export default function Hero() {
 
         {/* ── Right visual (blue shape + devices) ──── */}
         <div className="hero-visual">
-          {/* Ellipse 2 SVG from Figma */}
+          {/* Ellipse 2 SVG Background */}
           <Image
             src="/assets/images/Ellipse%202.svg"
             alt=""

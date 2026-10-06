@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Services Explorer – Figma-accurate Layout & Interaction States
+   Services Explorer – Layout & Interaction States
    ========================================================================== */
 
 .services-explorer-section {
@@ -613,7 +613,7 @@
   color: #64748B;
 }
 
-/* Grid of 2 columns — Figma cards are 468px; they stretch so the grid ends
+/* Grid of 2 columns — cards stretch so the grid ends
    on the navbar's right edge (the card art is pinned right). */
 .services-grid {
   display: grid;

@@ -206,11 +206,12 @@ export default function SolutionsMegaMenu({ id }) {
   const [activeId, setActiveId] = useState(SOLUTIONS[0].id);
   const active = SOLUTIONS.find((c) => c.id === activeId) ?? SOLUTIONS[0];
   return (
-    <div className="mega-menu" id={id} role="menu" aria-label="Solutions">
+    <div className="mega-menu" id={id} aria-label="Solutions">
       {/* ── Left: categories ─────────────────────────────────────────── */}
       <div
         className="mega-menu__left"
         role="tablist"
+        aria-label="Solution categories"
         aria-orientation="vertical"
       >
         {SOLUTIONS.map((cat) => {
@@ -218,9 +219,11 @@ export default function SolutionsMegaMenu({ id }) {
           return (
             <button
               key={cat.id}
+              id={`mega-tab-${cat.id}`}
               type="button"
               role="tab"
               aria-selected={isActive}
+              aria-controls={`mega-panel-${cat.id}`}
               className={`mega-cat${isActive ? " mega-cat--active" : ""}`}
               onMouseEnter={() => setActiveId(cat.id)}
               onFocus={() => setActiveId(cat.id)}
@@ -238,9 +241,10 @@ export default function SolutionsMegaMenu({ id }) {
       {/* ── Right: services for the active category ─────────────────── */}
       <div className="mega-menu__right">
         <div
+          id={`mega-panel-${active.id}`}
           className="mega-services"
           role="tabpanel"
-          aria-label={`${active.title} services`}
+          aria-labelledby={`mega-tab-${active.id}`}
         >
           {active.services.map((service) => {
             const Icon = service.icon;
@@ -250,7 +254,6 @@ export default function SolutionsMegaMenu({ id }) {
                 key={service.title}
                 href={href}
                 className="service-card"
-                role="menuitem"
               >
                 <span className="service-card__icon" aria-hidden="true">
                   <Icon size={28} strokeWidth={1.75} />

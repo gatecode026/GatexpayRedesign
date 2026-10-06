@@ -121,7 +121,7 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   transform: translateY(-1px);
 }
 
-/* ── Feature Card — matches Figma "Component 1" spec exactly ─────────────
+/* ── Feature Card ────────────────────────────────────────────────────────
    Desktop reference: 1288px canvas, 24px card padding, 32px image/content
    gap, 28px card radius, 12px image radius. Recalibrated proportionally
    for this project's ~1260px container; mobile stacks the same structure
@@ -177,7 +177,7 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 }
 
 /* Shared small muted label — used for the industry tag, "Use Cases", and
-   "Powered By" (identical styling for all three in the Figma spec). */
+   "Powered By". */
 .industry-card-label {
   display: block;
   font-size: 10px;
@@ -413,8 +413,7 @@ body.navbar--hidden .industry-stack-sticky {
 
 /* ── Very narrow phones only (≤375px): after the 10% stack-height
    reduction, the longest card content ("Industries We Offer") overflows
-   by up to 12px here specifically. Tighten a few gaps slightly — desktop
-   and the rest of mobile keep the exact Figma spacing untouched. ── */
+   by up to 12px here specifically. Tighten a few gaps slightly. ── */
 @media (max-width: 375px) {
   .industry-card.industry-stack-card {
     gap: 18px;

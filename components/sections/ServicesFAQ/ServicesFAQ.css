@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Services FAQ Section – Figma-accurate Layout
+   Services FAQ Section
    ========================================================================== */
 
 .services-faq-section {
@@ -164,7 +164,7 @@
 }
 
 /* ==========================================================================
-   Large variant — service detail page Figma: question Poppins 500 24/36,
+   Large variant — question Poppins 500 24/36,
    answer 400 18/28, 76px rows; headings follow the page's heading scale
    ========================================================================== */
 .services-faq-section--lg .services-faq-trigger {

@@ -1,6 +1,7 @@
 import { Source_Serif_4, Source_Sans_3, Poppins } from "next/font/google";
 import ConditionalLayout from "@/components/layout/ConditionalLayout/ConditionalLayout";
 import { ContactModalProvider } from "@/components/common/ContactModal/ContactModalContext";
+import { Analytics } from "@vercel/analytics/next";
 import "@/styles/globals.css";
 const sourceSerifPro = Source_Serif_4({
   subsets: ["latin"],
@@ -14,10 +15,7 @@ const poppins = Poppins({
   variable: "--font-body-src",
   display: "swap",
 });
-// Scoped to the Blog Insights page only (its Figma spec names this font
-// explicitly for the hero/featured/article headings) — declaring the CSS
-// variable here has no effect anywhere it isn't referenced, so it doesn't
-// touch any other page's typography.
+// Scoped to the Blog Insights page only for the hero/featured/article headings.
 const sourceSansPro = Source_Sans_3({
   subsets: ["latin"],
   weight: ["600", "700"],
@@ -70,6 +68,7 @@ export default function RootLayout({ children }) {
         <ContactModalProvider>
           <ConditionalLayout>{children}</ConditionalLayout>
         </ContactModalProvider>
+        <Analytics />
       </body>
     </html>
   );

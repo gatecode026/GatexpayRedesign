@@ -1,6 +1,6 @@
-# GateXPay Design System — Developer Handoff Assets
+# GateXPay Assets — Developer Handoff
 
-This directory contains production-ready image and media assets extracted directly from the Figma design (**Gate X Pay Redesign** / `Website Redesign` page) for developer handoff.
+This directory contains production-ready image and media assets for GateXPay developer handoff.
 
 > **Note**: In accordance with front-end best practices, **all UI icons have been excluded** (icons should be implemented using the `lucide-react` component library or inline SVGs). This directory contains strictly **content images, illustrations, device mockups, banners, portraits, and brand marks**.
 

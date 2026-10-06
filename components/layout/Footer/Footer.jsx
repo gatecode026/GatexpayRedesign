@@ -96,7 +96,7 @@ const SOCIAL_LINKS = [
 export default function Footer() {
   return (
     <footer className="footer">
-      {/* ── Ambient color splashes (exact match to Figma reference) ───────── */}
+      {/* ── Ambient color splashes ───────── */}
       <div className="footer-glow footer-glow--top-left" aria-hidden="true" />
       <div className="footer-glow footer-glow--mid-left" aria-hidden="true" />
       <div className="footer-glow footer-glow--top-right" aria-hidden="true" />

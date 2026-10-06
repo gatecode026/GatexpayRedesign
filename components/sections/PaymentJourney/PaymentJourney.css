@@ -1,5 +1,5 @@
 /* ==========================================================================
-   The Path to Seamless Payments — Figma pixel-perfect
+   The Path to Seamless Payments
    Section:       padding 64px 76px | gap 32px | bg #0F172A
    Active card:   413 x 406px | border #00C0FD | padding 24px
    Inactive card: 304 x 306px | border #64748B | padding 20px
@@ -56,7 +56,7 @@
   margin: 0;
 }
 
-/* Arrows wrapper: Figma 8px gap */
+/* Arrows wrapper: 8px gap */
 .journey-controls {
   display: flex;
   align-items: center;
@@ -110,7 +110,7 @@
   transform: scale(1.08);
 }
 
-/* Cards outer (track + dots, Figma gap 8px) — fixed height prevents stretch/compress during animation */
+/* Cards outer (track + dots, 8px gap) — fixed height prevents stretch/compress during animation */
 .journey-cards-outer {
   display: flex;
   flex-direction: column;
@@ -129,7 +129,7 @@
   height: 406px;
 }
 
-/* ── Inactive card (flex-grow = 1, Figma height 306px) ─────────────────── */
+/* ── Inactive card (flex-grow = 1, height 306px) ─────────────────── */
 .journey-card {
   box-sizing: border-box;
   display: flex;
@@ -201,7 +201,7 @@
 .journey-card.active .journey-card-img { transform: scale(1.04); }
 
 /* ── Step number ────────────────────────────────────────────────────────── */
-/* Figma: Source Serif Pro 700 32px, opacity 0.25                           */
+/* Source Serif Pro 700 32px, opacity 0.25                                  */
 /* Inactive: color #FFFFFF, left 20px top 16px                              */
 /* Active:   color #00C0FD, left 24px top 24px                              */
 .journey-step-num {
@@ -250,7 +250,7 @@
   padding: 24px;
 }
 
-/* ── Title: Figma Poppins 600 16px lh 24px #FFFFFF ─────────────────────── */
+/* ── Title: Poppins 600 16px lh 24px #FFFFFF ─────────────────────── */
 .journey-card-title {
   font-family: 'Poppins', var(--font-body), sans-serif;
   font-weight: 600;
@@ -270,7 +270,7 @@
   white-space: normal;
 }
 
-/* ── Description: Figma Poppins 400 14px lh 20px #CBD5E1 ───────────────── */
+/* ── Description: Poppins 400 14px lh 20px #CBD5E1 ───────────────── */
 /* Hidden on inactive, smooth reveal on active */
 .journey-card-desc {
   font-family: 'Poppins', var(--font-body), sans-serif;
@@ -295,7 +295,7 @@
   opacity: 1;
 }
 
-/* ── Dots: Figma active 32x8 #00C0FD | inactive 8x8 #CBD5E1 ────────────── */
+/* ── Dots: active 32x8 #00C0FD | inactive 8x8 #CBD5E1 ────────────── */
 .journey-dots {
   display: flex;
   flex-direction: row;

@@ -1,6 +1,5 @@
 /* ==========================================================================
    Featured Insight — single spotlight card above the category filter
-   Exact match to Figma Frame 193 spec:
    1288x430 card, 595x428 image (46.2%), 691x428 content (53.8%),
    32px padding, 20px gap, 627px content box.
    Proportional flex-basis ensures content column is never starved on
@@ -32,7 +31,7 @@
 
 .featured-img-wrap {
   position: relative;
-  /* Proportional 46.2% base (595/1288) capped at 595px per Figma spec */
+  /* Proportional 46.2% base (595/1288) capped at 595px */
   flex: 0 0 46.2%;
   max-width: 595px;
   min-height: 428px;
