@@ -119,10 +119,10 @@
 
 .contact-intro-stats {
   display: flex;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-  padding: var(--space-4) 0;
+  background: transparent;
+  box-shadow: none;
+  padding: var(--space-2) 0;
+  user-select: none;
 }
 
 .contact-intro-stat {
@@ -134,8 +134,12 @@
   gap: 4px;
   padding-inline: var(--space-3);
   border-right: 1px solid #E1E0E0;
+  transition: transform 0.22s ease;
 }
 .contact-intro-stat:last-child { border-right: none; }
+.contact-intro-stat:hover {
+  transform: translateY(-2px);
+}
 
 .contact-intro-stat-value {
   font-family: var(--font-heading);
@@ -143,6 +147,10 @@
   font-weight: 700;
   line-height: 1.2;
   color: #0284C7;
+  transition: color 0.22s ease;
+}
+.contact-intro-stat:hover .contact-intro-stat-value {
+  color: #00C0FD;
 }
 .contact-intro-stat-label {
   font-size: 12.5px;
@@ -193,6 +201,25 @@
   width: 100%;
   min-width: 0;
   position: relative;
+}
+
+/* ── Phone with Country Code Row ── */
+.contact-phone-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.contact-phone-code {
+  flex-shrink: 0;
+  width: 112px;
+}
+
+@media (max-width: 480px) {
+  .contact-phone-code {
+    width: 96px;
+  }
 }
 
 .contact-intro-form input,

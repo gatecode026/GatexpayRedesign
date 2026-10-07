@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import "./NewsletterCTA.css";
 export default function NewsletterCTA() {
   const [email, setEmail] = useState("");
@@ -71,7 +72,7 @@ export default function NewsletterCTA() {
                     aria-describedby={error ? "newsletter-error" : undefined}
                   />
                   <button type="submit" className="newsletter-btn">
-                    Subscribe <span aria-hidden="true">→</span>
+                    Subscribe <ArrowRight size={16} aria-hidden="true" />
                   </button>
                 </div>
                 {error && (

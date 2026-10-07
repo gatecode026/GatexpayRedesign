@@ -294,9 +294,9 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   border: 1px solid #E2E8F0;
   border-radius: 20px;
   padding: 8px 12px;
-  transition: background 0.2s, color 0.2s;
+  cursor: default;
+  user-select: none;
 }
-.industry-pill:hover { background: var(--color-blue); color: #fff; cursor: pointer; }
 
 /* ══════════════════════════════════════════════════════════════════════
    Scroll-driven stacked cards (last 3 real industries), rising directly
@@ -403,6 +403,8 @@ body.navbar--hidden .industry-stack-sticky {
      clip-path is a hard, GPU-composited-safe clip that doesn't have this
      issue — kept alongside overflow:hidden as the real fix. */
   clip-path: inset(0 round 28px);
+  perspective: 1000px;
+  transform-style: preserve-3d;
 }
 @media (min-width: 375px) {
   .industry-stack-stage { height: 830px; } /* 774 + 56 */
@@ -429,14 +431,11 @@ body.navbar--hidden .industry-stack-sticky {
   width: 100%;
   margin: 0;
   box-sizing: border-box;
-  /* Each card contains its OWN content — if a particular industry's text
-     (e.g. a wrapped pill row) is taller than the fixed stage height, this
-     stops it from spilling past the card's own box, independent of the
-     (separately unreliable) parent-clip situation handled in JS. */
   overflow: hidden;
   will-change: transform, opacity;
   transform-origin: top center;
-  transform: translateY(100%);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 /* ── Mobile: tabs become a contained horizontal scroller ──────────────────

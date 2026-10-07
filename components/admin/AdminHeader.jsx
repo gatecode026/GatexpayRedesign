@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Settings as SettingsIcon,
   LogOut,
+  ArrowRight,
 } from "lucide-react";
 export default function AdminHeader({
   onOpenMobileSidebar,
@@ -168,7 +169,8 @@ export default function AdminHeader({
                   className="notif-view-all"
                   onClick={onSelectNotificationLead}
                 >
-                  View all enquiries →
+                  <span>View all enquiries</span>
+                  <ArrowRight size={13} aria-hidden="true" />
                 </button>
               </div>
             </div>

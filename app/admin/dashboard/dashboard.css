@@ -747,6 +747,10 @@
 }
 
 .notif-view-all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   background: none;
   border: none;
   color: #0284c7;

@@ -9,51 +9,58 @@ export default function ArticleTOC({ items }) {
   const isClickScrollingRef = useRef(false);
   const scrollEndTimerRef = useRef(null);
 
-  // Track active section via IntersectionObserver
-  useEffect(() => {
-    const observerCallback = (entries) => {
-      // If user clicked a TOC link, do not jump through intermediate sections
-      if (isClickScrollingRef.current) return;
-
-      // Find the first intersecting entry from top to bottom
-      const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-      if (visibleEntries.length > 0) {
-        // Sort by position on screen
-        visibleEntries.sort(
-          (a, b) => a.boundingClientRect.top - b.boundingClientRect.top
-        );
-        setActiveId(visibleEntries[0].target.id);
-      }
-    };
-    const observer = new IntersectionObserver(observerCallback, {
-      rootMargin: "-90px 0px -60% 0px",
-      threshold: [0, 0.2, 0.5],
-    });
-    items.forEach((item) => {
-      const el = document.getElementById(item.id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [items]);
-
-  // Calculate reading progress based on article content container
-  const updateProgress = useCallback(() => {
+  // Synchronously compute reading progress and active section deterministically without observer jitter
+  const updateScrollSpyAndProgress = useCallback(() => {
+    // 1. Reading progress calculation based on article container
     const articleContainer = document.getElementById("article-content-body");
-    if (!articleContainer) return;
-    const rect = articleContainer.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const totalHeight = rect.height - windowHeight;
-    if (totalHeight <= 0) {
-      setProgress(100);
+    if (articleContainer) {
+      const rect = articleContainer.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const totalHeight = rect.height - windowHeight;
+      if (totalHeight <= 0) {
+        setProgress(100);
+      } else {
+        const currentScroll = -rect.top;
+        const percentage = Math.min(
+          100,
+          Math.max(0, (currentScroll / totalHeight) * 100)
+        );
+        setProgress(Math.round(percentage));
+      }
+    }
+
+    // 2. Active section detection
+    if (isClickScrollingRef.current) return;
+    if (!items || items.length === 0) return;
+
+    // If near the bottom of document, activate the last section
+    const scrollBottom = window.innerHeight + window.scrollY;
+    const documentHeight = document.documentElement.scrollHeight;
+    if (scrollBottom >= documentHeight - 60) {
+      const lastId = items[items.length - 1].id;
+      setActiveId((prev) => (prev === lastId ? prev : lastId));
       return;
     }
-    const currentScroll = -rect.top;
-    const percentage = Math.min(
-      100,
-      Math.max(0, (currentScroll / totalHeight) * 100)
-    );
-    setProgress(Math.round(percentage));
-  }, []);
+
+    // Fixed navbar is 80px; sections become active when they cross 120px from top
+    const ACTIVATION_OFFSET = 120;
+    let currentActive = items[0].id;
+
+    for (let i = 0; i < items.length; i++) {
+      const el = document.getElementById(items[i].id);
+      if (el) {
+        const top = el.getBoundingClientRect().top;
+        if (top <= ACTIVATION_OFFSET) {
+          currentActive = items[i].id;
+        } else {
+          // Sections are in document order, subsequent sections are further down
+          break;
+        }
+      }
+    }
+
+    setActiveId((prev) => (prev === currentActive ? prev : currentActive));
+  }, [items]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -66,7 +73,7 @@ export default function ArticleTOC({ items }) {
         }, 150);
       }
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(updateProgress);
+      rafRef.current = requestAnimationFrame(updateScrollSpyAndProgress);
     };
 
     const handleUserInteraction = () => {
@@ -86,7 +93,9 @@ export default function ArticleTOC({ items }) {
     window.addEventListener("scrollend", handleScrollEnd, { passive: true });
     window.addEventListener("wheel", handleUserInteraction, { passive: true });
     window.addEventListener("touchmove", handleUserInteraction, { passive: true });
-    rafRef.current = requestAnimationFrame(updateProgress);
+
+    // Initial check on mount
+    rafRef.current = requestAnimationFrame(updateScrollSpyAndProgress);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -96,14 +105,14 @@ export default function ArticleTOC({ items }) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (scrollEndTimerRef.current) clearTimeout(scrollEndTimerRef.current);
     };
-  }, [updateProgress]);
+  }, [updateScrollSpyAndProgress]);
 
   const scrollToSection = (e, id) => {
     e.preventDefault();
     const target = document.getElementById(id);
     if (!target) return;
 
-    // Lock scrollspy immediately to the clicked section
+    // Lock scrollspy immediately to the clicked section to prevent jumping intermediate sections
     isClickScrollingRef.current = true;
     setActiveId(id);
     setIsMobileOpen(false);
@@ -113,7 +122,7 @@ export default function ArticleTOC({ items }) {
     }
     scrollEndTimerRef.current = setTimeout(() => {
       isClickScrollingRef.current = false;
-    }, 1200);
+    }, 1000);
 
     const headerOffset = 100;
     const elementPosition = target.getBoundingClientRect().top;
@@ -145,7 +154,7 @@ export default function ArticleTOC({ items }) {
         id="article-toc-nav"
         className={`article-toc-content ${isMobileOpen ? "is-open-mobile" : ""}`}
       >
-        <h2 className="article-toc-heading">ON THIS ARTICLE</h2>
+        <h2 className="article-toc-heading">On this Article</h2>
         <nav className="article-toc-list">
           {items.map((item) => {
             const isActive = activeId === item.id;

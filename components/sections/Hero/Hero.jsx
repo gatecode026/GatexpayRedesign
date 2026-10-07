@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { Phone, ArrowRight } from "lucide-react";
 import { useContactModal } from "@/components/common/ContactModal/ContactModalContext";
 import "./Hero.css";
 export default function Hero() {
@@ -35,9 +35,7 @@ export default function Hero() {
             </button>
             <Link href="/services" className="hero-more">
               <span>Know More</span>
-              <span className="hero-arrow" aria-hidden="true">
-                →
-              </span>
+              <ArrowRight className="hero-arrow" aria-hidden="true" />
             </Link>
           </div>
         </div>

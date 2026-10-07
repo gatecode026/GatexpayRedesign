@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Headset, Users, AlertCircle } from "lucide-react";
 import Container from "@/components/common/Container/Container";
 import { SOLUTIONS } from "@/components/layout/Navbar/SolutionsMegaMenu";
@@ -7,16 +7,24 @@ import FloatingDropdown from "@/components/common/FloatingDropdown/FloatingDropd
 import "./ContactIntro.css";
 
 const SERVICE_CATEGORIES = [...SOLUTIONS.map((cat) => cat.title), "Other"];
+const COUNTRY_CODES = [
+  { value: "+91", label: "IND +91" },
+  { value: "+1", label: "USA +1" },
+  { value: "+44", label: "UK +44" },
+  { value: "+971", label: "UAE +971" },
+  { value: "+65", label: "SGP +65" },
+];
 const TIMELINES = [
   "Immediately",
   "Within 1 month",
   "1–3 months",
   "Just exploring",
 ];
+
 const STATS = [
-  { value: "500+", label: "Businesses Served" },
-  { value: "5+", label: "Years of Expertise" },
-  { value: "50+", label: "Fintech Integrations" },
+  { target: 500, suffix: "+", label: "Businesses Served" },
+  { target: 5, suffix: "+", label: "Years of Expertise" },
+  { target: 50, suffix: "+", label: "Fintech Integrations" },
 ];
 
 export default function ContactIntro() {
@@ -27,10 +35,70 @@ export default function ContactIntro() {
   const [errors, setErrors] = useState({});
   const formRef = useRef(null);
 
+  // ── Interactive Counter Animation (Runs only once on first interaction) ──
+  const [statValues, setStatValues] = useState(() => STATS.map((s) => s.target));
+  const statsRef = useRef(null);
+  const hasAnimatedRef = useRef(false);
+  const isAnimatingRef = useRef(false);
+  const animationFrameIdRef = useRef(null);
+
+  const runCountAnimation = () => {
+    if (hasAnimatedRef.current || isAnimatingRef.current) return;
+    hasAnimatedRef.current = true;
+    isAnimatingRef.current = true;
+    const duration = 1200; // ms
+    const startTimestamp = performance.now();
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTimestamp;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setStatValues(STATS.map((s) => s.target * easeOut));
+      if (progress < 1) {
+        animationFrameIdRef.current = requestAnimationFrame(animate);
+      } else {
+        setStatValues(STATS.map((s) => s.target));
+        isAnimatingRef.current = false;
+      }
+    };
+    setStatValues([0, 0, 0]);
+    animationFrameIdRef.current = requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReducedMotion) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          runCountAnimation();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+    };
+  }, []);
+
   const [formData, setFormData] = useState({
     fullName: "",
     companyName: "",
     email: "",
+    countryCode: "+91",
     phone: "",
     serviceCategory: "",
     timeline: "Immediately",
@@ -136,6 +204,7 @@ export default function ContactIntro() {
       fullName: formData.fullName.trim(),
       companyName: formData.companyName.trim(),
       email: formData.email.trim(),
+      countryCode: formData.countryCode || "+91",
       phone: formData.phone.trim(),
       serviceCategory: formData.serviceCategory,
       timeline: formData.timeline || "Immediately",
@@ -240,10 +309,19 @@ export default function ContactIntro() {
               </div>
             </div>
 
-            <div className="contact-intro-stats">
-              {STATS.map((stat) => (
+            <div
+              ref={statsRef}
+              className="contact-intro-stats"
+              onMouseEnter={runCountAnimation}
+              onClick={runCountAnimation}
+              role="region"
+              aria-label="GateXPay Key Metrics"
+            >
+              {STATS.map((stat, idx) => (
                 <div key={stat.label} className="contact-intro-stat">
-                  <span className="contact-intro-stat-value">{stat.value}</span>
+                  <span className="contact-intro-stat-value">
+                    {Math.floor(statValues[idx])}{stat.suffix}
+                  </span>
                   <span className="contact-intro-stat-label">{stat.label}</span>
                 </div>
               ))}
@@ -349,7 +427,36 @@ export default function ContactIntro() {
                     </div>
 
                     <div className="contact-form-field">
-                      <div className={`floating-field ${formData.phone ? "has-value" : ""}`}>
+                      <FloatingDropdown
+                        id="intro-timeline"
+                        name="timeline"
+                        label="Project Timeline"
+                        value={formData.timeline}
+                        options={TIMELINES}
+                        onChange={(name, val) => {
+                          setFormData((prev) => ({ ...prev, [name]: val }));
+                        }}
+                        hasSubmitted={hasSubmitted}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="contact-form-field">
+                    <div className="contact-phone-row">
+                      <div className="contact-phone-code">
+                        <FloatingDropdown
+                          id="intro-countryCode"
+                          name="countryCode"
+                          label="Code"
+                          value={formData.countryCode}
+                          options={COUNTRY_CODES}
+                          onChange={(name, val) => {
+                            setFormData((prev) => ({ ...prev, [name]: val }));
+                          }}
+                          hasSubmitted={hasSubmitted}
+                        />
+                      </div>
+                      <div className={`floating-field ${formData.phone ? "has-value" : ""}`} style={{ flex: 1 }}>
                         <input
                           id="intro-phone"
                           type="tel"
@@ -358,22 +465,22 @@ export default function ContactIntro() {
                           value={formData.phone}
                           onChange={handleChange}
                           onBlur={handleBlur}
-                          autoComplete="tel"
+                          autoComplete="tel-national"
                           className={hasSubmitted && errors.phone ? "is-invalid" : ""}
                           aria-invalid={Boolean(hasSubmitted && errors.phone)}
                           aria-describedby={hasSubmitted && errors.phone ? "error-phone" : undefined}
                         />
                         <label htmlFor="intro-phone">
-                          Phone Number <span className="floating-req">*</span>
+                          Mobile Number <span className="floating-req">*</span>
                         </label>
                       </div>
-                      {hasSubmitted && errors.phone && (
-                        <span id="error-phone" className="contact-field-error" role="alert">
-                          <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
-                          {errors.phone}
-                        </span>
-                      )}
                     </div>
+                    {hasSubmitted && errors.phone && (
+                      <span id="error-phone" className="contact-field-error" role="alert">
+                        <AlertCircle size={13} strokeWidth={2} aria-hidden="true" />
+                        {errors.phone}
+                      </span>
+                    )}
                   </div>
 
                   <div className="contact-form-field">
@@ -411,20 +518,6 @@ export default function ContactIntro() {
                         {errors.serviceCategory}
                       </span>
                     )}
-                  </div>
-
-                  <div className="contact-form-field">
-                    <FloatingDropdown
-                      id="intro-timeline"
-                      name="timeline"
-                      label="Project Timeline"
-                      value={formData.timeline}
-                      options={TIMELINES}
-                      onChange={(name, val) => {
-                        setFormData((prev) => ({ ...prev, [name]: val }));
-                      }}
-                      hasSubmitted={hasSubmitted}
-                    />
                   </div>
 
                   <div className="contact-form-field">

@@ -197,6 +197,86 @@ touch that section's component file(s) and, when genuinely necessary, shared
 global tokens. Do not modify unrelated sections, routing, or project
 configuration as a side effect.
 
+## Website Architecture & Key Subsystems
+
+GateXPay is a modern enterprise fintech platform offering global payment gateway integration, cross-border collections, multi-currency payouts, banking infrastructure, and agent/merchant onboarding.
+
+### Tech Stack
+- **Framework**: Next.js 16 (App Router, Turbopack, static site generation for 130+ routes)
+- **UI & Logic**: React 19, Vanilla CSS (modular co-located CSS files), Lucide React
+- **Animation**: GSAP 3 (ScrollTrigger) for scroll animations, Framer Motion for micro-interactions
+- **Backend / DB**: Mongoose (MongoDB connection caching in `lib/db.js`), `jose` JWT authentication (`lib/auth.js`)
+- **Assets & Cloud**: ImageKit integration (`lib/imagekit.js`), Vercel Analytics (`@vercel/analytics/next`)
+
+### Route Map & Core Pages
+- `/` (Home): `Hero`, `TrustRibbon`, `Capabilities`, `ScaleSection`, `ReliabilitySection` (subtle 54px background grid), `PaymentJourney`, `IndustrySection` (GSAP 3D stacked cards), `CTASection` (54px desktop heading, clean hover).
+- `/services` & `/services/[slug]`: 26+ production service detail pages across Payments & Banking, Agent & CSP Services, E-Governance & Utilities, and Business & IT Infrastructure. Features transparent vector hero art, sticky desktop showcase graphics, clean checklist headers, 4-step processes, and contextual internal linking.
+- `/blog` & `/blog/[slug]`: Blog listing with categories, search, featured insight card, and pixel-accurate `BlogDetail` reader with sticky Table of Contents sidebar.
+- `/contact`: `ContactIntro` (with custom `FloatingDropdown` country code and services selector), `ContactHeadquarter`, `ContactFAQ`.
+- `/about`: Company story, mission, and leadership.
+- `/policy/[slug]`: Compliance documents (`Privacy Policy`, `Terms`, `Merchant Onboarding`, `DPDP Compliance`).
+- `/llms.txt`: Clean LLM agentic web directory conforming to `llmstxt.org`.
+- `/login`, `/dashboard`, `/admin`: Secured portal for lead and content management.
+- `/api/*`: API routes (`/api/enquiries`, `/api/blog`, `/api/auth/*`).
+
+## Component & Section Design Locks (DO NOT BREAK)
+
+These patterns represent hard-won design locks and user-approved implementations. Any future modification must preserve these exact specifications.
+
+### 1. IndustrySection — 3D Stacked Card Scroll Animation (`IndustrySection.jsx`, `IndustrySection.css`)
+- **Strict Scope Rule**: This section is LOCKED in structure, layout, typography, content, images, and dimensions. Changes must ONLY affect animation mechanics.
+- **3D Transform Configuration**: The card container utilizes `transformStyle: "preserve-3d"`, `transformPerspective: 1000`, and `transformOrigin: "center top"`.
+- **GSAP ScrollTrigger**: Pinned timeline with `scrub: 1`, `pin: true`, `anticipatePin: 1`. Always wrapped in `gsap.context()` and cleaned up with `ctx.revert()` on unmount.
+- **Card Entry**: Cards animate upward from below to `y: 0, scale: 1, rotationX: 0, opacity: 1`.
+- **Card Retirement**: As the user scrolls to subsequent cards, retiring cards tilt backward (`rotationX: -20deg` desktop, `-14deg` tablet, `-8deg` mobile) and scale down proportionally via `scaleMax(index)` (`1 - (total - 1 - i) * 0.05`), resting at a subtle `-18px` top offset.
+- **Visibility & Culling Rule (Anti-Fanning)**: Unlike short 3-card demos, with 10 cards an accumulator offset creates an unsightly fanned staircase that clips the active card. Cards older than 2 layers back fade to `opacity: 0` (`duration: 0.2`).
+- **Terminal State**: The final card remains stable and fully visible at `scale: 1, rotationX: 0, y: 0, opacity: 1`.
+
+### 2. Blog Detail Article TOC Sidebar (`BlogDetail.css`, `ArticleTOC.jsx`)
+- **Sidebar Dimensions & Sticking**: Sticky sidebar (`.article-toc-sidebar`) with width `236px` (`220px` laptop), `position: sticky; top: 100px; z-index: 10; align-self: flex-start; height: fit-content;`.
+- **Heading**: `.article-toc-heading` is `18px`, font-weight `700`, color `#0F172A`, bottom margin `24px` (`1.5rem`).
+- **Left Rail**: `.article-toc-list` features a continuous `border-left: 1px solid #E2E8F0; gap: 14px; margin-bottom: 32px; padding-left: 0;`.
+- **Active Indicator**: `.article-toc-item.is-active::before` attaches flush to the rail:
+  ```css
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #0284C7;
+  border-radius: 0 4px 4px 0;
+  ```
+- **Item Typography**: Inactive items are `#64748B`, active items are `#0F172A` with font-weight `500`, and `padding: 2px 0 2px 18px`.
+- **Reading Progress Bar**: Positioned `28px` below the list, with `3px` track height, `#E2E8F0` track background, and `#0284C7` progress fill.
+- **Deterministic Scrollspy (Zero Flickering)**: Never use raw `IntersectionObserver` with multiple thresholds for TOC active tracking — `IntersectionObserver` callbacks deliver only changed entries per frame, which causes severe oscillation and flickering between adjacent sections. Use a single-pass `requestAnimationFrame` scroll handler evaluating all sections sequentially against a fixed activation offset (`120px` below viewport top) with bottom-of-page locking for the final section.
+
+### 3. Forms & Lead Capture Standards (`ContactIntro.jsx`, `ContactModal.jsx`)
+- **Country Code Selector**: All lead capture and contact forms MUST include an international country code dropdown using `FloatingDropdown`.
+  - Default: `IND +91` (`{ code: "+91", label: "IND +91", flag: "🇮🇳" }`).
+  - Standard options: India (+91), United States (+1), United Kingdom (+44), UAE (+971), Singapore (+65).
+  - Phone layout: `.contact-phone-row` with `.contact-phone-code` set to `112px` desktop and `96px` mobile, flex-1 phone input.
+  - The form submission payload to `/api/enquiries` MUST pass `countryCode: formData.countryCode || "+91"`.
+- **Contact Intro Form Layout (`ContactIntro.jsx`)**:
+  - Row 1: Full Name | Company Name (2-column grid).
+  - Row 2: Email Address | Project Timeline (2-column grid, half Email Address & half Project Timeline).
+  - Row 3: Mobile Number with Country Code dropdown (`.contact-phone-row`, full width).
+  - Row 4: Service Category (`FloatingDropdown`, full width, placed directly above textarea).
+  - Row 5: Tell us about your requirements (`textarea`, full width).
+- **Floating Notched Labels**: Labels rest inside the input and smoothly animate into the top border line on focus or when a value is present.
+- **Submit-Only Validation**: Validation errors and red border states MUST ONLY trigger after the user attempts form submission (`hasSubmitted: true`). Never show premature errors on mount or plain field blur.
+
+### 4. Service Detail Page Conventions (`ServiceDetail/*`, `data/service-details.js`)
+- **Hero Summaries**: Strict 20-word summary guidelines for clear, impactful messaging.
+- **Hero Artwork**: Uses authentic 100% transparent vector art (`channels: 4, hasAlpha: true`) that integrates seamlessly with `#F0F9FF` hero backgrounds without white card boxes.
+- **Showcase Graphics**: All showcase images must have transparent backgrounds and stick smoothly on desktop (`position: sticky; top: 96px; align-self: start`) alongside checklists to eliminate trailing empty space.
+- **Showcase Checklists**: Render clean bold headings only; do not display noisy sub-descriptions (`item.detail` is omitted).
+- **Process Headings**: Clean and balanced titles (`text-wrap: balance`) without orphaned words or awkward line breaks.
+
+### 5. Badges, Ribbons & Social Icons
+- **Trust Ribbons & Partner Badges**: Must remain strictly static without interactive jump, scale, or transform effects on hover to preserve institutional credibility.
+- **Footer Social Icons**: Uniform 30x30 SVG icons for X, LinkedIn, Facebook, and Instagram, rendered with clean white color and subtle opacity transitions (no stray cyan or colored hover states on individual icons).
+- **Cookie Consent**: Full-width bottom bar pinned to `bottom: 0` without close crosses or redundant badge elements.
+
 ## Daily Work Tracking System
 
 This project keeps a permanent, append-only development diary. Follow this

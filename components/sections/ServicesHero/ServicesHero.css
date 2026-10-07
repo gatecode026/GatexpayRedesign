@@ -103,11 +103,18 @@
   background: #FFFFFF;
   border-radius: 16px;
   overflow: hidden;
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
-.services-hero-search:focus-within {
-  outline: 2px solid var(--sh-cyan);
-  outline-offset: 3px;
+.services-hero-search:focus-within,
+.services-hero-search:focus,
+.services-hero-search:hover,
+.services-hero-search:active {
+  border: none;
+  outline: none;
+  box-shadow: none;
 }
 
 /* Frame 174 — padding 8 12 8 20 */
@@ -164,8 +171,7 @@
 }
 
 .services-hero-submit:focus-visible {
-  outline: 2px solid #FFFFFF;
-  outline-offset: -4px;
+  outline: none;
 }
 
 .services-hero-submit svg {

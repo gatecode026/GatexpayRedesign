@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
 import "./SolutionCards.css";
 
 const SOLUTIONS = [
@@ -90,9 +91,7 @@ export default function SolutionCards() {
                 <div className="sol-card-bottom">
                   <Link href={sol.href} className="sol-card-link">
                     <span>{sol.linkLabel}</span>
-                    <span className="sol-link-arrow" aria-hidden="true">
-                      →
-                    </span>
+                    <ArrowRight className="sol-link-arrow" aria-hidden="true" />
                   </Link>
                 </div>
               </div>

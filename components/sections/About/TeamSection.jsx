@@ -4,7 +4,7 @@ const TEAM = [
   {
     name: "Vansh Chaudhary",
     role: "Chief Executive Officer",
-    bio: "Visionary leader driving innovation and strategic direction to shape the next era of fintech infrastructure.",
+    bio: "Visionary leader driving innovation, strategic partnerships, and the overarching technological roadmap at GateXPay.",
     image: "/assets/about_us/images/img_a233d47b2e.png",
     linkedin: "https://linkedin.com/company/gatexpay",
     instagram: "https://instagram.com/gatexpay",
@@ -13,7 +13,7 @@ const TEAM = [
   {
     name: "Govind Jain",
     role: "Chief Financial Officer",
-    bio: "Financial strategist ensuring fiscal discipline, regulatory compliance, and sustainable growth across operations.",
+    bio: "Financial strategist ensuring sustainable company growth, robust risk management, and strict adherence to industry compliance.",
     image: "/assets/about_us/images/img_eb0c79c77d.png",
     linkedin: "https://linkedin.com/company/gatexpay",
     instagram: "https://instagram.com/gatexpay",
@@ -59,8 +59,8 @@ export default function TeamSection() {
                 <Image
                   src={member.image}
                   alt={`${member.name} - ${member.role}`}
-                  width={289}
-                  height={244}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 240px"
                   className="about-team-card-img"
                 />
               </div>

@@ -258,7 +258,7 @@ export default function CookieConsent() {
                 onClick={handleSaveCustom}
                 disabled={isSaving}
               >
-                <Check className="w-4 h-4" /> Save Preferences
+                Save Preferences
               </button>
             ) : (
               <>

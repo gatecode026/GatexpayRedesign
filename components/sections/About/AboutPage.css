@@ -680,16 +680,18 @@
   font-family: var(--font-heading, 'Source Serif 4', 'Source Serif Pro', serif);
   font-style: normal;
   font-weight: 700;
-  font-size: 54px;
-  line-height: 74px;
+  font-size: clamp(32px, 3.5vw, 42px);
+  line-height: 1.25;
   color: var(--gx-text);
 }
 
 .about-team-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
+  gap: 24px;
   width: 100%;
+  max-width: 1040px;
+  margin-inline: auto;
 }
 
 .about-team-card {
@@ -698,24 +700,26 @@
   align-items: stretch;
   background: var(--gx-white);
   border: 1px solid var(--gx-card-border);
-  box-shadow: var(--gx-shadow-md);
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
   border-radius: 16px;
   overflow: hidden;
   box-sizing: border-box;
-  min-height: 246px;
+  min-height: 200px;
   transition: transform 300ms ease, box-shadow 300ms ease;
 }
 
 .about-team-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0px 10px 20px -3px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 10px 20px -3px rgba(0, 0, 0, 0.1);
 }
 
 .about-team-card-img-wrap {
-  width: 289px;
-  min-width: 240px;
+  width: 190px;
+  min-width: 190px;
+  flex: 0 0 190px;
   position: relative;
   background-color: #E2E8F0;
+  overflow: hidden;
 }
 
 .about-team-card-img {
@@ -729,8 +733,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 24px;
-  gap: 12px;
+  padding: 20px 24px;
   flex-grow: 1;
   box-sizing: border-box;
 }
@@ -746,8 +749,8 @@
   font-family: var(--font-heading, 'Source Serif 4', 'Source Serif Pro', serif);
   font-style: normal;
   font-weight: 700;
-  font-size: 32px;
-  line-height: 44px;
+  font-size: 24px;
+  line-height: 32px;
   color: var(--gx-text);
 }
 
@@ -755,19 +758,19 @@
   margin: 0;
   font-family: var(--font-body, 'Poppins', sans-serif);
   font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
   color: var(--gx-blue);
 }
 
 .about-team-card-bio {
-  margin: 0;
+  margin: 8px 0;
   font-family: var(--font-body, 'Poppins', sans-serif);
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 13px;
+  line-height: 19px;
   color: var(--gx-muted);
 }
 
@@ -775,17 +778,17 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
-  margin-top: 4px;
+  gap: 10px;
+  margin-top: auto;
 }
 
 .about-social-btn {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   text-decoration: none;
   color: var(--gx-white);
   transition: transform 200ms ease, opacity 200ms ease;
@@ -823,36 +826,41 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
-  padding: 32px;
-  gap: 16px;
-  background: var(--gx-light-blue);
-  box-shadow: var(--gx-shadow-md), var(--gx-inset-card-reverse);
+  padding: 36px 40px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
   border-radius: 16px;
   box-sizing: border-box;
-  min-height: 252px;
-  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  width: 100%;
 }
 
 .about-regulatory-header-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
-  z-index: 1;
+  gap: 16px;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .about-regulatory-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  background: var(--gx-blue);
-  border-radius: 12px;
-  color: var(--gx-white);
+  width: 48px;
+  height: 48px;
+  background: #F0F9FF;
+  border: 1px solid #E0F2FE;
+  border-radius: 50%;
+  color: #0284C7;
   flex-shrink: 0;
+}
+
+.about-regulatory-badge svg {
+  width: 24px;
+  height: 24px;
 }
 
 .about-regulatory-heading {
@@ -860,17 +868,17 @@
   font-family: var(--font-heading, 'Source Serif 4', 'Source Serif Pro', serif);
   font-style: normal;
   font-weight: 700;
-  font-size: 46px;
-  line-height: 64px;
-  color: var(--gx-text);
+  font-size: 26px;
+  line-height: 34px;
+  color: #0F172A;
 }
 
 .about-regulatory-body {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-width: min(775px, 68%);
-  z-index: 1;
+  gap: 14px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .about-regulatory-body p {
@@ -879,25 +887,8 @@
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 20px;
-  color: var(--gx-muted);
-}
-
-.about-regulatory-art-wrap {
-  position: absolute;
-  width: 510px;
-  height: 340px;
-  right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.about-regulatory-art {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  line-height: 22px;
+  color: #64748B;
 }
 
 /* ============================================================
@@ -1081,11 +1072,6 @@ a.about-contact-item:hover {
     font-size: 26px;
     line-height: 36px;
   }
-
-  .about-regulatory-art-wrap {
-    width: 400px;
-    height: 260px;
-  }
 }
 
 /* Tablet Portrait: 768px - 1023px */
@@ -1194,24 +1180,12 @@ a.about-contact-item:hover {
   }
 
   .about-regulatory-card {
-    min-height: auto;
-    padding: 24px;
+    padding: 28px 24px;
   }
 
   .about-regulatory-heading {
-    font-size: 32px;
-    line-height: 42px;
-  }
-
-  .about-regulatory-art-wrap {
-    position: relative;
-    width: 100%;
-    max-width: 380px;
-    height: 240px;
-    margin: 16px auto 0 auto;
-    right: auto;
-    top: auto;
-    transform: none;
+    font-size: 22px;
+    line-height: 30px;
   }
 
   .about-contact-grid {
@@ -1325,22 +1299,23 @@ a.about-contact-item:hover {
 
   .about-team-card-img-wrap {
     width: 100%;
-    height: 260px;
+    height: 240px;
+    flex: 0 0 240px;
   }
 
   .about-regulatory-heading {
-    font-size: 24px;
-    line-height: 32px;
+    font-size: 20px;
+    line-height: 28px;
   }
 
   .about-regulatory-badge {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
 
   .about-regulatory-badge svg {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
   }
 
   .about-contact-item {

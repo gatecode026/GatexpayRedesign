@@ -4259,7 +4259,7 @@ export const SERVICE_DETAILS = [
         href: "/services#citizen-identity",
       },
       image: {
-        src: "/assets/services-detail/aadhaar/hero-aadhaar-illustration.png",
+        src: "/assets/services-listing/service-aadhaar.png",
         width: 1536,
         height: 1024,
         alt: "Illustration of Aadhaar citizen identity verification, enrolment assistance, and smart card services",

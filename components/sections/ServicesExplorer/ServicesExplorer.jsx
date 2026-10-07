@@ -548,7 +548,11 @@ export default function ServicesExplorer({
 // Reusable ServiceCard component matching Frame 202 exact specifications
 function ServiceCard({ service }) {
   return (
-    <article className="services-card" data-service-id={service.id}>
+    <Link
+      href={service.href}
+      className="services-card"
+      data-service-id={service.id}
+    >
       {/* Frame 199: Badge */}
       <div className="services-card-badge-wrap">
         <span
@@ -566,7 +570,7 @@ function ServiceCard({ service }) {
       </div>
 
       {/* Buttons: CTA Link */}
-      <Link href={service.href} className="services-card-cta">
+      <div className="services-card-cta">
         <span className="services-card-cta-text">Explore Service</span>
         <ArrowRight
           size={14}
@@ -574,7 +578,7 @@ function ServiceCard({ service }) {
           className="services-card-arrow"
           aria-hidden="true"
         />
-      </Link>
+      </div>
 
       {/* 316x211 Illustration placed at left: 151px, top: calc(50% - 211px/2 + 0.5px) */}
       <div className="services-card-visual" aria-hidden="true">
@@ -586,6 +590,6 @@ function ServiceCard({ service }) {
           className="services-card-img"
         />
       </div>
-    </article>
+    </Link>
   );
 }
