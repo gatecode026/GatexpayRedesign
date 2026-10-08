@@ -1,6 +1,12 @@
-import Image from "next/image";
 import { MapPin, Mail, Phone } from "lucide-react";
+
+const ADDRESS = "412, Sumer Nagar, Mansarovar, Jaipur, Rajasthan, 302020";
+
 export default function ContactSection() {
+  const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(
+    ADDRESS
+  )}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
   return (
     <section
       className="about-contact-section"
@@ -51,12 +57,16 @@ export default function ContactSection() {
 
         {/* Map Card */}
         <div className="about-map-card">
-          <Image
-            src="/assets/about_us/images/img_a4aba51f90.png"
-            alt="GateXPay headquarters map location in Mansarovar, Jaipur, Rajasthan, India"
-            width={629}
-            height={336}
-            className="about-map-img"
+          <iframe
+            title="GateXPay headquarters map location in Mansarovar, Jaipur, Rajasthan"
+            src={mapEmbedUrl}
+            width="100%"
+            height="100%"
+            style={{ border: 0, display: "block" }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+            className="about-map-iframe"
           />
 
           <div className="about-map-floating-pin" aria-hidden="true">
