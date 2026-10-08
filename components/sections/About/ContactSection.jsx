@@ -68,13 +68,6 @@ export default function ContactSection() {
             allowFullScreen
             className="about-map-iframe"
           />
-
-          <div className="about-map-floating-pin" aria-hidden="true">
-            <div className="about-map-pin-title">GateXPay Technologies</div>
-            <div className="about-map-pin-subtitle">
-              Mansarovar, Jaipur, Rajasthan
-            </div>
-          </div>
         </div>
       </div>
     </section>
