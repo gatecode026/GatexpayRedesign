@@ -70,7 +70,7 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 
 .industry-tabs-label {
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   line-height: 20px;
   color: #0F172A;
@@ -79,20 +79,22 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   letter-spacing: -0.01em;
 }
 
+/* Tabs scroll / flex container: spans 100% width, edge-to-edge aligned with website container */
 .industry-tabs-scroll {
   display: flex;
   align-items: center;
-  overflow-x: auto;
+  justify-content: space-between;
+  width: 100%;
+  flex: 1;
+  padding: 4px 0 6px 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 4px 0 6px 0;
-  flex: 1;
 }
 .industry-tabs-scroll::-webkit-scrollbar {
   display: none;
 }
 
-/* ── Tab Item & Dividers (Image 2) ──────────────────────────────────────── */
+/* ── Tab Item & Dividers ─────────────────────────────────────────────────── */
 .industry-tab-item {
   display: inline-flex;
   align-items: center;
@@ -104,12 +106,12 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   color: #CBD5E1;
   font-size: 13px;
   line-height: 1;
-  margin-inline: 10px;
+  margin-right: clamp(4px, 0.45vw, 8px);
   user-select: none;
   opacity: 0.8;
 }
 
-/* When sticky, hide dividers (Image 3) */
+/* When sticky, hide dividers */
 .industry-tabs-sticky-wrap.is-sticky .industry-tab-divider {
   display: none;
 }
@@ -118,14 +120,14 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 .industry-tab {
   position: relative;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: clamp(12px, 0.92vw, 13.5px);
   font-weight: 500;
   line-height: 1.4;
   color: #64748B;
   background: none;
   border: none;
   border-radius: 0;
-  padding: 4px 6px;
+  padding: 4px clamp(2px, 0.3vw, 5px);
   white-space: nowrap;
   cursor: pointer;
   transition: color 0.2s ease;
@@ -141,7 +143,7 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   transform: none;
 }
 
-/* Only style active tab when in sticky mode (Image 3) */
+/* Only style active tab when in sticky mode */
 .industry-tabs-sticky-wrap.is-sticky .industry-tab.active {
   color: #0F172A;
   font-weight: 700;
@@ -151,13 +153,14 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   transform: none;
 }
 
-/* Sticky mode tabs (Image 3): generous horizontal gap, solid dark underline on active */
-.industry-tabs-sticky-wrap.is-sticky .industry-tab {
-  padding-bottom: 8px;
-  margin-right: 28px;
+/* Sticky mode tabs: perfectly distributed across 100% container width with zero trailing space */
+.industry-tabs-sticky-wrap.is-sticky .industry-tabs-scroll {
+  justify-content: space-between;
+  width: 100%;
 }
 
-.industry-tabs-sticky-wrap.is-sticky .industry-tab-item:last-child .industry-tab {
+.industry-tabs-sticky-wrap.is-sticky .industry-tab {
+  padding-bottom: 8px;
   margin-right: 0;
 }
 
@@ -165,8 +168,8 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   content: "";
   position: absolute;
   bottom: 0;
-  left: 6px;
-  right: 6px;
+  left: 2px;
+  right: 2px;
   height: 2.5px;
   background: #0F172A;
   border-radius: 2px;
@@ -178,6 +181,26 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 .industry-tabs-sticky-wrap.is-sticky .industry-tab.active::after {
   opacity: 1;
   transform: scaleX(1);
+}
+
+/* Responsive overflow fallback on narrow mobile screens (<= 960px) */
+@media (max-width: 960px) {
+  .industry-tabs-scroll {
+    overflow-x: auto;
+    justify-content: flex-start;
+    gap: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .industry-tab-divider {
+    margin-right: 6px;
+    margin-left: 6px;
+  }
+
+  .industry-tabs-sticky-wrap.is-sticky .industry-tabs-scroll {
+    justify-content: flex-start;
+    gap: 20px;
+  }
 }
 
 /* ── Feature Card ────────────────────────────────────────────────────────
@@ -310,55 +333,77 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   gap: var(--space-6);
 }
 
-/* Tall scroll track — its height provides the scroll distance the
-   animation maps to. Sticky child locks in place while scrolling through it. */
+/* ── Strict 3-Card Stacked Showcase ──────────────────────────────────────
+   Fixed 3-card visible window: MAIN (scale 1.0, y 0), SECOND (scale 0.97, y 18px),
+   THIRD (scale 0.94, y 36px). All other cards are completely hidden. ── */
 .industry-stack-wrap {
   position: relative;
-  margin-top: var(--space-6);
+  margin-top: 32px;
+  width: 100%;
 }
 
-/* Fitted to content (stage + dots + padding), not 100vh — a full-viewport
-   sticky leaves a lot of dead space above/below the centered stage. Capped
-   by the viewport too, for short/landscape screens. */
 .industry-stack-sticky {
   position: sticky;
-  top: calc(var(--navbar-h, 80px) + 104px);
-  height: min(calc(100vh - var(--navbar-h, 80px) - 110px), 960px);
+  top: calc(var(--navbar-h, 80px) + var(--industry-tabs-h, 128px) + 24px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  overflow: hidden;
-  transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1), height 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 100%;
+  z-index: 10;
+  transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.navbar--hidden .industry-stack-sticky {
-  top: 104px;
-  height: min(calc(100vh - 110px), 960px);
+  top: calc(var(--industry-tabs-h, 128px) + 24px);
 }
 
-@media (min-width: 375px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 110px), 920px); }
-  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 110px), 920px); }
-}
-@media (min-width: 414px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 110px), 860px); }
-  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 110px), 860px); }
-}
-@media (min-width: 480px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 110px), 830px); }
-  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 110px), 830px); }
-}
-@media (min-width: 768px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 110px), 620px); }
-  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 110px), 620px); }
-}
-@media (min-width: 1024px) {
-  .industry-stack-sticky { height: min(calc(100vh - var(--navbar-h, 80px) - 110px), 580px); }
-  body.navbar--hidden .industry-stack-sticky { height: min(calc(100vh - 110px), 580px); }
-}
-
-.industry-stack-stage-outer {
+.industry-stack-stage {
+  position: relative;
   width: 100%;
+  height: 520px;
+}
+
+@media (min-width: 768px) {
+  .industry-stack-stage {
+    height: 520px;
+  }
+}
+
+@media (max-width: 767px) {
+  .industry-stack-stage {
+    height: 770px;
+  }
+}
+
+@media (max-width: 480px) {
+  .industry-stack-stage {
+    height: 810px;
+  }
+}
+
+.industry-stack-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  transform-origin: 50% 0%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transition: box-shadow 0.25s ease;
+}
+
+.industry-stack-static .industry-stack-card {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  margin-bottom: 24px;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
 }
 
 .industry-stack-dots {
@@ -366,9 +411,10 @@ body.navbar--hidden .industry-stack-sticky {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-top: 40px;
+  margin-top: 32px;
+  margin-bottom: 16px;
   position: relative;
-  z-index: 20;
+  z-index: 40;
 }
 
 .industry-stack-dot {
@@ -379,63 +425,10 @@ body.navbar--hidden .industry-stack-sticky {
   transition: background 0.3s var(--ease-out), width 0.3s var(--ease-out);
   cursor: pointer;
 }
+
 .industry-stack-dot.active {
   width: 28px;
   background: var(--color-blue);
-}
-
-/* Card content is a row (image beside text) at >=768px but stacks
-   vertically (image above text) below that, so mobile needs far more
-   height. Stage has +56px height to accommodate the 3 peeking cards
-   stacked above the front card (-15px, -30px, -45px) with full visibility
-   under the sticky tab bar, while overflow:hidden strictly hides all
-   incoming cards and bottom edges from overflowing. */
-.industry-stack-stage {
-  position: relative;
-  width: 100%;
-  height: 884px; /* 828 + 56 */
-  overflow: hidden;
-  border-radius: 28px;
-  /* overflow:hidden alone intermittently fails to clip the absolutely-
-     positioned, translateY-animated cards in Chromium (confirmed via an
-     isolated element screenshot — cards bled past this box's own bottom
-     edge, fully unclipped, even with will-change/border-radius removed).
-     clip-path is a hard, GPU-composited-safe clip that doesn't have this
-     issue — kept alongside overflow:hidden as the real fix. */
-  clip-path: inset(0 round 28px);
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-@media (min-width: 375px) {
-  .industry-stack-stage { height: 830px; } /* 774 + 56 */
-}
-@media (min-width: 414px) {
-  .industry-stack-stage { height: 767px; } /* 711 + 56 */
-}
-@media (min-width: 480px) {
-  .industry-stack-stage { height: 740px; } /* 684 + 56 */
-}
-@media (min-width: 768px) {
-  .industry-stack-stage { height: 506px; } /* 450 + 56 */
-}
-@media (min-width: 1024px) {
-  .industry-stack-stage { height: 470px; } /* 414 + 56 */
-}
-
-.industry-stack-card {
-  position: absolute;
-  top: 56px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-  overflow: hidden;
-  will-change: transform, opacity;
-  transform-origin: top center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
 }
 
 /* ── Mobile: tabs become a contained horizontal scroller ──────────────────
@@ -473,16 +466,16 @@ body.navbar--hidden .industry-stack-sticky {
    reduction, the longest card content ("Industries We Offer") overflows
    by up to 12px here specifically. Tighten a few gaps slightly. ── */
 @media (max-width: 375px) {
-  .industry-card.industry-stack-card {
+  .industry-card {
     gap: 18px;
   }
-  .industry-stack-card .industry-card-content {
+  .industry-card .industry-card-content {
     gap: 18px;
   }
-  .industry-stack-card .industry-card-block {
+  .industry-card .industry-card-block {
     gap: 6px;
   }
-  .industry-stack-card .industry-card-usecases {
+  .industry-card .industry-card-usecases {
     gap: 6px;
   }
 }

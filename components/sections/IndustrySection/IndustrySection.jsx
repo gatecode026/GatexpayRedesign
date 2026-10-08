@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect, useLayoutEffect, useRef, useSyncExternalStore } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import "./IndustrySection.css";
 
 function subscribeReducedMotion(callback) {
@@ -202,7 +200,7 @@ export default function IndustrySection() {
   const ref = useRef(null);
   const sentinelRef = useRef(null);
   const tabsScrollRef = useRef(null);
-
+  const tabsWrapRef = useRef(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -217,30 +215,195 @@ export default function IndustrySection() {
     el.querySelectorAll(".reveal").forEach((n) => obs.observe(n));
     return () => obs.disconnect();
   }, []);
-  // ── GSAP ScrollTrigger stacked card showcase (all 10 industries) ─────────
+
+  // Dynamically sync tabs wrap height to CSS variable --industry-tabs-h
+  useEffect(() => {
+    const updateTabsHeight = () => {
+      const tabsEl = tabsWrapRef.current;
+      const sectionEl = ref.current;
+      if (!tabsEl || !sectionEl) return;
+      const h = tabsEl.getBoundingClientRect().height;
+      sectionEl.style.setProperty("--industry-tabs-h", `${Math.round(h)}px`);
+    };
+    updateTabsHeight();
+    window.addEventListener("resize", updateTabsHeight);
+    return () => window.removeEventListener("resize", updateTabsHeight);
+  }, [isSticky]);
+
+  // ── Strict 3-Card Stacked Showcase ──
   const stackWrapRef = useRef(null);
   const stackStickyRef = useRef(null);
   const stackCardRefs = useRef([]);
-  const scrollTriggerRef = useRef(null);
+  const lastActiveIndexRef = useRef(0);
   const [stackActiveIndex, setStackActiveIndex] = useState(0);
+  const [wrapHeightPx, setWrapHeightPx] = useState(null);
   const reducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot
   );
-  const [wrapHeightPx, setWrapHeightPx] = useState(null);
 
-  useLayoutEffect(() => {
+  // Smoothstep easing: 0 velocity at endpoints for fluid, jitter-free motion
+  const ease = (v) => {
+    const clamped = Math.min(Math.max(v, 0), 1);
+    return clamped * clamped * (3 - 2 * clamped);
+  };
+
+  // Continuous physical stacking animation strictly controlled by scroll progress p
+  const applyStackPositions = (p) => {
+    const cards = stackCardRefs.current;
+    const n = STACK_KEYS.length;
+    if (!cards || cards.length === 0) return;
+
+    const clampedP = Math.min(Math.max(p, 0), n);
+
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    const isTablet =
+      typeof window !== "undefined" &&
+      window.innerWidth >= 768 &&
+      window.innerWidth < 1024;
+
+    const yStep = isMobile ? 10 : isTablet ? 13 : 16;
+    const enterY = isMobile ? 80 : isTablet ? 100 : 120;
+    const targetBehind2Y = 0;
+    const targetBehind1Y = yStep;
+    const targetActiveY = yStep * 2;
+
+    const scaleSecond = isMobile ? 0.98 : isTablet ? 0.975 : 0.97;
+    const scaleThird = isMobile ? 0.96 : isTablet ? 0.95 : 0.94;
+
+    cards.forEach((card, idx) => {
+      if (!card) return;
+
+      // Final portion: when clampedP > n - 1 (p between 9 and 10), final card completes section exit
+      if (clampedP > n - 1) {
+        const exitT = clampedP - (n - 1);
+        const eExit = ease(exitT);
+
+        if (idx === n - 1) {
+          // Final active card moves upward/forward toward the end of the section
+          const y = targetActiveY - 30 * eExit;
+          const scale = 1.0 - 0.02 * eExit;
+          const op = Math.max(0, 1 - 0.5 * eExit);
+          card.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+          card.style.opacity = op.toFixed(3);
+          card.style.visibility = op > 0.01 ? "visible" : "hidden";
+          card.style.zIndex = "40";
+          card.style.pointerEvents = "auto";
+        } else if (idx === n - 2) {
+          // 1st behind card (peeking at top) fades out
+          const op = Math.max(0, 1 - eExit);
+          card.style.transform = `translate3d(0, ${targetBehind1Y}px, 0) scale(${scaleSecond.toFixed(3)})`;
+          card.style.opacity = op.toFixed(3);
+          card.style.visibility = op > 0.01 ? "visible" : "hidden";
+          card.style.zIndex = "30";
+          card.style.pointerEvents = "none";
+        } else if (idx === n - 3) {
+          // 2nd behind card (peeking higher at top) fades out
+          const op = Math.max(0, 1 - eExit);
+          card.style.transform = `translate3d(0, ${targetBehind2Y}px, 0) scale(${scaleThird.toFixed(3)})`;
+          card.style.opacity = op.toFixed(3);
+          card.style.visibility = op > 0.01 ? "visible" : "hidden";
+          card.style.zIndex = "20";
+          card.style.pointerEvents = "none";
+        } else {
+          card.style.opacity = "0";
+          card.style.visibility = "hidden";
+          card.style.zIndex = "0";
+          card.style.pointerEvents = "none";
+        }
+        return;
+      }
+
+      // Normal rolling stack progression (clampedP <= n - 1)
+      const diff = clampedP - idx;
+
+      if (diff < -1) {
+        // 1. Future card: not yet entering
+        card.style.opacity = "0";
+        card.style.visibility = "hidden";
+        card.style.zIndex = "0";
+        card.style.pointerEvents = "none";
+        card.style.transform = `translate3d(0, ${enterY}px, 0) scale(0.98)`;
+      } else if (diff < 0) {
+        // 2. Card entering into ACTIVE from below: diff in [-1, 0)
+        const t = diff + 1;
+        const e = ease(t);
+        const y = enterY * (1 - e) + targetActiveY * e;
+        const scale = 0.98 + 0.02 * e;
+        const op = Math.min(1, e * 1.5);
+        card.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+        card.style.opacity = op.toFixed(3);
+        card.style.visibility = op > 0.01 ? "visible" : "hidden";
+        card.style.zIndex = "40";
+        card.style.pointerEvents = e >= 0.5 ? "auto" : "none";
+      } else if (diff < 1) {
+        // 3. Card is ACTIVE transitioning to FIRST BEHIND (peeking at top): diff in [0, 1)
+        // t = 0 -> active at y = targetActiveY, scale = 1.0
+        // t = 1 -> first behind at y = targetBehind1Y, scale = scaleSecond
+        const t = diff;
+        const e = ease(t);
+        const y = targetActiveY * (1 - e) + targetBehind1Y * e;
+        const scale = 1.0 - (1.0 - scaleSecond) * e;
+        card.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+        card.style.opacity = "1";
+        card.style.visibility = "visible";
+        card.style.zIndex = "30";
+        card.style.pointerEvents = e < 0.5 ? "auto" : "none";
+      } else if (diff < 2) {
+        // 4. Card is FIRST BEHIND transitioning to SECOND BEHIND (peeking higher at top): diff in [1, 2)
+        // t = 0 -> y = targetBehind1Y, scale = scaleSecond
+        // t = 1 -> y = targetBehind2Y, scale = scaleThird
+        const t = diff - 1;
+        const e = ease(t);
+        const y = targetBehind1Y * (1 - e) + targetBehind2Y * e;
+        const scale = scaleSecond - (scaleSecond - scaleThird) * e;
+        card.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+        card.style.opacity = "1";
+        card.style.visibility = "visible";
+        card.style.zIndex = "20";
+        card.style.pointerEvents = "none";
+      } else if (diff < 3) {
+        // 5. Card is SECOND BEHIND transitioning OUT of the stack: diff in [2, 3)
+        const t = diff - 2;
+        if (t < 0.75) {
+          const eExit = ease(t / 0.75);
+          const y = targetBehind2Y - 8 * eExit;
+          const scale = scaleThird - 0.02 * eExit;
+          const op = Math.max(0, 1 - eExit);
+          card.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
+          card.style.opacity = op.toFixed(3);
+          card.style.visibility = op > 0.01 ? "visible" : "hidden";
+          card.style.zIndex = "10";
+          card.style.pointerEvents = "none";
+        } else {
+          card.style.opacity = "0";
+          card.style.visibility = "hidden";
+          card.style.zIndex = "0";
+          card.style.pointerEvents = "none";
+          card.style.transform = `translate3d(0, ${targetBehind2Y - 8}px, 0) scale(${(scaleThird - 0.02).toFixed(3)})`;
+        }
+      } else {
+        // 6. Old card: completely out of the visible stack
+        card.style.opacity = "0";
+        card.style.visibility = "hidden";
+        card.style.zIndex = "0";
+        card.style.pointerEvents = "none";
+      }
+    });
+  };
+
+  // Measure and set track scroll height
+  useEffect(() => {
     if (reducedMotion) return;
-    const measure = () => {
+    const updateWrapHeight = () => {
       const stickyH =
-        stackStickyRef.current?.getBoundingClientRect().height ??
-        window.innerHeight;
-      setWrapHeightPx(STACK_KEYS.length * 620 + stickyH);
+        stackStickyRef.current?.getBoundingClientRect().height ?? 580;
+      setWrapHeightPx(STACK_KEYS.length * 500 + stickyH);
     };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    updateWrapHeight();
+    window.addEventListener("resize", updateWrapHeight);
+    return () => window.removeEventListener("resize", updateWrapHeight);
   }, [reducedMotion]);
 
   // Sticky tabs bar detection
@@ -281,131 +444,56 @@ export default function IndustrySection() {
     };
   }, []);
 
-  // GSAP + ScrollTrigger stacked card animation
+  // Scroll listener: links scroll progress to strictly 3 visible cards
   useEffect(() => {
     if (reducedMotion || typeof window === "undefined") return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    const wrap = stackWrapRef.current;
+    const sticky = stackStickyRef.current;
+    if (!wrap || !sticky) return;
 
-    const ctx = gsap.context(() => {
-      const cards = stackCardRefs.current.filter(Boolean);
-      if (cards.length === 0) return;
-      const n = cards.length;
+    applyStackPositions(0);
 
-      const isMobile = window.innerWidth < 768;
-      const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-      const rotX = isMobile ? -8 : isTablet ? -14 : -20;
-      const stackOffset = isMobile ? -10 : isTablet ? -14 : -18;
-      const scaleMax = gsap.utils.mapRange(1, n - 1, 0.8, 1);
+    let rafId = null;
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const rect = wrap.getBoundingClientRect();
+        const stickyH = sticky.getBoundingClientRect().height;
+        const scrollDistance = wrap.offsetHeight - stickyH;
+        if (scrollDistance <= 0) return;
 
-      gsap.set(cards, {
-        transformStyle: "preserve-3d",
-        transformPerspective: 1000,
-        transformOrigin: "center top",
-      });
+        const isNavHidden =
+          typeof document !== "undefined" &&
+          document.body.classList.contains("navbar--hidden");
+        const navH = isNavHidden ? 0 : 80;
+        const tabsH = tabsWrapRef.current?.getBoundingClientRect().height ?? 128;
+        const stickyTop = navH + tabsH + 24;
 
-      // Card 0 starts as the active front card
-      gsap.set(cards[0], {
-        y: 0,
-        scale: 1,
-        rotationX: 0,
-        opacity: 1,
-        zIndex: 10,
-      });
+        const scrolled = stickyTop - rect.top;
+        const normalized = Math.min(Math.max(scrolled / scrollDistance, 0), 1);
+        const p = normalized * STACK_KEYS.length;
 
-      // Cards 1..n-1 start below viewport
-      for (let i = 1; i < n; i++) {
-        gsap.set(cards[i], {
-          y: () => window.innerHeight,
-          scale: 1,
-          rotationX: 0,
-          opacity: 1,
-          zIndex: 10 + i * 2,
-        });
-      }
+        applyStackPositions(p);
 
-      const stepDuration = 2;
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: stackWrapRef.current,
-          start: "top top+=184",
-          end: "bottom bottom",
-          scrub: 0.5,
-          onUpdate: (self) => {
-            const p = self.progress;
-            const activeIdx = Math.min(Math.round(p * (n - 1)), n - 1);
-            setStackActiveIndex(activeIdx);
-            setActive(STACK_KEYS[activeIdx]);
-          },
-        },
-      });
-
-      scrollTriggerRef.current = tl.scrollTrigger;
-
-      for (let i = 1; i < n; i++) {
-        const startTime = (i - 1) * stepDuration;
-
-        // Card i enters from below to front
-        tl.to(
-          cards[i],
-          {
-            y: 0,
-            scale: 1,
-            rotationX: 0,
-            duration: stepDuration,
-            ease: "none",
-          },
-          startTime
-        );
-
-        // Card i - 1 retires: tilts backward, scales down, moves to stackOffset
-        tl.to(
-          cards[i - 1],
-          {
-            rotationX: rotX,
-            scale: scaleMax(i - 1),
-            y: stackOffset,
-            duration: stepDuration,
-            ease: "none",
-          },
-          startTime
-        );
-
-        // Card i - 2 shifts further back
-        if (i >= 2) {
-          tl.to(
-            cards[i - 2],
-            {
-              rotationX: rotX,
-              scale: scaleMax(i - 2) * 0.96,
-              y: stackOffset * 1.8,
-              opacity: 0.6,
-              duration: stepDuration,
-              ease: "none",
-            },
-            startTime
-          );
+        const roundedIdx = Math.min(Math.round(p), STACK_KEYS.length - 1);
+        if (roundedIdx !== lastActiveIndexRef.current) {
+          lastActiveIndexRef.current = roundedIdx;
+          setStackActiveIndex(roundedIdx);
+          setActive(STACK_KEYS[roundedIdx]);
         }
+      });
+    };
 
-        // Card i - 3 fades out completely
-        if (i >= 3) {
-          tl.to(
-            cards[i - 3],
-            {
-              y: stackOffset * 2.4,
-              opacity: 0,
-              duration: stepDuration,
-              ease: "none",
-            },
-            startTime
-          );
-        }
-      }
-    }, ref);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
 
     return () => {
-      scrollTriggerRef.current = null;
-      ctx.revert();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, [reducedMotion]);
 
@@ -428,21 +516,36 @@ export default function IndustrySection() {
     const idx = STACK_KEYS.indexOf(tab);
     if (idx === -1) return;
     setStackActiveIndex(idx);
-    if (reducedMotion) return;
-    const st = scrollTriggerRef.current;
-    if (!st) return;
-    const n = STACK_KEYS.length;
-    const targetProgress = idx === 0 ? 0.001 : idx / (n - 1);
-    const targetScrollY = st.start + targetProgress * (st.end - st.start);
+    lastActiveIndexRef.current = idx;
+    applyStackPositions(idx);
+
+    const wrap = stackWrapRef.current;
+    const sticky = stackStickyRef.current;
+    if (!wrap || !sticky) return;
+    const rect = wrap.getBoundingClientRect();
+    const stickyH = sticky.getBoundingClientRect().height;
+    const scrollDistance = wrap.offsetHeight - stickyH;
+    const isNavHidden =
+      typeof document !== "undefined" &&
+      document.body.classList.contains("navbar--hidden");
+    const navH = isNavHidden ? 0 : 80;
+    const tabsH = tabsWrapRef.current?.getBoundingClientRect().height ?? 128;
+    const stickyTop = navH + tabsH + 24;
+
+    const targetNormalized = idx / STACK_KEYS.length;
+    const targetScrollY =
+      window.scrollY + rect.top - stickyTop + targetNormalized * scrollDistance;
     window.scrollTo({ top: targetScrollY, behavior: "smooth" });
   };
+
   return (
     <section className="industry-section section" id="industries" ref={ref}>
       {/* Sentinel to toggle sticky state when top hits navbar */}
       <div ref={sentinelRef} className="industry-sticky-sentinel" />
 
-      {/* Sticky Header + Tabs Bar — heading stays visible in sticky mode (Image 3), tabs match Image 2 & 3 */}
+      {/* Sticky Header + Tabs Bar */}
       <div
+        ref={tabsWrapRef}
         className={`industry-tabs-sticky-wrap ${isSticky ? "is-sticky" : ""}`}
       >
         <div className="container container--page">
@@ -491,42 +594,43 @@ export default function IndustrySection() {
               height:
                 wrapHeightPx != null
                   ? `${wrapHeightPx}px`
-                  : `${STACK_KEYS.length * 600}px`,
+                  : `${(STACK_KEYS.length - 1) * 500 + 600}px`,
             }}
           >
             <div className="industry-stack-sticky" ref={stackStickyRef}>
-              <div className="industry-stack-stage-outer">
-                <div className="industry-stack-stage">
-                  {STACK_KEYS.map((key, i) => (
-                    <div
-                      key={key}
-                      ref={(el) => {
-                        stackCardRefs.current[i] = el;
-                      }}
-                      className="industry-card industry-stack-card"
-                      style={{
-                        zIndex: 10 + i * 2,
-                        opacity: i === 0 ? 1 : 0,
-                      }}
-                      aria-hidden={key !== active}
-                    >
-                      <IndustryCardBody
-                        data={INDUSTRY_DATA[key]}
-                        sizes="(max-width: 767px) 100vw, 600px"
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="industry-stack-dots" aria-hidden="true">
-                  {STACK_KEYS.map((key, i) => (
-                    <span
-                      key={key}
-                      className={`industry-stack-dot ${i === stackActiveIndex ? "active" : ""}`}
-                      onClick={() => handleTabClick(key)}
-                      style={{ cursor: "pointer" }}
-                    />
-                  ))}
-                </div>
+              <div className="industry-stack-stage">
+                {STACK_KEYS.map((key, i) => (
+                  <div
+                    key={key}
+                    ref={(el) => {
+                      stackCardRefs.current[i] = el;
+                    }}
+                    className="industry-card industry-stack-card"
+                    style={{
+                      zIndex: i === 0 ? 30 : 0,
+                      opacity: i === 0 ? 1 : 0,
+                      visibility: i === 0 ? "visible" : "hidden",
+                      transform:
+                        i === 0
+                          ? "translate3d(0, 32px, 0) scale(1)"
+                          : "translate3d(0, 120px, 0) scale(0.98)",
+                    }}
+                    aria-hidden={key !== active}
+                  >
+                    <IndustryCardBody data={INDUSTRY_DATA[key]} />
+                  </div>
+                ))}
+              </div>
+
+              <div className="industry-stack-dots" aria-hidden="true">
+                {STACK_KEYS.map((key, i) => (
+                  <span
+                    key={key}
+                    className={`industry-stack-dot ${i === stackActiveIndex ? "active" : ""}`}
+                    onClick={() => handleTabClick(key)}
+                    style={{ cursor: "pointer" }}
+                  />
+                ))}
               </div>
             </div>
           </div>

@@ -69,6 +69,17 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* ── Text Selection ─────────────────────────────────────────────────────── */
+::selection {
+  background-color: #046790;
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #046790;
+  color: #ffffff;
+}
+
 /* ── Reset ─────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html {

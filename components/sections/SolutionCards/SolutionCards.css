@@ -135,7 +135,7 @@
   transition: transform 0.25s var(--ease-out);
 }
 
-.sol-card:hover .sol-link-arrow,
+/* Arrow translates only when hovering directly on the link, not the whole card */
 .sol-card-link:hover .sol-link-arrow {
   transform: translateX(4px);
 }

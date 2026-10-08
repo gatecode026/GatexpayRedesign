@@ -289,6 +289,13 @@
   line-height: 64px;
   text-align: center;
   color: var(--gx-blue);
+  transition: color 0.25s ease, text-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.about-stat-item:hover .about-stat-value {
+  color: #00C0FD;
+  text-shadow: 0 0 16px rgba(0, 192, 253, 0.65), 0 0 32px rgba(2, 132, 199, 0.45);
+  filter: drop-shadow(0 0 8px rgba(0, 192, 253, 0.5));
 }
 
 .about-stat-label {

@@ -314,6 +314,7 @@ export default function ContactIntro() {
               className="contact-intro-stats"
               onMouseEnter={runCountAnimation}
               onClick={runCountAnimation}
+              onTouchStart={runCountAnimation}
               role="region"
               aria-label="GateXPay Key Metrics"
             >

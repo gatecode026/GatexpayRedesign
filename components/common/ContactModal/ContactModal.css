@@ -301,7 +301,24 @@
 
 .contact-modal-code-field {
   flex-shrink: 0;
-  width: 106px;
+  width: 132px;
+}
+
+.contact-modal-code-field .floating-dropdown-trigger {
+  padding: 0 12px;
+}
+
+.contact-modal-code-field .floating-dropdown-chevron {
+  margin-left: 6px;
+}
+
+@media (max-width: 480px) {
+  .contact-modal-code-field {
+    width: 124px;
+  }
+  .contact-modal-code-field .floating-dropdown-trigger {
+    padding: 0 10px;
+  }
 }
 
 /* ── Submit + legal ───────────────────────────────────────────────────── */

@@ -9,51 +9,54 @@ const STATS = [
 export default function HeroStats() {
   const [values, setValues] = useState(() => STATS.map((s) => s.target));
   const cardRef = useRef(null);
-  useEffect(() => {
-    // If user prefers reduced motion, leave target values as-is
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+  const hasAnimatedRef = useRef(false);
+  const isAnimatingRef = useRef(false);
+  const animationFrameIdRef = useRef(null);
+
+  const runCountAnimation = () => {
+    if (hasAnimatedRef.current || isAnimatingRef.current) return;
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
-    let animationFrameId;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          observer.disconnect();
-          const duration = 1200; // ms
-          const startTimestamp = performance.now();
-          const animate = (currentTime) => {
-            const elapsed = currentTime - startTimestamp;
-            const progress = Math.min(elapsed / duration, 1);
-            // Ease-out cubic
-            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
-            setValues(STATS.map((stat) => stat.target * easeOutProgress));
-            if (progress < 1) {
-              animationFrameId = requestAnimationFrame(animate);
-            } else {
-              setValues(STATS.map((stat) => stat.target));
-            }
-          };
-          // Reset to 0 and start count-up
-          setValues([0, 0, 0, 0]);
-          animationFrameId = requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
+
+    hasAnimatedRef.current = true;
+    isAnimatingRef.current = true;
+    const duration = 1200; // ms
+    const startTimestamp = performance.now();
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTimestamp;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+      setValues(STATS.map((stat) => stat.target * easeOutProgress));
+      if (progress < 1) {
+        animationFrameIdRef.current = requestAnimationFrame(animate);
+      } else {
+        setValues(STATS.map((stat) => stat.target));
+        isAnimatingRef.current = false;
+      }
+    };
+    // Reset to 0 and start count-up
+    setValues([0, 0, 0, 0]);
+    animationFrameIdRef.current = requestAnimationFrame(animate);
+  };
+
+  useEffect(() => {
     return () => {
-      observer.disconnect();
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
     };
   }, []);
+
   return (
     <div
       className="about-stats-card"
       ref={cardRef}
+      onMouseEnter={runCountAnimation}
+      onClick={runCountAnimation}
+      onTouchStart={runCountAnimation}
       role="region"
       aria-label="Key GateXPay Statistics"
     >

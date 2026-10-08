@@ -254,7 +254,7 @@ These patterns represent hard-won design locks and user-approved implementations
 - **Country Code Selector**: All lead capture and contact forms MUST include an international country code dropdown using `FloatingDropdown`.
   - Default: `IND +91` (`{ code: "+91", label: "IND +91", flag: "🇮🇳" }`).
   - Standard options: India (+91), United States (+1), United Kingdom (+44), UAE (+971), Singapore (+65).
-  - Phone layout: `.contact-phone-row` with `.contact-phone-code` set to `112px` desktop and `96px` mobile, flex-1 phone input.
+  - Phone layout: `.contact-phone-row` with `.contact-phone-code` set to `134px` desktop and `124px` mobile (`padding: 0 12px` / `0 10px` mobile), flex-1 phone input.
   - The form submission payload to `/api/enquiries` MUST pass `countryCode: formData.countryCode || "+91"`.
 - **Contact Intro Form Layout (`ContactIntro.jsx`)**:
   - Row 1: Full Name | Company Name (2-column grid).
