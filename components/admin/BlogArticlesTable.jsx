@@ -14,43 +14,60 @@ import {
   ChevronLeft,
   ChevronRight,
   FileText,
+  Plus,
+  Edit3,
+  Trash2,
 } from "lucide-react";
-export default function BlogArticlesTable({ posts, loading = false }) {
+
+export default function BlogArticlesTable({
+  posts,
+  loading = false,
+  onAddPost,
+  onEditPost,
+  onDeletePost,
+}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [copiedId, setCopiedId] = useState(null);
   const pageSize = 8;
+
   // Extract unique categories
   const categories = useMemo(() => {
     const set = new Set();
     posts.forEach((p) => {
-      const name = p.category?.name || "FinTech";
+      const name = p.category?.name || "CSP Services";
       set.add(name);
     });
     return Array.from(set);
   }, [posts]);
+
   // Filtered posts
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
       const matchCat =
         selectedCategory === "all" ||
-        (post.category?.name || "FinTech").toLowerCase() ===
+        (post.category?.name || "CSP Services").toLowerCase() ===
           selectedCategory.toLowerCase();
+
       if (!matchCat) return false;
       if (!searchTerm.trim()) return true;
+
       const term = searchTerm.toLowerCase();
       const matchTitle = post.title?.toLowerCase().includes(term);
       const matchSlug = post.slug?.toLowerCase().includes(term);
       const matchAuthor = post.author?.toLowerCase().includes(term);
       const matchCatName = post.category?.name?.toLowerCase().includes(term);
+
       return matchTitle || matchSlug || matchAuthor || matchCatName;
     });
   }, [posts, selectedCategory, searchTerm]);
+
   // Pagination
   const totalPages = Math.ceil(filteredPosts.length / pageSize) || 1;
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedPosts = filteredPosts.slice(startIndex, startIndex + pageSize);
+
   const handleCopyLink = (slug, id) => {
     const url = `${window.location.origin}/blog/${slug}`;
     navigator.clipboard.writeText(url);
@@ -59,6 +76,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
       setCopiedId(null);
     }, 2000);
   };
+
   const getCategoryTheme = (catName) => {
     const name = catName?.toLowerCase() || "";
     if (name.includes("growth") || name.includes("business")) {
@@ -73,8 +91,12 @@ export default function BlogArticlesTable({ posts, loading = false }) {
     if (name.includes("csp") || name.includes("service")) {
       return { bg: "#F0FDF4", text: "#15803D", border: "#BBF7D0" };
     }
+    if (name.includes("news") || name.includes("company")) {
+      return { bg: "#FFF7ED", text: "#C2410C", border: "#FFEDD5" };
+    }
     return { bg: "#F1F5F9", text: "#475569", border: "#CBD5E1" };
   };
+
   const formatDate = (dateStr) => {
     if (!dateStr) return "Recently";
     try {
@@ -89,6 +111,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
       return dateStr;
     }
   };
+
   const getInitials = (author) => {
     if (!author) return "GP";
     const parts = author.trim().split(" ");
@@ -97,32 +120,46 @@ export default function BlogArticlesTable({ posts, loading = false }) {
     }
     return author.slice(0, 2).toUpperCase();
   };
+
   return (
     <div className="dash-leads-card">
-      {/* ── TOOLBAR: SEARCH & CATEGORY PILLS ── */}
+      {/* ── TOOLBAR: SEARCH & CATEGORY PILLS + ADD BUTTON ── */}
       <div className="leads-toolbar" style={{ paddingTop: "16px" }}>
-        <div className="leads-search-input-wrap">
-          <Search size={15} className="leads-search-icon" />
-          <input
-            type="text"
-            placeholder="Search articles by title, author, slug..."
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
-          {searchTerm && (
-            <button
-              type="button"
-              className="leads-clear-search"
-              onClick={() => {
-                setSearchTerm("");
+        <div className="blog-toolbar-top-row">
+          <div className="leads-search-input-wrap">
+            <Search size={15} className="leads-search-icon" />
+            <input
+              type="text"
+              placeholder="Search articles by title, author, slug..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              aria-label="Clear search"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                className="leads-clear-search"
+                onClick={() => {
+                  setSearchTerm("");
+                  setCurrentPage(1);
+                }}
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          {onAddPost && (
+            <button
+              type="button"
+              className="blog-toolbar-add-btn"
+              onClick={onAddPost}
             >
-              <X size={14} />
+              <Plus size={15} />
+              <span>Add Blog Article</span>
             </button>
           )}
         </div>
@@ -140,7 +177,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
           </button>
           {categories.map((cat) => {
             const count = posts.filter(
-              (p) => (p.category?.name || "FinTech") === cat
+              (p) => (p.category?.name || "CSP Services") === cat
             ).length;
             return (
               <button
@@ -192,10 +229,11 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                   <FileText size={32} className="table-empty-icon" />
                   <div className="table-empty-title">No articles found</div>
                   <div className="table-empty-desc">
-                    Try adjusting your search terms or category filter to find
-                    what you need.
+                    {searchTerm || selectedCategory !== "all"
+                      ? "Try adjusting your search terms or category filter to find what you need."
+                      : "Start publishing blog articles to grow search visibility and brand authority."}
                   </div>
-                  {(searchTerm || selectedCategory !== "all") && (
+                  {searchTerm || selectedCategory !== "all" ? (
                     <button
                       type="button"
                       className="add-lead-empty-btn"
@@ -207,14 +245,26 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                     >
                       Reset Filters
                     </button>
+                  ) : (
+                    onAddPost && (
+                      <button
+                        type="button"
+                        className="add-lead-empty-btn"
+                        onClick={onAddPost}
+                      >
+                        <Plus size={14} />
+                        <span>Create First Article</span>
+                      </button>
+                    )
                   )}
                 </td>
               </tr>
             ) : (
               paginatedPosts.map((post) => {
                 const theme = getCategoryTheme(post.category?.name);
-                const categoryName = post.category?.name || "FinTech";
+                const categoryName = post.category?.name || "CSP Services";
                 const isCopied = copiedId === post._id;
+
                 return (
                   <tr key={post._id} className="blog-table-row">
                     {/* Article Title & Slug */}
@@ -311,7 +361,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                       <div className="blog-views-cell">
                         <Eye size={13} className="blog-views-icon" />
                         <span className="blog-views-num">
-                          {post.views.toLocaleString()}
+                          {(post.views || 0).toLocaleString()}
                         </span>
                         <span className="blog-views-label">views</span>
                       </div>
@@ -319,7 +369,11 @@ export default function BlogArticlesTable({ posts, loading = false }) {
 
                     {/* Status */}
                     <td className="td-blog-status">
-                      <div className="blog-status-pill published">
+                      <div
+                        className={`blog-status-pill ${
+                          post.status === "draft" ? "draft" : "published"
+                        }`}
+                      >
                         <span className="blog-status-dot" />
                         <span className="blog-status-text">
                           {post.status
@@ -335,15 +389,37 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                       className="td-blog-action"
                       style={{ textAlign: "right" }}
                     >
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        target="_blank"
-                        className="blog-view-live-btn"
-                        title="Open live article"
-                      >
-                        <span>View Live</span>
-                        <ExternalLink size={12} />
-                      </Link>
+                      <div className="blog-actions-cluster">
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          target="_blank"
+                          className="blog-view-live-btn"
+                          title="Open live article"
+                        >
+                          <span>View Live</span>
+                          <ExternalLink size={12} />
+                        </Link>
+                        {onEditPost && (
+                          <button
+                            type="button"
+                            className="blog-row-edit-btn"
+                            onClick={() => onEditPost(post)}
+                            title="Edit article"
+                          >
+                            <Edit3 size={13} />
+                          </button>
+                        )}
+                        {onDeletePost && (
+                          <button
+                            type="button"
+                            className="blog-row-del-btn"
+                            onClick={() => onDeletePost(post)}
+                            title="Delete article"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -380,11 +456,20 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                       borderColor: theme.border,
                     }}
                   >
-                    {post.category?.name || "FinTech"}
+                    {post.category?.name || "CSP Services"}
                   </span>
-                  <div className="blog-status-pill published">
+                  <div
+                    className={`blog-status-pill ${
+                      post.status === "draft" ? "draft" : "published"
+                    }`}
+                  >
                     <span className="blog-status-dot" />
-                    <span>Published</span>
+                    <span>
+                      {post.status
+                        ? post.status.charAt(0).toUpperCase() +
+                          post.status.slice(1)
+                        : "Published"}
+                    </span>
                   </div>
                 </div>
 
@@ -399,7 +484,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
 
                   <div className="mobile-blog-slug-row">
                     <span className="blog-slug-pill">
-                      <span className="blog-slug-prefix">/</span>
+                      <span className="blog-slug-prefix">/blog/</span>
                       {post.slug}
                     </span>
                     <button
@@ -420,7 +505,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                   <div className="mobile-meta-item">
                     <span className="mobile-meta-lbl">Views</span>
                     <span className="mobile-meta-val font-semibold">
-                      {post.views}
+                      {post.views || 0}
                     </span>
                   </div>
                   <div className="mobile-meta-item">
@@ -437,7 +522,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                   </div>
                 </div>
 
-                <div className="mobile-card-bottom">
+                <div className="mobile-card-bottom blog-mobile-actions-row">
                   <Link
                     href={`/blog/${post.slug}`}
                     target="_blank"
@@ -445,8 +530,28 @@ export default function BlogArticlesTable({ posts, loading = false }) {
                     style={{ textDecoration: "none" }}
                   >
                     <ExternalLink size={13} />
-                    <span>View Live Article</span>
+                    <span>View Live</span>
                   </Link>
+                  {onEditPost && (
+                    <button
+                      type="button"
+                      className="mobile-lead-btn-secondary"
+                      onClick={() => onEditPost(post)}
+                    >
+                      <Edit3 size={13} />
+                      <span>Edit</span>
+                    </button>
+                  )}
+                  {onDeletePost && (
+                    <button
+                      type="button"
+                      className="mobile-quick-btn danger"
+                      onClick={() => onDeletePost(post)}
+                      aria-label="Delete post"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  )}
                 </div>
               </div>
             );
@@ -455,8 +560,8 @@ export default function BlogArticlesTable({ posts, loading = false }) {
       </div>
 
       {/* ── FOOTER & PAGINATION ── */}
-      <div className="leads-table-footer">
-        <div className="footer-count">
+      <div className="leads-pagination-footer leads-table-footer">
+        <div className="pagination-text footer-count">
           Showing{" "}
           <span className="font-semibold text-slate-800">
             {filteredPosts.length > 0 ? startIndex + 1 : 0}
@@ -473,10 +578,10 @@ export default function BlogArticlesTable({ posts, loading = false }) {
         </div>
 
         {totalPages > 1 && (
-          <div className="footer-pagination">
+          <div className="pagination-buttons footer-pagination">
             <button
               type="button"
-              className="page-btn nav-btn"
+              className="page-nav-btn nav-btn"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               aria-label="Previous page"
@@ -488,7 +593,9 @@ export default function BlogArticlesTable({ posts, loading = false }) {
               <button
                 key={page}
                 type="button"
-                className={`page-btn ${currentPage === page ? "active" : ""}`}
+                className={`page-num-btn page-btn ${
+                  currentPage === page ? "active" : ""
+                }`}
                 onClick={() => setCurrentPage(page)}
               >
                 {page}
@@ -497,7 +604,7 @@ export default function BlogArticlesTable({ posts, loading = false }) {
 
             <button
               type="button"
-              className="page-btn nav-btn"
+              className="page-nav-btn nav-btn"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               aria-label="Next page"

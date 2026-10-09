@@ -80,7 +80,11 @@ export default function AdminSidebar({
           >
             <Users size={17} />
             <span>All Merchant Leads</span>
-            <span className="nav-badge count">{stats.totalLeads}</span>
+            {((stats.unreadTotalLeads !== undefined ? stats.unreadTotalLeads : stats.newLeads) || 0) > 0 && (
+              <span className="nav-badge count unread">
+                {stats.unreadTotalLeads !== undefined ? stats.unreadTotalLeads : stats.newLeads}
+              </span>
+            )}
           </button>
 
           <button
@@ -90,7 +94,11 @@ export default function AdminSidebar({
           >
             <Mail size={17} />
             <span>Contact Page Leads</span>
-            <span className="nav-badge count">{stats.contactLeads}</span>
+            {(stats.unreadContactLeads || 0) > 0 && (
+              <span className="nav-badge count unread">
+                {stats.unreadContactLeads}
+              </span>
+            )}
           </button>
 
           <button
@@ -100,7 +108,11 @@ export default function AdminSidebar({
           >
             <Briefcase size={17} />
             <span>Service &amp; Modal Leads</span>
-            <span className="nav-badge count">{stats.serviceLeads}</span>
+            {(stats.unreadServiceLeads || 0) > 0 && (
+              <span className="nav-badge count unread">
+                {stats.unreadServiceLeads}
+              </span>
+            )}
           </button>
 
           {/* CONTENT & CMS */}
@@ -112,7 +124,6 @@ export default function AdminSidebar({
           >
             <FileText size={17} />
             <span>Blog Articles</span>
-            <span className="nav-badge count">{stats.totalArticles}</span>
           </button>
         </nav>
 

@@ -34,6 +34,9 @@ export default function LeadsTable({
   onSelectLead,
   onStatusChange,
   onDeleteLead,
+  onBulkDelete,
+  onBulkStatusChange,
+  onMarkAsRead,
 }) {
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [activeActionMenuId, setActiveActionMenuId] = useState(null);
@@ -242,6 +245,87 @@ export default function LeadsTable({
           </button>
         </div>
       </div>
+
+      {/* ── BULK ACTION BAR ── */}
+      {selectedRowIds.length > 0 && (
+        <div className="leads-bulk-bar">
+          <div className="leads-bulk-left">
+            <span className="leads-bulk-badge">
+              {selectedRowIds.length} Selected
+            </span>
+            <span className="leads-bulk-hint">
+              {selectedRowIds.length === 1
+                ? "1 enquiry selected"
+                : `${selectedRowIds.length} enquiries selected`}
+            </span>
+          </div>
+
+          <div className="leads-bulk-actions">
+            <button
+              type="button"
+              className="leads-bulk-btn bulk-btn-read"
+              onClick={() => {
+                if (onBulkStatusChange) {
+                  onBulkStatusChange(selectedRowIds, "in_progress");
+                } else if (onStatusChange) {
+                  selectedRowIds.forEach((id) =>
+                    onStatusChange(id, "in_progress")
+                  );
+                }
+                setSelectedRowIds([]);
+              }}
+              title="Mark selected enquiries as read"
+            >
+              <CheckCircle2 size={14} />
+              <span>Mark as Read</span>
+            </button>
+
+            <button
+              type="button"
+              className="leads-bulk-btn bulk-btn-unread"
+              onClick={() => {
+                if (onBulkStatusChange) {
+                  onBulkStatusChange(selectedRowIds, "new");
+                } else if (onStatusChange) {
+                  selectedRowIds.forEach((id) => onStatusChange(id, "new"));
+                }
+                setSelectedRowIds([]);
+              }}
+              title="Mark selected enquiries as unread"
+            >
+              <Mail size={14} />
+              <span>Mark as Unread</span>
+            </button>
+
+            <button
+              type="button"
+              className="leads-bulk-btn bulk-btn-delete"
+              onClick={() => {
+                if (onBulkDelete) {
+                  onBulkDelete(selectedRowIds);
+                } else if (onDeleteLead) {
+                  onDeleteLead(selectedRowIds);
+                }
+                setSelectedRowIds([]);
+              }}
+              title="Permanently delete selected enquiries"
+            >
+              <Trash2 size={14} />
+              <span>Delete ({selectedRowIds.length})</span>
+            </button>
+
+            <button
+              type="button"
+              className="leads-bulk-btn bulk-btn-clear"
+              onClick={() => setSelectedRowIds([])}
+              aria-label="Clear selection"
+            >
+              <X size={14} />
+              <span>Deselect</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── DESKTOP & TABLET DATA TABLE ── */}
       <div className="dash-table-container desktop-table-view">
@@ -483,6 +567,36 @@ export default function LeadsTable({
                               type="button"
                               className="action-dropdown-item"
                               onClick={() => {
+                                const targetStatus =
+                                  lead.status === "new"
+                                    ? "in_progress"
+                                    : "new";
+                                onStatusChange(lead._id, targetStatus);
+                                setActiveActionMenuId(null);
+                              }}
+                            >
+                              {lead.status === "new" ? (
+                                <>
+                                  <CheckCircle2
+                                    size={14}
+                                    className="action-item-icon text-emerald-600"
+                                  />
+                                  <span>Mark as Read</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Mail
+                                    size={14}
+                                    className="action-item-icon text-amber-600"
+                                  />
+                                  <span>Mark as Unread</span>
+                                </>
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              className="action-dropdown-item"
+                              onClick={() => {
                                 const nextStatus =
                                   lead.status === "new"
                                     ? "in_progress"
@@ -650,19 +764,36 @@ export default function LeadsTable({
                   </span>
                 </div>
 
-                <div className="lead-status-wrapper">
-                  <select
-                    className={`lead-status-dropdown status-${lead.status}`}
-                    value={lead.status}
-                    onChange={(e) => onStatusChange(lead._id, e.target.value)}
-                    aria-label="Change status"
+                <div className="mobile-card-actions-quick">
+                  <button
+                    type="button"
+                    className="mobile-quick-btn"
+                    title={
+                      lead.status === "new"
+                        ? "Mark as Read"
+                        : "Mark as Unread"
+                    }
+                    onClick={() =>
+                      onStatusChange(
+                        lead._id,
+                        lead.status === "new" ? "in_progress" : "new"
+                      )
+                    }
                   >
-                    <option value="new">New</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="contacted">Contacted</option>
-                    <option value="closed">Closed</option>
-                  </select>
-                  <ChevronDown size={12} className="lead-status-chevron" />
+                    {lead.status === "new" ? (
+                      <CheckCircle2 size={14} />
+                    ) : (
+                      <Mail size={14} />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="mobile-quick-btn danger"
+                    title="Delete Lead"
+                    onClick={() => onDeleteLead(lead._id)}
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               </div>
             </div>

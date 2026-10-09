@@ -73,11 +73,11 @@ export async function PATCH(req, { params }) {
 
 export async function DELETE(req, { params }) {
   try {
-    const auth = await authenticateAdminRequest(req, ["superadmin"]);
+    const auth = await authenticateAdminRequest(req, ["superadmin", "admin"]);
     if (!auth.authorized) {
       return NextResponse.json(
         { success: false, error: auth.error },
-        { status: auth.status }
+        { status: auth.status, headers: { "Content-Type": "application/json" } }
       );
     }
 

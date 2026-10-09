@@ -244,6 +244,7 @@ export default function IndustrySection() {
   const lastActiveIndexRef = useRef(0);
   const [stackActiveIndex, setStackActiveIndex] = useState(0);
   const [wrapHeightPx, setWrapHeightPx] = useState(null);
+  const [stageHeight, setStageHeight] = useState(null);
   const reducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
@@ -265,7 +266,7 @@ export default function IndustrySection() {
       window.innerWidth < 1024;
 
     const yStep = isMobile ? 10 : isTablet ? 13 : 16;
-    const enterY = isMobile ? 80 : isTablet ? 100 : 120;
+    const enterY = isMobile ? 40 : isTablet ? 48 : 56;
     const targetBehind2Y = 0;
     const targetBehind1Y = yStep;
     const targetActiveY = yStep * 2;
@@ -394,18 +395,47 @@ export default function IndustrySection() {
     });
   }, []);
 
+  // Dynamically compute exact stage height from tallest card to eliminate dead space
+  useEffect(() => {
+    const updateStageHeight = () => {
+      const cards = stackCardRefs.current;
+      if (!cards || cards.length === 0) return;
+      let maxH = 0;
+      cards.forEach((card) => {
+        if (card && card.offsetHeight > maxH) {
+          maxH = card.offsetHeight;
+        }
+      });
+      if (maxH > 0) {
+        const isMobile = window.innerWidth < 768;
+        const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+        const yStep = isMobile ? 10 : isTablet ? 13 : 16;
+        const activeY = yStep * 2;
+        // Exact height: tallest card + active Y offset + 4px breathing room
+        setStageHeight(maxH + activeY + 4);
+      }
+    };
+
+    updateStageHeight();
+    window.addEventListener("resize", updateStageHeight);
+    if (typeof document !== "undefined" && document.fonts?.ready) {
+      document.fonts.ready.then(updateStageHeight);
+    }
+    return () => window.removeEventListener("resize", updateStageHeight);
+  }, []);
+
   // Measure and set track scroll height
   useEffect(() => {
     if (reducedMotion) return;
     const updateWrapHeight = () => {
       const stickyH =
-        stackStickyRef.current?.getBoundingClientRect().height ?? 580;
+        stackStickyRef.current?.getBoundingClientRect().height ?? 460;
       setWrapHeightPx(STACK_KEYS.length * 500 + stickyH);
     };
     updateWrapHeight();
     window.addEventListener("resize", updateWrapHeight);
     return () => window.removeEventListener("resize", updateWrapHeight);
-  }, [reducedMotion]);
+  }, [reducedMotion, stageHeight]);
 
   // Sticky tabs bar detection
   useEffect(() => {
@@ -599,7 +629,10 @@ export default function IndustrySection() {
             }}
           >
             <div className="industry-stack-sticky" ref={stackStickyRef}>
-              <div className="industry-stack-stage">
+              <div
+                className="industry-stack-stage"
+                style={stageHeight ? { height: `${stageHeight}px` } : undefined}
+              >
                 {STACK_KEYS.map((key, i) => (
                   <div
                     key={key}
@@ -614,7 +647,7 @@ export default function IndustrySection() {
                       transform:
                         i === 0
                           ? "translate3d(0, 32px, 0) scale(1)"
-                          : "translate3d(0, 120px, 0) scale(0.98)",
+                          : "translate3d(0, 56px, 0) scale(0.98)",
                     }}
                     aria-hidden={key !== active}
                   >

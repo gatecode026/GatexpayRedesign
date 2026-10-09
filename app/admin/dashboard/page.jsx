@@ -33,6 +33,7 @@ import LeadDetailDrawer from "@/components/admin/LeadDetailDrawer";
 import HelpModal from "@/components/admin/HelpModal";
 import DeleteConfirmModal from "@/components/admin/DeleteConfirmModal";
 import BlogArticlesTable from "@/components/admin/BlogArticlesTable";
+import AddBlogModal from "@/components/admin/AddBlogModal";
 import CookieConsentsTable from "@/components/admin/CookieConsentsTable";
 import "./dashboard.css";
 export default function AdminDashboardPage() {
@@ -84,6 +85,11 @@ export default function AdminDashboardPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [submittingLead, setSubmittingLead] = useState(false);
+  // Blog Post Modals
+  const [addBlogModalOpen, setAddBlogModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
+  const [deleteBlogPostId, setDeleteBlogPostId] = useState(null);
+  const [submittingBlog, setSubmittingBlog] = useState(false);
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const prevLeadsCountRef = useRef(null);
@@ -113,7 +119,14 @@ export default function AdminDashboardPage() {
           fetch("/api/admin/analytics").then((r) => r.json()),
           fetch("/api/admin/notifications").then((r) => r.json()),
           fetch("/api/cookie-consent").then((r) => r.json()),
-          fetch("/api/blog/posts?limit=50").then((r) => r.json()),
+          fetch("/api/admin/blog/posts")
+            .then((r) => r.json())
+            .then((d) =>
+              d?.success ? d : fetch("/api/blog/posts?limit=50").then((r) => r.json())
+            )
+            .catch(() =>
+              fetch("/api/blog/posts?limit=50").then((r) => r.json())
+            ),
         ]);
       const leadsData = leadsRes.status === "fulfilled" ? leadsRes.value : null;
       const analyticsData =
@@ -221,6 +234,8 @@ export default function AdminDashboardPage() {
         setAddLeadModalOpen(false);
         setDeleteConfirmId(null);
         setHelpModalOpen(false);
+        setAddBlogModalOpen(false);
+        setDeleteBlogPostId(null);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -234,24 +249,75 @@ export default function AdminDashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setLeads((prev) =>
-          prev.map((l) => (l._id === id ? { ...l, status: newStatus } : l))
-        );
-        if (selectedLead && selectedLead._id === id) {
-          setSelectedLead((prev) =>
-            prev ? { ...prev, status: newStatus } : null
-          );
-        }
-        setToastMessage(
-          `Lead status updated to ${newStatus.replace("_", " ")}`
-        );
-        setTimeout(() => setToastMessage(null), 3000);
-        fetchData();
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Request failed with status ${res.status}`);
       }
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || `Failed to update status (${res.status})`);
+      }
+      setLeads((prev) =>
+        prev.map((l) => (l._id === id ? { ...l, status: newStatus } : l))
+      );
+      if (selectedLead && selectedLead._id === id) {
+        setSelectedLead((prev) =>
+          prev ? { ...prev, status: newStatus } : null
+        );
+      }
+      const label =
+        newStatus === "in_progress"
+          ? "marked as read"
+          : newStatus === "new"
+            ? "marked as unread"
+            : `status updated to ${newStatus.replace("_", " ")}`;
+      setToastMessage(`Lead ${label}`);
+      setTimeout(() => setToastMessage(null), 3000);
+      fetchData();
     } catch (err) {
       console.error("Failed to update status:", err);
+      setToastMessage(err.message || "Failed to update lead status");
+      setTimeout(() => setToastMessage(null), 4000);
+    }
+  };
+  const handleBulkStatusChange = async (ids, newStatus) => {
+    if (!ids || ids.length === 0) return;
+    try {
+      const res = await fetch("/api/admin/enquiries/bulk", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids, status: newStatus }),
+      });
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Request failed with status ${res.status}`);
+      }
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || `Failed to update status (${res.status})`);
+      }
+      setLeads((prev) =>
+        prev.map((l) => (ids.includes(l._id) ? { ...l, status: newStatus } : l))
+      );
+      const label =
+        newStatus === "in_progress"
+          ? "marked as read"
+          : newStatus === "new"
+            ? "marked as unread"
+            : `updated to ${newStatus.replace("_", " ")}`;
+      setToastMessage(`${data.modifiedCount || ids.length} enquiries ${label}`);
+      setTimeout(() => setToastMessage(null), 3000);
+      fetchData();
+    } catch (err) {
+      console.error("Failed to bulk update status:", err);
+      setToastMessage(err.message || "Failed to update selected enquiries");
+      setTimeout(() => setToastMessage(null), 4000);
     }
   };
   const handleSaveNote = async (notes) => {
@@ -262,38 +328,86 @@ export default function AdminDashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ notes }),
       });
-      const data = await res.json();
-      if (data.success) {
-        setSelectedLead((prev) => (prev ? { ...prev, notes } : null));
-        setLeads((prev) =>
-          prev.map((l) => (l._id === selectedLead._id ? { ...l, notes } : l))
-        );
-        setToastMessage("Note saved successfully");
-        setTimeout(() => setToastMessage(null), 3000);
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Request failed with status ${res.status}`);
       }
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || "Failed to save note");
+      }
+      setSelectedLead((prev) => (prev ? { ...prev, notes } : null));
+      setLeads((prev) =>
+        prev.map((l) => (l._id === selectedLead._id ? { ...l, notes } : l))
+      );
+      setToastMessage("Note saved successfully");
+      setTimeout(() => setToastMessage(null), 3000);
     } catch (err) {
       console.error("Failed to save note:", err);
+      setToastMessage(err.message || "Failed to save note");
+      setTimeout(() => setToastMessage(null), 4000);
     }
   };
-  const handleDeleteLead = async (id) => {
+  const handleDeleteLead = async (idOrIds) => {
+    // Immediately close modal on confirmation so the user never feels stuck
+    setDeleteConfirmId(null);
+    const isBulk = Array.isArray(idOrIds);
+    if (
+      selectedLead &&
+      (isBulk ? idOrIds.includes(selectedLead._id) : selectedLead._id === idOrIds)
+    ) {
+      setLeadDetailModalOpen(false);
+      setSelectedLead(null);
+    }
+    // Optimistic removal for instant 0ms UI responsiveness
+    setLeads((prev) =>
+      prev.filter((l) => (isBulk ? !idOrIds.includes(l._id) : l._id !== idOrIds))
+    );
+
     try {
-      const res = await fetch(`/api/admin/enquiries/${id}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
-      if (data.success) {
-        setLeads((prev) => prev.filter((l) => l._id !== id));
-        setDeleteConfirmId(null);
-        if (selectedLead?._id === id) {
-          setLeadDetailModalOpen(false);
-          setSelectedLead(null);
-        }
-        setToastMessage("Lead deleted successfully");
-        setTimeout(() => setToastMessage(null), 3000);
-        fetchData();
+      const url = isBulk
+        ? "/api/admin/enquiries/bulk"
+        : `/api/admin/enquiries/${idOrIds}`;
+      const options = isBulk
+        ? {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ids: idOrIds }),
+          }
+        : { method: "DELETE" };
+
+      const res = await fetch(url, options);
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Request failed with status ${res.status}`);
       }
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || `Failed to delete (${res.status})`);
+      }
+
+      const count = isBulk ? data.deletedCount || idOrIds.length : 1;
+      setToastMessage(
+        isBulk
+          ? `${count} enquiries deleted successfully`
+          : "Lead deleted successfully"
+      );
+      setTimeout(() => setToastMessage(null), 3000);
+      fetchData();
     } catch (err) {
       console.error("Failed to delete lead:", err);
+      setToastMessage(
+        err.message || "Failed to delete lead. Please try again."
+      );
+      setTimeout(() => setToastMessage(null), 4000);
+      // Restore server data on failure
+      fetchData();
     }
   };
   const handleCreateLead = async (newLeadForm) => {
@@ -319,6 +433,94 @@ export default function AdminDashboardPage() {
       return { success: false, error: "Network error creating lead" };
     } finally {
       setSubmittingLead(false);
+    }
+  };
+  const handleSaveBlogPost = async (payload, postId) => {
+    setSubmittingBlog(true);
+    try {
+      const isEdit = Boolean(postId);
+      const url = isEdit
+        ? `/api/admin/blog/posts/${postId}`
+        : "/api/admin/blog/posts";
+      const method = isEdit ? "PATCH" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Request failed (${res.status})`);
+      }
+
+      if (!res.ok || !data?.success) {
+        return {
+          success: false,
+          error:
+            data?.error ||
+            data?.details?.[0]?.message ||
+            "Failed to save blog post",
+        };
+      }
+
+      setAddBlogModalOpen(false);
+      setEditingPost(null);
+      setToastMessage(
+        isEdit
+          ? "Article updated successfully!"
+          : "Article published successfully to MongoDB & Website!"
+      );
+      setTimeout(() => setToastMessage(null), 4000);
+      fetchData();
+      return { success: true };
+    } catch (err) {
+      console.error("Save blog post error:", err);
+      return {
+        success: false,
+        error: err.message || "Network error saving article",
+      };
+    } finally {
+      setSubmittingBlog(false);
+    }
+  };
+
+  const handleConfirmDeleteBlogPost = async (postId) => {
+    // Immediate optimistic removal
+    setBlogPosts((prev) => prev.filter((p) => p._id !== postId));
+    setDeleteBlogPostId(null);
+    try {
+      const res = await fetch(`/api/admin/blog/posts/${postId}`, {
+        method: "DELETE",
+      });
+      let data = null;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(text || `Request failed (${res.status})`);
+      }
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || `Delete failed with status ${res.status}`);
+      }
+
+      setToastMessage("Blog article deleted successfully.");
+      setTimeout(() => setToastMessage(null), 3000);
+      fetchData();
+    } catch (err) {
+      console.error("Delete blog post error:", err);
+      setToastMessage(
+        err.message || "Failed to delete article. Please try again."
+      );
+      setTimeout(() => setToastMessage(null), 4000);
+      fetchData();
     }
   };
   const handleMarkAllNotificationsRead = async () => {
@@ -420,6 +622,34 @@ export default function AdminDashboardPage() {
     setToastMessage("DPDP Cookie Consents exported successfully");
     setTimeout(() => setToastMessage(null), 3500);
   };
+  // ── DYNAMIC UNREAD LEADS COUNTS FOR SIDEBAR ─────────────────────────
+  const unreadCounts = useMemo(() => {
+    const unreadTotal = leads.filter((l) => l.status === "new").length;
+    const unreadContact = leads.filter(
+      (l) => l.source === "contact_page" && l.status === "new"
+    ).length;
+    const unreadService = leads.filter(
+      (l) =>
+        (l.source === "contact_modal" || l.source === "service_page") &&
+        l.status === "new"
+    ).length;
+    return {
+      unreadTotal,
+      unreadContact,
+      unreadService,
+    };
+  }, [leads]);
+
+  const sidebarStats = useMemo(
+    () => ({
+      ...stats,
+      unreadTotalLeads: unreadCounts.unreadTotal,
+      unreadContactLeads: unreadCounts.unreadContact,
+      unreadServiceLeads: unreadCounts.unreadService,
+    }),
+    [stats, unreadCounts]
+  );
+
   // ── FILTERED DATA SETS ─────────────────────────────────────────────
   const filteredLeads = useMemo(() => {
     let result = [...leads];
@@ -547,7 +777,7 @@ export default function AdminDashboardPage() {
         setActiveNav={setActiveNav}
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
-        stats={stats}
+        stats={sidebarStats}
         onOpenHelpModal={() => setHelpModalOpen(true)}
         onLogout={handleLogout}
       />
@@ -734,6 +964,9 @@ export default function AdminDashboardPage() {
                       }}
                       onStatusChange={handleStatusChange}
                       onDeleteLead={(id) => setDeleteConfirmId(id)}
+                      onBulkDelete={(ids) => setDeleteConfirmId(ids)}
+                      onBulkStatusChange={handleBulkStatusChange}
+                      onMarkAsRead={(id) => handleStatusChange(id, "in_progress")}
                     />
                   ) : (
                     <CookieConsentsTable
@@ -905,6 +1138,9 @@ export default function AdminDashboardPage() {
                 }}
                 onStatusChange={handleStatusChange}
                 onDeleteLead={(id) => setDeleteConfirmId(id)}
+                onBulkDelete={(ids) => setDeleteConfirmId(ids)}
+                onBulkStatusChange={handleBulkStatusChange}
+                onMarkAsRead={(id) => handleStatusChange(id, "in_progress")}
               />
             </div>
           )}
@@ -929,10 +1165,21 @@ export default function AdminDashboardPage() {
                 </div>
 
                 <div className="panel-header-actions">
+                  <button
+                    type="button"
+                    className="panel-action-btn primary"
+                    onClick={() => {
+                      setEditingPost(null);
+                      setAddBlogModalOpen(true);
+                    }}
+                  >
+                    <Plus size={14} />
+                    <span>New Article</span>
+                  </button>
                   <Link
                     href="/blog"
                     target="_blank"
-                    className="panel-action-btn primary"
+                    className="panel-action-btn"
                   >
                     <ExternalLink size={14} />
                     <span>View Public Blog ↗</span>
@@ -940,7 +1187,19 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              <BlogArticlesTable posts={blogPosts} loading={loading} />
+              <BlogArticlesTable
+                posts={blogPosts}
+                loading={loading}
+                onAddPost={() => {
+                  setEditingPost(null);
+                  setAddBlogModalOpen(true);
+                }}
+                onEditPost={(post) => {
+                  setEditingPost(post);
+                  setAddBlogModalOpen(true);
+                }}
+                onDeletePost={(post) => setDeleteBlogPostId(post._id)}
+              />
             </div>
           )}
 
@@ -1252,6 +1511,25 @@ export default function AdminDashboardPage() {
       <HelpModal
         isOpen={helpModalOpen}
         onClose={() => setHelpModalOpen(false)}
+      />
+
+      <AddBlogModal
+        isOpen={addBlogModalOpen}
+        onClose={() => {
+          setAddBlogModalOpen(false);
+          setEditingPost(null);
+        }}
+        onSubmit={handleSaveBlogPost}
+        postToEdit={editingPost}
+        submitting={submittingBlog}
+      />
+
+      <DeleteConfirmModal
+        id={deleteBlogPostId}
+        title="Delete Blog Article"
+        message="Are you sure you want to permanently delete this blog article from MongoDB and the website? This cannot be undone."
+        onClose={() => setDeleteBlogPostId(null)}
+        onConfirm={handleConfirmDeleteBlogPost}
       />
     </div>
   );

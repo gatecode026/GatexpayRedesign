@@ -3,6 +3,9 @@ import { z } from "zod";
 import { connectDB } from "@/lib/db";
 import { BlogPost } from "@/models/blog/post.model";
 import { verifyAdminToken, COOKIE_NAME } from "@/lib/auth";
+import mongoose from "mongoose";
+import { BlogCategory } from "@/models/blog/category.model";
+
 const CreatePostSchema = z.object({
   title: z.string().min(3),
   slug: z.string().min(3),
@@ -10,11 +13,13 @@ const CreatePostSchema = z.object({
   content: z.string().optional().default(""),
   coverImage: z.string().optional().default(""),
   category: z.string(),
+  author: z.string().optional(),
   tags: z.array(z.string()).optional().default([]),
   readTime: z.number().optional().default(5),
   isFeatured: z.boolean().optional().default(false),
   status: z.enum(["draft", "published", "archived"]).default("published"),
 });
+
 export async function GET(req) {
   try {
     const token = req.cookies.get(COOKIE_NAME)?.value;
@@ -38,6 +43,7 @@ export async function GET(req) {
     );
   }
 }
+
 export async function POST(req) {
   try {
     const token = req.cookies.get(COOKIE_NAME)?.value;
@@ -61,15 +67,49 @@ export async function POST(req) {
       );
     }
     await connectDB();
+
+    // Resolve Category ID
+    let categoryId = parsed.data.category;
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      const catName = parsed.data.category.trim();
+      const catSlug =
+        catName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "") || "general";
+
+      let catDoc = await BlogCategory.findOne({
+        $or: [{ name: catName }, { slug: catSlug }],
+      });
+      if (!catDoc) {
+        catDoc = await BlogCategory.create({
+          name: catName,
+          slug: catSlug,
+          description: `${catName} insights and updates`,
+        });
+      }
+      categoryId = catDoc._id;
+    }
+
     const newPost = await BlogPost.create({
       ...parsed.data,
-      author: session.name,
+      category: categoryId,
+      author: parsed.data.author || session.name || "GateXPay Editorial Team",
       publishedAt: parsed.data.status === "published" ? new Date() : undefined,
     });
-    return NextResponse.json({ success: true, post: newPost }, { status: 201 });
+
+    const populated = await BlogPost.findById(newPost._id)
+      .populate("category", "name slug")
+      .lean();
+
+    return NextResponse.json({ success: true, post: populated }, { status: 201 });
   } catch (error) {
+    console.error("Failed to create blog post:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to create post" },
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to create post",
+      },
       { status: 500 }
     );
   }

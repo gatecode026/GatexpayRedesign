@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { BlogPost } from "@/models/blog/post.model";
 import { verifyAdminToken, COOKIE_NAME } from "@/lib/auth";
+import mongoose from "mongoose";
+import { BlogCategory } from "@/models/blog/category.model";
+
 export async function PATCH(req, { params }) {
   try {
     const token = req.cookies.get(COOKIE_NAME)?.value;
@@ -15,11 +18,39 @@ export async function PATCH(req, { params }) {
     const { id } = await params;
     const body = await req.json();
     await connectDB();
+
+    const updateFields = { ...body };
+
+    // Resolve Category ID if passed as string name
+    if (updateFields.category && !mongoose.Types.ObjectId.isValid(updateFields.category)) {
+      const catName = updateFields.category.trim();
+      const catSlug =
+        catName
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "") || "general";
+
+      let catDoc = await BlogCategory.findOne({
+        $or: [{ name: catName }, { slug: catSlug }],
+      });
+      if (!catDoc) {
+        catDoc = await BlogCategory.create({
+          name: catName,
+          slug: catSlug,
+          description: `${catName} insights and updates`,
+        });
+      }
+      updateFields.category = catDoc._id;
+    }
+
     const updated = await BlogPost.findByIdAndUpdate(
       id,
-      { $set: body },
+      { $set: updateFields },
       { new: true }
-    );
+    )
+      .populate("category", "name slug")
+      .lean();
+
     if (!updated) {
       return NextResponse.json(
         { success: false, error: "Post not found" },
@@ -28,12 +59,14 @@ export async function PATCH(req, { params }) {
     }
     return NextResponse.json({ success: true, post: updated });
   } catch (error) {
+    console.error("Failed to update blog post:", error);
     return NextResponse.json(
       { success: false, error: "Update failed" },
       { status: 500 }
     );
   }
 }
+
 export async function DELETE(req, { params }) {
   try {
     const token = req.cookies.get(COOKIE_NAME)?.value;
