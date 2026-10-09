@@ -257,7 +257,7 @@ export default function IndustrySection() {
     const n = STACK_KEYS.length;
     if (!cards || cards.length === 0) return;
 
-    const clampedP = Math.min(Math.max(p, 0), n);
+    const clampedP = Math.min(Math.max(p, 0), n - 1);
 
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
     const isTablet =
@@ -277,47 +277,7 @@ export default function IndustrySection() {
     cards.forEach((card, idx) => {
       if (!card) return;
 
-      // Final portion: when clampedP > n - 1 (p between 9 and 10), final card completes section exit
-      if (clampedP > n - 1) {
-        const exitT = clampedP - (n - 1);
-        const eExit = ease(exitT);
-
-        if (idx === n - 1) {
-          // Final active card moves upward/forward toward the end of the section
-          const y = targetActiveY - 30 * eExit;
-          const scale = 1.0 - 0.02 * eExit;
-          const op = Math.max(0, 1 - 0.5 * eExit);
-          card.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0) scale(${scale.toFixed(3)})`;
-          card.style.opacity = op.toFixed(3);
-          card.style.visibility = op > 0.01 ? "visible" : "hidden";
-          card.style.zIndex = "40";
-          card.style.pointerEvents = "auto";
-        } else if (idx === n - 2) {
-          // 1st behind card (peeking at top) fades out
-          const op = Math.max(0, 1 - eExit);
-          card.style.transform = `translate3d(0, ${targetBehind1Y}px, 0) scale(${scaleSecond.toFixed(3)})`;
-          card.style.opacity = op.toFixed(3);
-          card.style.visibility = op > 0.01 ? "visible" : "hidden";
-          card.style.zIndex = "30";
-          card.style.pointerEvents = "none";
-        } else if (idx === n - 3) {
-          // 2nd behind card (peeking higher at top) fades out
-          const op = Math.max(0, 1 - eExit);
-          card.style.transform = `translate3d(0, ${targetBehind2Y}px, 0) scale(${scaleThird.toFixed(3)})`;
-          card.style.opacity = op.toFixed(3);
-          card.style.visibility = op > 0.01 ? "visible" : "hidden";
-          card.style.zIndex = "20";
-          card.style.pointerEvents = "none";
-        } else {
-          card.style.opacity = "0";
-          card.style.visibility = "hidden";
-          card.style.zIndex = "0";
-          card.style.pointerEvents = "none";
-        }
-        return;
-      }
-
-      // Normal rolling stack progression (clampedP <= n - 1)
+      // Stack progression strictly in [0, n - 1]
       const diff = clampedP - idx;
 
       if (diff < -1) {
@@ -395,11 +355,15 @@ export default function IndustrySection() {
     });
   }, []);
 
-  // Dynamically compute exact stage height from tallest card to eliminate dead space
+  // Dynamically compute exact stage height and enforce uniform card minHeight
   useEffect(() => {
     const updateStageHeight = () => {
       const cards = stackCardRefs.current;
       if (!cards || cards.length === 0) return;
+      // Reset any inline minHeight before measuring natural content
+      cards.forEach((card) => {
+        if (card) card.style.minHeight = "";
+      });
       let maxH = 0;
       cards.forEach((card) => {
         if (card && card.offsetHeight > maxH) {
@@ -407,6 +371,10 @@ export default function IndustrySection() {
         }
       });
       if (maxH > 0) {
+        // Enforce identical minHeight on every card so behind cards never stick out at the bottom
+        cards.forEach((card) => {
+          if (card) card.style.minHeight = `${maxH}px`;
+        });
         const isMobile = window.innerWidth < 768;
         const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
         const yStep = isMobile ? 10 : isTablet ? 13 : 16;
@@ -424,13 +392,14 @@ export default function IndustrySection() {
     return () => window.removeEventListener("resize", updateStageHeight);
   }, []);
 
-  // Measure and set track scroll height
+  // Measure and set track scroll height: 1000px per card transition (half speed, slow & smooth)
   useEffect(() => {
     if (reducedMotion) return;
     const updateWrapHeight = () => {
       const stickyH =
         stackStickyRef.current?.getBoundingClientRect().height ?? 460;
-      setWrapHeightPx(STACK_KEYS.length * 500 + stickyH);
+      // 1000px per card transition (2x slower than original 500px)
+      setWrapHeightPx((STACK_KEYS.length - 1) * 1000 + stickyH);
     };
     updateWrapHeight();
     window.addEventListener("resize", updateWrapHeight);
@@ -504,7 +473,7 @@ export default function IndustrySection() {
 
         const scrolled = stickyTop - rect.top;
         const normalized = Math.min(Math.max(scrolled / scrollDistance, 0), 1);
-        const p = normalized * STACK_KEYS.length;
+        const p = normalized * (STACK_KEYS.length - 1);
 
         applyStackPositions(p);
 
@@ -563,7 +532,7 @@ export default function IndustrySection() {
     const tabsH = tabsWrapRef.current?.getBoundingClientRect().height ?? 128;
     const stickyTop = navH + tabsH + 24;
 
-    const targetNormalized = idx / STACK_KEYS.length;
+    const targetNormalized = idx / (STACK_KEYS.length - 1);
     const targetScrollY =
       window.scrollY + rect.top - stickyTop + targetNormalized * scrollDistance;
     window.scrollTo({ top: targetScrollY, behavior: "smooth" });
@@ -588,11 +557,6 @@ export default function IndustrySection() {
             <div className="industry-tabs-scroll" ref={tabsScrollRef}>
               {STACK_KEYS.map((tab, idx) => (
                 <div key={tab} className="industry-tab-item">
-                  {idx > 0 && (
-                    <span className="industry-tab-divider" aria-hidden="true">
-                      |
-                    </span>
-                  )}
                   <button
                     type="button"
                     aria-current={active === tab ? "true" : undefined}
@@ -601,6 +565,11 @@ export default function IndustrySection() {
                   >
                     <span className="industry-tab-text">{tab}</span>
                   </button>
+                  {idx < STACK_KEYS.length - 1 && (
+                    <span className="industry-tab-divider" aria-hidden="true">
+                      |
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
@@ -625,7 +594,7 @@ export default function IndustrySection() {
               height:
                 wrapHeightPx != null
                   ? `${wrapHeightPx}px`
-                  : `${(STACK_KEYS.length - 1) * 500 + 600}px`,
+                  : `${(STACK_KEYS.length - 1) * 1000 + 600}px`,
             }}
           >
             <div className="industry-stack-sticky" ref={stackStickyRef}>

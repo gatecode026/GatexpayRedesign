@@ -8,6 +8,33 @@ export default function ArticleTOC({ items }) {
   const rafRef = useRef(null);
   const isClickScrollingRef = useRef(false);
   const scrollEndTimerRef = useRef(null);
+  const tocListRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(null);
+
+  // Measure the natural width of the TOC items so reading progress matches exact content width
+  useEffect(() => {
+    const updateWidth = () => {
+      if (tocListRef.current) {
+        const listEl = tocListRef.current;
+        let maxW = listEl.offsetWidth || 0;
+        const links = listEl.querySelectorAll(".article-toc-item");
+        links.forEach((l) => {
+          if (l.offsetWidth > maxW) {
+            maxW = l.offsetWidth;
+          }
+        });
+        if (maxW > 0) {
+          setContentWidth(maxW);
+        }
+      }
+    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    if (typeof document !== "undefined" && document.fonts?.ready) {
+      document.fonts.ready.then(updateWidth);
+    }
+    return () => window.removeEventListener("resize", updateWidth);
+  }, [items]);
 
   // Synchronously compute reading progress and active section deterministically without observer jitter
   const updateScrollSpyAndProgress = useCallback(() => {
@@ -132,6 +159,7 @@ export default function ArticleTOC({ items }) {
       behavior: "smooth",
     });
   };
+
   return (
     <aside className="article-toc-sidebar" aria-label="Table of contents">
       {/* Mobile Collapsible Header */}
@@ -155,7 +183,7 @@ export default function ArticleTOC({ items }) {
         className={`article-toc-content ${isMobileOpen ? "is-open-mobile" : ""}`}
       >
         <h2 className="article-toc-heading">On this Article</h2>
-        <nav className="article-toc-list">
+        <nav className="article-toc-list" ref={tocListRef}>
           {items.map((item) => {
             const isActive = activeId === item.id;
             return (
@@ -173,7 +201,10 @@ export default function ArticleTOC({ items }) {
         </nav>
 
         {/* Reading Progress */}
-        <div className="reading-progress-block">
+        <div
+          className="reading-progress-block"
+          style={contentWidth ? { width: `${contentWidth}px`, maxWidth: "100%" } : undefined}
+        >
           <span className="reading-progress-label">Reading progress</span>
           <div
             className="reading-progress-track"

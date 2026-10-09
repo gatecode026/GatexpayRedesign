@@ -159,8 +159,56 @@
   margin: 0;
   max-height: 280px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   z-index: 100;
   animation: dropdownMenuOpen 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Open Above: Opens upwards over the input trigger */
+.floating-dropdown.open-above .floating-dropdown-menu,
+.floating-dropdown-menu--above,
+.contact-phone-code .floating-dropdown-menu,
+.contact-modal-code-field .floating-dropdown-menu {
+  top: auto;
+  bottom: calc(100% + 6px);
+  box-shadow: 0 -16px 40px -8px rgba(9, 15, 34, 0.18),
+              0 -6px 16px -4px rgba(9, 15, 34, 0.08);
+  animation: dropdownMenuOpenUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownMenuOpenUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Sleek custom scrollbar so items scroll cleanly without visual clutter */
+.floating-dropdown-menu::-webkit-scrollbar {
+  width: 5px;
+}
+.floating-dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.floating-dropdown-menu::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+.floating-dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Country code selector specific menu - compact height with isolated scrolling */
+.contact-phone-code .floating-dropdown-menu,
+.contact-modal-code-field .floating-dropdown-menu {
+  max-height: 165px;
 }
 
 @keyframes dropdownMenuOpen {

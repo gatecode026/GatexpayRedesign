@@ -97,19 +97,24 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 
 /* ── Tab Item & Dividers ─────────────────────────────────────────────────── */
 .industry-tab-item {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .industry-tab-divider {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: #CBD5E1;
   font-size: 13px;
   line-height: 1;
-  margin-right: clamp(4px, 0.45vw, 8px);
   user-select: none;
   opacity: 0.8;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
 }
 
 /* When sticky, hide dividers */
@@ -119,6 +124,11 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 
 /* ── Tab Button (Clean text link, NO pill background) ───────────────────── */
 .industry-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   position: relative;
   font-family: var(--font-body);
   font-size: clamp(12px, 0.92vw, 13.5px);
@@ -128,12 +138,19 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   background: none;
   border: none;
   border-radius: 0;
-  padding: 4px clamp(2px, 0.3vw, 5px);
+  padding: 4px clamp(4px, 0.5vw, 10px);
   white-space: nowrap;
   cursor: pointer;
   transition: color 0.2s ease;
-  flex-shrink: 0;
   user-select: none;
+  min-width: 0;
+}
+
+.industry-tab-text {
+  text-align: center;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .industry-tab:hover {
@@ -223,7 +240,7 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 @media (min-width: 768px) {
   .industry-card {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 32px;
   }
 }
@@ -242,6 +259,7 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
     width: 37.6%;
     min-height: 300px;
     align-self: stretch;
+    height: 100%;
   }
 }
 
@@ -254,7 +272,8 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
 .industry-card-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  justify-content: space-between;
+  gap: 20px;
   flex: 1;
   min-width: 0;
 }
@@ -394,6 +413,7 @@ body.navbar--hidden .industry-stack-sticky {
   will-change: transform, opacity;
   backface-visibility: hidden;
   transition: box-shadow 0.25s ease;
+  overflow: hidden;
 }
 
 .industry-stack-static .industry-stack-card {
@@ -455,6 +475,10 @@ body.navbar--hidden .industry-stack-sticky {
     padding-right: var(--container-pad);
   }
   .industry-tabs-scroll::-webkit-scrollbar { display: none; }
+
+  .industry-tab-item {
+    flex: 0 0 auto;
+  }
 
   .industry-tab {
     scroll-snap-align: start;

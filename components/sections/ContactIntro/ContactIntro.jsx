@@ -451,6 +451,8 @@ export default function ContactIntro() {
                           label="Code"
                           value={formData.countryCode}
                           options={COUNTRY_CODES}
+                          openAbove={true}
+                          singleItemScroll={true}
                           onChange={(name, val) => {
                             setFormData((prev) => ({ ...prev, [name]: val }));
                           }}

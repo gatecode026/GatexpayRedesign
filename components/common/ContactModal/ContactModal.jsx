@@ -335,6 +335,8 @@ export default function ContactModal({ isOpen, onClose }) {
                       label="Code"
                       value={formData.countryCode}
                       options={COUNTRY_CODES}
+                      openAbove={true}
+                      singleItemScroll={true}
                       onChange={(name, val) => {
                         setFormData((prev) => ({ ...prev, [name]: val }));
                       }}

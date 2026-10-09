@@ -44,11 +44,11 @@
   white-space: nowrap;
 }
 
-/* Engine Cards Grid: fluid up to Figma 412px per card with 24px gap */
+/* Engine Cards Grid: expanded desktop gap for better breathing room */
 .reliability-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
+  gap: clamp(32px, 3vw, 48px);
   width: 100%;
 }
 
@@ -58,12 +58,14 @@
   }
   .reliability-grid {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 }
 
 @media (min-width: 680px) and (max-width: 1023px) {
   .reliability-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
   }
 }
 
@@ -95,22 +97,22 @@
   border-radius: 16px;
 }
 
-/* Frame 61: Content area (padding: 32px 8px 0px, gap: 32px) */
+/* Frame 61: Content area - reduced gap between text and link */
 .rel-card-body {
   padding: 32px 8px 0px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 32px;
+  gap: 14px;
   width: 100%;
 }
 
-/* Frame 63: Text area (gap: 16px) */
+/* Frame 63: Text area (gap: 12px) */
 .rel-card-text {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 12px;
   width: 100%;
 }
 

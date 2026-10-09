@@ -49,7 +49,7 @@ export default function CookieConsent() {
     return `gxp_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
   };
 
-  const saveConsent = async (decision, finalPrefs) => {
+  const saveConsent = (decision, finalPrefs) => {
     setIsSaving(true);
     const consentId = getOrCreateConsentId();
     const payload = {
@@ -69,18 +69,20 @@ export default function CookieConsent() {
     } catch (e) {
       console.warn("Could not save to localStorage", e);
     }
-    try {
-      await fetch("/api/cookie-consent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-    } catch (error) {
+
+    // Dismiss immediately (0ms) so user is never blocked by network latency
+    setIsVisible(false);
+    setShowCustomize(false);
+    setIsSaving(false);
+
+    // Asynchronously sync consent record to server in background without blocking UI
+    fetch("/api/cookie-consent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }).catch((error) => {
       console.error("Failed to sync consent to server:", error);
-    } finally {
-      setIsSaving(false);
-      setIsVisible(false);
-    }
+    });
   };
 
   const handleAcceptAll = () => {

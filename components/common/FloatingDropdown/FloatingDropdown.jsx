@@ -15,14 +15,161 @@ export default function FloatingDropdown({
   error = "",
   hasSubmitted = false,
   className = "",
+  openAbove = false,
+  singleItemScroll = false,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const containerRef = useRef(null);
+  const menuRef = useRef(null);
+  const lastWheelTimeRef = useRef(0);
+  const isWheelingRef = useRef(false);
+  const wheelTimerRef = useRef(null);
 
   const normalizedOptions = options.map((opt) =>
     typeof opt === "string" ? { value: opt, label: opt } : opt
   );
+
+  const isCountryCode =
+    name === "countryCode" ||
+    id?.includes("code") ||
+    id?.includes("country");
+  const shouldOpenAbove = openAbove || isCountryCode;
+  const isSingleScroll = singleItemScroll || isCountryCode;
+
+  // Prevent wheel/touch events from scrolling the parent form or modal,
+  // and step exactly one code per scroll tick when isSingleScroll is active.
+  useEffect(() => {
+    const menuEl = menuRef.current;
+    if (!isOpen || !menuEl) return;
+
+    const handleWheel = (e) => {
+      // Always prevent default and stop propagation so form/modal NEVER scrolls
+      e.stopPropagation();
+      e.preventDefault();
+
+      if (isSingleScroll) {
+        const now = Date.now();
+        // 160ms throttle: 1 scroll notch/tick = exactly 1 code item stepped
+        if (now - lastWheelTimeRef.current < 160) {
+          return;
+        }
+        lastWheelTimeRef.current = now;
+
+        const delta = e.deltaY;
+        if (Math.abs(delta) < 4) return;
+
+        isWheelingRef.current = true;
+        if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
+        wheelTimerRef.current = setTimeout(() => {
+          isWheelingRef.current = false;
+        }, 150);
+
+        if (delta > 0) {
+          // Scroll down -> step exactly 1 code down
+          setHighlightedIndex((prev) => {
+            const next = Math.min(normalizedOptions.length - 1, prev + 1);
+            if (normalizedOptions[next]) {
+              onChange(name, normalizedOptions[next].value);
+            }
+            return next;
+          });
+        } else {
+          // Scroll up -> step exactly 1 code up
+          setHighlightedIndex((prev) => {
+            const prevIdx = Math.max(0, prev - 1);
+            if (normalizedOptions[prevIdx]) {
+              onChange(name, normalizedOptions[prevIdx].value);
+            }
+            return prevIdx;
+          });
+        }
+      } else {
+        const { deltaY } = e;
+        const atTop = menuEl.scrollTop <= 0;
+        const atBottom =
+          menuEl.scrollTop + menuEl.clientHeight >= menuEl.scrollHeight - 1;
+
+        if ((deltaY < 0 && atTop) || (deltaY > 0 && atBottom)) {
+          return;
+        }
+
+        if (menuEl.scrollHeight > menuEl.clientHeight) {
+          menuEl.scrollTop += deltaY;
+        }
+      }
+    };
+
+    let touchStartY = 0;
+    let touchMoved = false;
+
+    const handleTouchStart = (e) => {
+      touchStartY = e.touches[0].clientY;
+      touchMoved = false;
+      e.stopPropagation();
+    };
+
+    const handleTouchMove = (e) => {
+      e.stopPropagation();
+      if (touchMoved) return;
+      const currentY = e.touches[0].clientY;
+      const diffY = touchStartY - currentY;
+
+      if (Math.abs(diffY) > 18) {
+        touchMoved = true;
+        if (isSingleScroll) {
+          if (diffY > 0) {
+            setHighlightedIndex((prev) => {
+              const next = Math.min(normalizedOptions.length - 1, prev + 1);
+              if (normalizedOptions[next]) {
+                onChange(name, normalizedOptions[next].value);
+              }
+              return next;
+            });
+          } else {
+            setHighlightedIndex((prev) => {
+              const prevIdx = Math.max(0, prev - 1);
+              if (normalizedOptions[prevIdx]) {
+                onChange(name, normalizedOptions[prevIdx].value);
+              }
+              return prevIdx;
+            });
+          }
+        }
+        if (e.cancelable) e.preventDefault();
+      }
+    };
+
+    menuEl.addEventListener("wheel", handleWheel, { passive: false });
+    menuEl.addEventListener("touchstart", handleTouchStart, { passive: true });
+    menuEl.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    return () => {
+      if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
+      menuEl.removeEventListener("wheel", handleWheel);
+      menuEl.removeEventListener("touchstart", handleTouchStart);
+      menuEl.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [isOpen, isSingleScroll, name, normalizedOptions, onChange]);
+
+  // Keep highlighted option scrolled into view inside the dropdown menu
+  useEffect(() => {
+    if (!isOpen || !menuRef.current) return;
+    const menu = menuRef.current;
+    const activeItem = menu.querySelector(".floating-dropdown-item.is-active");
+    if (activeItem) {
+      const itemTop = activeItem.offsetTop;
+      const itemBottom = itemTop + activeItem.offsetHeight;
+      const menuScrollTop = menu.scrollTop;
+      const menuHeight = menu.clientHeight;
+
+      if (itemTop < menuScrollTop) {
+        menu.scrollTop = itemTop;
+      } else if (itemBottom > menuScrollTop + menuHeight) {
+        menu.scrollTop = itemBottom - menuHeight;
+      }
+    }
+  }, [isOpen, highlightedIndex]);
 
   const currentIndex = normalizedOptions.findIndex((opt) => opt.value === value);
 
@@ -65,6 +212,7 @@ export default function FloatingDropdown({
 
   // User requirement: "hover wala value hover ke according values change ho jaaye"
   const handleOptionMouseEnter = (index) => {
+    if (isWheelingRef.current) return;
     setHighlightedIndex(index);
     if (normalizedOptions[index]) {
       onChange(name, normalizedOptions[index].value);
@@ -115,7 +263,7 @@ export default function FloatingDropdown({
   return (
     <div
       ref={containerRef}
-      className={`floating-dropdown ${isOpen ? "is-open" : ""} ${isFloating ? "has-value" : ""} ${className}`}
+      className={`floating-dropdown ${isOpen ? "is-open" : ""} ${isFloating ? "has-value" : ""} ${shouldOpenAbove ? "open-above" : ""} ${className}`}
     >
       <div
         id={id}
@@ -144,9 +292,10 @@ export default function FloatingDropdown({
 
       {isOpen && (
         <ul
+          ref={menuRef}
           id={`${id}-listbox`}
           role="listbox"
-          className="floating-dropdown-menu"
+          className={`floating-dropdown-menu ${shouldOpenAbove ? "floating-dropdown-menu--above" : ""}`}
         >
           {normalizedOptions.map((opt, idx) => {
             const isHighlighted = idx === highlightedIndex;
