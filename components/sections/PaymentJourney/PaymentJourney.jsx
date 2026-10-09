@@ -169,7 +169,7 @@ export default function PaymentJourney() {
                       fill
                       className="journey-card-img"
                       sizes="(max-width: 640px) 88vw, (max-width: 900px) 75vw, 430px"
-                      priority={i === 0}
+                      loading="lazy"
                     />
                     {/* Step number — large typographic overlay */}
                     <span className="journey-step-num" aria-hidden="true">

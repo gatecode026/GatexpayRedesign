@@ -158,7 +158,7 @@ export default function CTASection({ alignToNavbar = false, customCta = null }) 
               fill
               className="cta-illustration"
               sizes="(max-width: 767px) 100vw, (max-width: 1024px) 44vw, 600px"
-              priority
+              loading="lazy"
             />
           </div>
         </div>

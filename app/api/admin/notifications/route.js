@@ -15,10 +15,16 @@ export async function GET(req) {
     }
     await connectDB();
     // Query latest 10 enquiries as notifications
-    const recentLeads = await Enquiry.find().sort({ createdAt: -1 }).limit(10);
+    const recentLeads = await Enquiry.find()
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .select("fullName serviceCategory status createdAt")
+      .lean();
     const recentConsents = await CookieConsent.find()
       .sort({ updatedAt: -1 })
-      .limit(5);
+      .limit(5)
+      .select("ipSnippet analytics marketing updatedAt")
+      .lean();
     const notifications = [];
     function timeAgo(date) {
       const seconds = Math.floor(

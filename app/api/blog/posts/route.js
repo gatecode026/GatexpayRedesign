@@ -23,7 +23,8 @@ export async function GET(req) {
     const posts = await BlogPost.find(query)
       .sort({ publishedAt: -1, createdAt: -1 })
       .limit(limit)
-      .populate("category", "name slug");
+      .populate("category", "name slug")
+      .lean();
     return NextResponse.json({
       success: true,
       total: posts.length,

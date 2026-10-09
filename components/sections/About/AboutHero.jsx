@@ -56,6 +56,7 @@ export default function AboutHero() {
               alt="GateXPay Next-Gen Fintech Infrastructure"
               width={584}
               height={876}
+              sizes="(max-width: 768px) 100vw, 584px"
               priority
               className="about-hero-artwork-img"
             />

@@ -28,7 +28,8 @@ export async function GET(req) {
     await connectDB();
     const posts = await BlogPost.find({ isDeleted: false })
       .sort({ createdAt: -1 })
-      .populate("category", "name slug");
+      .populate("category", "name slug")
+      .lean();
     return NextResponse.json({ success: true, posts });
   } catch (error) {
     return NextResponse.json(

@@ -1,10 +1,11 @@
 "use client";
+import React, { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CATEGORY_BADGE, formatBlogDate } from "@/data/blog-posts";
 import "./ArticleGrid.css";
-function ArticleCard({ post }) {
+const ArticleCard = memo(function ArticleCard({ post }) {
   const badge = CATEGORY_BADGE[post.category];
   return (
     <Link href={`/blog/${post.slug}`} className="article-card">
@@ -38,7 +39,7 @@ function ArticleCard({ post }) {
       </div>
     </Link>
   );
-}
+});
 export default function ArticleGrid({ posts, visibleCount, onLoadMore }) {
   if (posts.length === 0) {
     return (

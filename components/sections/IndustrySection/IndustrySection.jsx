@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore, useCallback } from "react";
 import "./IndustrySection.css";
 
 function subscribeReducedMotion(callback) {
@@ -160,6 +160,7 @@ function IndustryCardBody({ data, sizes }) {
           src={data.img}
           alt={data.tag}
           fill
+          loading="lazy"
           className="industry-card-img"
           style={{ objectFit: "cover", objectPosition: "center" }}
           sizes={sizes}
@@ -194,6 +195,12 @@ function IndustryCardBody({ data, sizes }) {
     </>
   );
 }
+// Smoothstep easing: 0 velocity at endpoints for fluid, jitter-free motion
+const ease = (v) => {
+  const clamped = Math.min(Math.max(v, 0), 1);
+  return clamped * clamped * (3 - 2 * clamped);
+};
+
 export default function IndustrySection() {
   const [active, setActive] = useState("Real Estate");
   const [isSticky, setIsSticky] = useState(false);
@@ -243,14 +250,8 @@ export default function IndustrySection() {
     getReducedMotionServerSnapshot
   );
 
-  // Smoothstep easing: 0 velocity at endpoints for fluid, jitter-free motion
-  const ease = (v) => {
-    const clamped = Math.min(Math.max(v, 0), 1);
-    return clamped * clamped * (3 - 2 * clamped);
-  };
-
   // Continuous physical stacking animation strictly controlled by scroll progress p
-  const applyStackPositions = (p) => {
+  const applyStackPositions = useCallback((p) => {
     const cards = stackCardRefs.current;
     const n = STACK_KEYS.length;
     if (!cards || cards.length === 0) return;
@@ -391,7 +392,7 @@ export default function IndustrySection() {
         card.style.pointerEvents = "none";
       }
     });
-  };
+  }, []);
 
   // Measure and set track scroll height
   useEffect(() => {
@@ -495,7 +496,7 @@ export default function IndustrySection() {
       window.removeEventListener("resize", onScroll);
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, applyStackPositions]);
 
   // Keep active tab centered in horizontal scroll
   useEffect(() => {

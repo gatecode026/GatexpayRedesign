@@ -90,9 +90,18 @@
   font-weight: 500;
   color: #0284C7;
   margin-top: auto;
+  width: fit-content;
+  transition: color 0.2s var(--ease-out);
 }
-.article-card-link svg { transition: transform 0.2s var(--ease-out); }
-.article-card:hover .article-card-link svg { transform: translateX(3px); }
+.article-card-link svg {
+  transition: transform 0.2s var(--ease-out);
+}
+.article-card-link:hover {
+  color: #0369A1;
+}
+.article-card-link:hover svg {
+  transform: translateX(4px);
+}
 
 /* ── Empty state ── */
 .article-empty-state {

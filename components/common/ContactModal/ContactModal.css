@@ -85,7 +85,7 @@
 .contact-modal-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 22px;
   margin-top: 22px;
 }
 
@@ -334,7 +334,7 @@
   font-size: 14px;
   font-weight: 600;
   border-radius: var(--radius-md);
-  margin-top: 7px;
+  margin-top: 0;
   box-shadow: 0 4px 14px rgba(26, 93, 200, 0.28);
   transition: background 0.2s, transform 0.2s var(--ease-out), box-shadow 0.2s;
 }
@@ -345,7 +345,7 @@
 .contact-modal-submit:active { transform: scale(0.98); }
 
 .contact-modal-legal {
-  margin-top: 11px;
+  margin-top: -8px;
   font-size: 10.5px;
   line-height: 1.5;
   color: var(--color-muted);

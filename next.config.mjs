@@ -37,15 +37,21 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  compress: true,
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [375, 480, 640, 768, 1024, 1280, 1440],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "ik.imagekit.io",
       },
     ],
+  },
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
   },
   devIndicators: false,
   async redirects() {

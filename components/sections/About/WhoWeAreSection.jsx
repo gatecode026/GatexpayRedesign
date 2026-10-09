@@ -33,6 +33,8 @@ export default function WhoWeAreSection() {
             alt="The GateXPay team collaborating on digital payments infrastructure"
             width={640}
             height={427}
+            sizes="(max-width: 768px) 100vw, 640px"
+            loading="lazy"
             className="about-who-image"
           />
         </div>

@@ -306,15 +306,14 @@
   padding: 32px 28px;
   background: transparent;
   border-radius: 24px;
-  border: 1px solid rgba(226, 232, 240, 0.7);
+  border: none;
   box-shadow: none;
-  transition: transform 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+  transition: transform 0.25s var(--ease-out);
 }
 
 .sd-feature:hover {
   transform: translateY(-4px);
   box-shadow: none;
-  border-color: rgba(2, 132, 199, 0.3);
 }
 
 .sd-feature-icon-box {
@@ -324,9 +323,11 @@
   flex: none;
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: 50%;
+  border: 1.5px solid #0284C7;
   background: #F0F9FF;
   color: #0284C7;
+  box-sizing: border-box;
 }
 
 .sd-feature-icon-box .sd-icon {
@@ -344,8 +345,8 @@
 .sd-feature-title {
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: 18px;
-  line-height: 26px;
+  font-size: 24px;
+  line-height: 32px;
   color: #0F172A;
   margin: 0;
 }
@@ -353,8 +354,8 @@
 .sd-feature-desc {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 14px;
-  line-height: 22px;
+  font-size: 18px;
+  line-height: 28px;
   color: #64748B;
   margin: 0;
 }
@@ -965,8 +966,8 @@
   .sd-icon-box--sm { width: clamp(48px, 3.8889vw, 56px); height: clamp(48px, 3.8889vw, 56px); }
   .sd-highlight-title { font-size: clamp(18px, 1.6667vw, 24px); line-height: 1.5; }
 
-  .sd-feature-title { font-size: 18px; line-height: 26px; }
-  .sd-feature-desc { font-size: 14px; line-height: 22px; }
+  .sd-feature-title { font-size: 24px; line-height: 32px; }
+  .sd-feature-desc { font-size: 18px; line-height: 28px; }
   .sd-step-title { font-size: 16px; line-height: 24px; }
   .sd-step-desc { font-size: 14px; line-height: 20px; }
   .sd-step-card { padding: 20px; }
@@ -1050,8 +1051,8 @@
   /* Cards: two columns */
   .sd-included-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
   .sd-feature { gap: 16px; padding: 24px 20px; }
-  .sd-feature-title { font-size: 18px; line-height: 26px; }
-  .sd-feature-desc { font-size: 14px; line-height: 22px; }
+  .sd-feature-title { font-size: 22px; line-height: 30px; }
+  .sd-feature-desc { font-size: 16px; line-height: 24px; }
 
   /* Process: 2-column cards on tablet */
   .sd-process-timeline { display: none; }

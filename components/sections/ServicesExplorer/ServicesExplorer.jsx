@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -546,7 +546,7 @@ export default function ServicesExplorer({
   );
 }
 // Reusable ServiceCard component matching Frame 202 exact specifications
-function ServiceCard({ service }) {
+const ServiceCard = memo(function ServiceCard({ service }) {
   return (
     <Link
       href={service.href}
@@ -587,9 +587,11 @@ function ServiceCard({ service }) {
           alt=""
           width={316}
           height={211}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 316px"
+          loading="lazy"
           className="services-card-img"
         />
       </div>
     </Link>
   );
-}
+});

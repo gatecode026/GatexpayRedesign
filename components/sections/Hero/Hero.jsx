@@ -57,6 +57,7 @@ export default function Hero() {
               alt="GateXPay payment dashboard on tablet"
               width={900}
               height={840}
+              sizes="(max-width: 768px) 45vw, 360px"
               draggable={false}
               className="hero-device-img hero-device-img--ipad"
             />
@@ -67,6 +68,7 @@ export default function Hero() {
               alt="GateXPay payment dashboard on mobile"
               width={700}
               height={1265}
+              sizes="(max-width: 768px) 45vw, 280px"
               priority
               draggable={false}
               className="hero-device-img hero-device-img--iphone"
@@ -78,6 +80,7 @@ export default function Hero() {
               alt="GateXPay payment dashboard on laptop"
               width={1600}
               height={1199}
+              sizes="(max-width: 768px) 95vw, (max-width: 1280px) 55vw, 680px"
               priority
               draggable={false}
               className="hero-device-img hero-device-img--macbook"

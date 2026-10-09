@@ -885,10 +885,19 @@
   font-weight: 500;
   color: #0284C7;
   margin-top: 8px;
+  width: fit-content;
+  transition: color 0.2s ease;
+}
+
+.related-card-link svg {
   transition: transform 0.2s ease;
 }
 
-.related-card:hover .related-card-link {
+.related-card-link:hover {
+  color: #0369A1;
+}
+
+.related-card-link:hover svg {
   transform: translateX(4px);
 }
 

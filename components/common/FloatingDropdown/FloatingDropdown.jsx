@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import "./FloatingDropdown.css";
 
@@ -36,10 +36,10 @@ export default function FloatingDropdown({
     setIsOpen(true);
   };
 
-  const closeDropdown = () => {
+  const closeDropdown = useCallback(() => {
     setIsOpen(false);
     if (onBlur) onBlur(name, value);
-  };
+  }, [name, onBlur, value]);
 
   const toggleDropdown = () => {
     if (isOpen) {
@@ -61,7 +61,7 @@ export default function FloatingDropdown({
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [isOpen]);
+  }, [isOpen, closeDropdown]);
 
   // User requirement: "hover wala value hover ke according values change ho jaaye"
   const handleOptionMouseEnter = (index) => {

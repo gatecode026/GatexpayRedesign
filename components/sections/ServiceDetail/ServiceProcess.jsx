@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { SectionTitle, ServiceDetailIcon } from "./ServiceDetailParts";
+import { SectionTitle } from "./ServiceDetailParts";
 
 export default function ServiceProcess({ detail }) {
   const { heading, steps } = detail.process;
@@ -45,11 +45,6 @@ export default function ServiceProcess({ detail }) {
                     <span className="sd-sr-only">Step {i + 1}: </span>
                     {step.title}
                   </h3>
-                  <ServiceDetailIcon
-                    name={step.icon}
-                    size={24}
-                    strokeWidth={1.75}
-                  />
                 </div>
                 <p className="sd-step-desc">{step.text}</p>
               </div>
