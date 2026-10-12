@@ -25,12 +25,177 @@ const RBI_TOC_ITEMS = [
     label: "Practical Compliance Checklist",
   },
 ];
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/--+/g, "-");
+}
+
+function parseDynamicPost(post) {
+  const raw =
+    post.rawContent ||
+    (Array.isArray(post.content) ? post.content.join("\n\n") : post.content) ||
+    "";
+
+  if (!raw.trim()) {
+    return {
+      tocItems: [{ id: "overview", label: "Overview" }],
+      sections: [
+        {
+          id: "overview",
+          title: "Overview",
+          elements: [<p key="empty" className="article-p">{post.description || ""}</p>],
+        },
+      ],
+    };
+  }
+
+  const lines = raw.split("\n");
+  const sections = [];
+  let currentSection = {
+    id: "overview",
+    title: "Overview",
+    elements: [],
+  };
+  let currentList = [];
+  let inCodeBlock = false;
+  let codeBuffer = [];
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      currentSection.elements.push(
+        <ul key={`ul-${currentSection.elements.length}`} className="article-bullet-list">
+          {currentList.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ul>
+      );
+      currentList = [];
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith("```")) {
+      if (inCodeBlock) {
+        currentSection.elements.push(
+          <pre
+            key={`code-${currentSection.elements.length}`}
+            style={{
+              background: "#0F172A",
+              color: "#E2E8F0",
+              padding: "16px 20px",
+              borderRadius: "10px",
+              fontSize: "13px",
+              overflowX: "auto",
+              fontFamily: "monospace",
+              lineHeight: 1.6,
+              margin: "12px 0",
+            }}
+          >
+            <code>{codeBuffer.join("\n")}</code>
+          </pre>
+        );
+        codeBuffer = [];
+        inCodeBlock = false;
+      } else {
+        flushList();
+        inCodeBlock = true;
+      }
+      return;
+    }
+
+    if (inCodeBlock) {
+      codeBuffer.push(line);
+      return;
+    }
+
+    if (trimmed.startsWith("## ")) {
+      flushList();
+      if (currentSection.elements.length > 0 || currentSection.id !== "overview") {
+        sections.push(currentSection);
+      }
+      const title = trimmed.replace(/^##\s+/, "");
+      currentSection = {
+        id: slugify(title) || `section-${sections.length + 1}`,
+        title,
+        elements: [],
+      };
+    } else if (trimmed.startsWith("### ")) {
+      flushList();
+      currentSection.elements.push(
+        <h3 key={`h3-${index}`} className="section-subtitle">
+          {trimmed.replace(/^###\s+/, "")}
+        </h3>
+      );
+    } else if (trimmed.startsWith("> ")) {
+      flushList();
+      const quoteText = trimmed.replace(/^>\s+/, "").replace(/\*\*(.*?)\*\*/g, "$1");
+      currentSection.elements.push(
+        <blockquote key={`quote-${index}`} className="article-blockquote">
+          {quoteText}
+        </blockquote>
+      );
+    } else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+      currentList.push(trimmed.replace(/^[-*]\s+/, ""));
+    } else if (trimmed === "") {
+      flushList();
+    } else {
+      flushList();
+      currentSection.elements.push(
+        <p key={`p-${index}`} className="article-p">
+          {trimmed}
+        </p>
+      );
+    }
+  });
+
+  flushList();
+  if (inCodeBlock && codeBuffer.length > 0) {
+    currentSection.elements.push(
+      <pre
+        key={`code-${currentSection.elements.length}`}
+        style={{
+          background: "#0F172A",
+          color: "#E2E8F0",
+          padding: "16px 20px",
+          borderRadius: "10px",
+          fontSize: "13px",
+          overflowX: "auto",
+          fontFamily: "monospace",
+          lineHeight: 1.6,
+        }}
+      >
+        <code>{codeBuffer.join("\n")}</code>
+      </pre>
+    );
+  }
+
+  sections.push(currentSection);
+
+  const tocItems = sections.map((s) => ({
+    id: s.id,
+    label: s.title,
+  }));
+
+  return { tocItems, sections };
+}
+
 export default function BlogDetail({ post }) {
   // Deterministic related posts: filter out current article, take top 3
   const relatedPosts = GRID_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
   const isRbiGuide =
     post.id === "rbi-pa-pg-licensing-guide-2026" ||
     post.slug === "rbi-payment-aggregator-licensing-guide-2026";
+
+  const dynamicParsed = !isRbiGuide ? parseDynamicPost(post) : null;
+  const tocItems = isRbiGuide ? RBI_TOC_ITEMS : dynamicParsed.tocItems;
+
   return (
     <div className="blog-detail-page">
       {/* 1. Article Hero with Breadcrumbs */}
@@ -42,23 +207,14 @@ export default function BlogDetail({ post }) {
         title={post.title}
         publishedAt={formatBlogDate(post.publishedAt)}
         readTime={post.readTime}
+        author={post.author}
       />
 
       {/* 3. Main Article Layout: Sticky Sidebar TOC + Content */}
       <main className="article-main-layout">
         <div className="article-layout-container">
           {/* Left Column: Sticky Table of Contents & Reading Progress */}
-          <ArticleTOC
-            items={
-              isRbiGuide
-                ? RBI_TOC_ITEMS
-                : [
-                    { id: "overview", label: "Overview" },
-                    { id: "key-takeaways", label: "Key Takeaways" },
-                    { id: "deep-dive", label: "Deep Dive" },
-                  ]
-            }
-          />
+          <ArticleTOC items={tocItems} />
 
           {/* Right Column: Article Content */}
           <article className="article-content-column" id="article-content-body">
@@ -243,15 +399,16 @@ export default function BlogDetail({ post }) {
               </>
             ) : (
               <>
-                <section id="overview" className="article-section">
-                  <h2 className="section-title">Overview</h2>
-                  <p className="article-lede">{post.description}</p>
-                  {post.content.map((p, i) => (
-                    <p key={i} className="article-p">
-                      {p}
-                    </p>
+                {dynamicParsed &&
+                  dynamicParsed.sections.map((sec, sIdx) => (
+                    <section key={sec.id} id={sec.id} className="article-section">
+                      <h2 className="section-title">{sec.title}</h2>
+                      {sIdx === 0 && post.description && (
+                        <p className="article-lede">{post.description}</p>
+                      )}
+                      {sec.elements}
+                    </section>
                   ))}
-                </section>
                 <InlineCTA />
                 <AuthorCard />
               </>

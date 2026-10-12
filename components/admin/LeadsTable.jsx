@@ -16,7 +16,16 @@ import {
   Trash2,
   Inbox,
   ChevronDown,
+  Check,
 } from "lucide-react";
+
+const STATUS_OPTIONS = [
+  { value: "new", label: "New", dot: "#F97316" },
+  { value: "in_progress", label: "In Progress", dot: "#0284C7" },
+  { value: "contacted", label: "Contacted", dot: "#10B981" },
+  { value: "closed", label: "Closed", dot: "#94A3B8" },
+];
+
 export default function LeadsTable({
   leads,
   stats,
@@ -41,7 +50,11 @@ export default function LeadsTable({
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [activeActionMenuId, setActiveActionMenuId] = useState(null);
   const actionMenuRef = useRef(null);
-  // Close action dropdown on outside click
+
+  const [activeStatusMenuId, setActiveStatusMenuId] = useState(null);
+  const statusMenuRef = useRef(null);
+
+  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -50,14 +63,20 @@ export default function LeadsTable({
       ) {
         setActiveActionMenuId(null);
       }
+      if (
+        statusMenuRef.current &&
+        !statusMenuRef.current.contains(event.target)
+      ) {
+        setActiveStatusMenuId(null);
+      }
     }
-    if (activeActionMenuId) {
+    if (activeActionMenuId || activeStatusMenuId) {
       document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [activeActionMenuId]);
+  }, [activeActionMenuId, activeStatusMenuId]);
   // Paginated leads
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedLeads = leads.slice(startIndex, startIndex + pageSize);
@@ -497,24 +516,66 @@ export default function LeadsTable({
 
                     {/* Status */}
                     <td className="td-status">
-                      <div className="lead-status-wrapper">
-                        <select
-                          className={`lead-status-dropdown status-${lead.status}`}
-                          value={lead.status}
-                          onChange={(e) =>
-                            onStatusChange(lead._id, e.target.value)
-                          }
+                      <div
+                        className="lead-status-wrapper"
+                        ref={activeStatusMenuId === lead._id ? statusMenuRef : null}
+                      >
+                        <button
+                          type="button"
+                          className={`lead-status-pill-btn status-${lead.status} ${activeStatusMenuId === lead._id ? "open" : ""}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveStatusMenuId(
+                              activeStatusMenuId === lead._id ? null : lead._id
+                            );
+                            setActiveActionMenuId(null);
+                          }}
                           aria-label={`Change status for ${lead.fullName}`}
+                          aria-expanded={activeStatusMenuId === lead._id}
                         >
-                          <option value="new">New</option>
-                          <option value="in_progress">In Progress</option>
-                          <option value="contacted">Contacted</option>
-                          <option value="closed">Closed</option>
-                        </select>
-                        <ChevronDown
-                          size={12}
-                          className="lead-status-chevron"
-                        />
+                          <span className="lead-status-pill-text">
+                            {STATUS_OPTIONS.find((s) => s.value === lead.status)?.label ||
+                              "New"}
+                          </span>
+                          <ChevronDown
+                            size={11}
+                            className={`lead-status-chevron ${activeStatusMenuId === lead._id ? "rotate" : ""}`}
+                          />
+                        </button>
+
+                        {activeStatusMenuId === lead._id && (
+                          <div className="lead-status-menu-dropdown">
+                            {STATUS_OPTIONS.map((opt) => {
+                              const isSelected = lead.status === opt.value;
+                              return (
+                                <button
+                                  key={opt.value}
+                                  type="button"
+                                  className={`lead-status-menu-item status-opt-${opt.value} ${isSelected ? "selected" : ""}`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onStatusChange(lead._id, opt.value);
+                                    setActiveStatusMenuId(null);
+                                  }}
+                                >
+                                  <span
+                                    className="lead-status-menu-dot"
+                                    style={{ backgroundColor: opt.dot }}
+                                  />
+                                  <span className="lead-status-menu-label">
+                                    {opt.label}
+                                  </span>
+                                  {isSelected && (
+                                    <Check
+                                      size={12}
+                                      className="lead-status-menu-check"
+                                    />
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </td>
 

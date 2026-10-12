@@ -73,26 +73,6 @@ export default function BlogArticlesTable({
     }, 2000);
   };
 
-  const getCategoryTheme = (catName) => {
-    const name = catName?.toLowerCase() || "";
-    if (name.includes("growth") || name.includes("business")) {
-      return { text: "#7E22CE", border: "#DDD6FE" };
-    }
-    if (name.includes("engineer") || name.includes("tech")) {
-      return { text: "#0284C7", border: "#BAE6FD" };
-    }
-    if (name.includes("compliance") || name.includes("regulation")) {
-      return { text: "#B45309", border: "#FDE68A" };
-    }
-    if (name.includes("csp") || name.includes("service")) {
-      return { text: "#059669", border: "#A7F3D0" };
-    }
-    if (name.includes("news") || name.includes("company")) {
-      return { text: "#C2410C", border: "#FED7AA" };
-    }
-    return { text: "#475569", border: "#E2E8F0" };
-  };
-
   const formatDate = (dateStr) => {
     if (!dateStr) return "Recently";
     try {
@@ -257,7 +237,6 @@ export default function BlogArticlesTable({
               </tr>
             ) : (
               paginatedPosts.map((post) => {
-                const theme = getCategoryTheme(post.category?.name);
                 const categoryName = post.category?.name || "CSP Services";
                 const isCopied = copiedId === post._id;
 
@@ -302,14 +281,7 @@ export default function BlogArticlesTable({
 
                     {/* Category */}
                     <td className="td-blog-category">
-                      <span
-                        className="blog-category-tag"
-                        style={{
-                          backgroundColor: "transparent",
-                          color: theme.text,
-                          borderColor: theme.border,
-                        }}
-                      >
+                      <span className="blog-category-tag">
                         {categoryName}
                       </span>
                     </td>
@@ -417,19 +389,11 @@ export default function BlogArticlesTable({
           </div>
         ) : (
           paginatedPosts.map((post) => {
-            const theme = getCategoryTheme(post.category?.name);
             const isCopied = copiedId === post._id;
             return (
               <div key={post._id} className="mobile-lead-card blog-mobile-card">
                 <div className="mobile-card-top">
-                  <span
-                    className="blog-category-tag"
-                    style={{
-                      backgroundColor: "transparent",
-                      color: theme.text,
-                      borderColor: theme.border,
-                    }}
-                  >
+                  <span className="blog-category-tag">
                     {post.category?.name || "CSP Services"}
                   </span>
                   <div

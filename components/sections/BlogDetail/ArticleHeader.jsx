@@ -5,7 +5,16 @@ export default function ArticleHeader({
   title,
   publishedAt,
   readTime,
+  author = "GateXPay Editorial Team",
 }) {
+  const authorName = author || "GateXPay Editorial Team";
+  const authorRole =
+    authorName === "Vansh Chaudhary"
+      ? "Chief Compliance Officer"
+      : authorName.toLowerCase().includes("engineering")
+      ? "Engineering & Tech Desk"
+      : "FinTech Compliance & Tech Desk";
+
   return (
     <header className="article-header">
       <div className="article-header-container">
@@ -18,15 +27,15 @@ export default function ArticleHeader({
             <div className="author-avatar-wrap">
               <Image
                 src="/assets/images/author-vansh.png"
-                alt="Vansh Chaudhary"
+                alt={authorName}
                 width={34}
                 height={34}
                 className="author-avatar-img"
               />
             </div>
             <div className="author-info">
-              <span className="author-name">Vansh Chaudhary</span>
-              <span className="author-role">Chief Compliance Officer</span>
+              <span className="author-name">{authorName}</span>
+              <span className="author-role">{authorRole}</span>
             </div>
           </div>
 

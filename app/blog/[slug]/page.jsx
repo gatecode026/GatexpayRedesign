@@ -43,8 +43,13 @@ async function getPostBySlug(slug) {
         title: dbPost.title,
         description: dbPost.excerpt || dbPost.title,
         content: contentArr,
+        rawContent:
+          typeof dbPost.content === "string"
+            ? dbPost.content
+            : contentArr.join("\n\n"),
         image: dbPost.coverImage || "/assets/images/card-it-software.jpg",
         category: dbPost.category?.name || "CSP Services",
+        author: dbPost.author || "GateXPay Editorial Team",
         publishedAt: dbPost.publishedAt
           ? new Date(dbPost.publishedAt).toISOString().split("T")[0]
           : "2026-09-12",

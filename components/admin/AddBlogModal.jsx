@@ -42,11 +42,149 @@ const PRESET_COVERS = [
 ];
 
 const PRESET_AUTHORS = [
-  "Admin",
   "GateXPay Editorial Team",
-  "Engineering Team",
+  "Vansh Chaudhary",
+  "GateXPay Engineering",
   "Compliance Desk",
+  "Admin",
 ];
+
+const ARTICLE_SNIPPETS = [
+  {
+    label: "H2 Section",
+    snippet: "## Understanding the Core Requirements\n\nExplain the regulatory background, platform mechanics, or architectural foundations here.",
+  },
+  {
+    label: "H3 Subtitle",
+    snippet: "### 1. Key Operational Standards\n\nDetail the exact workflow steps or infrastructure configuration.",
+  },
+  {
+    label: "Callout Box",
+    snippet: "> **Key Takeaway:** If your platform collects funds before merchant settlement, you sit inside the regulatory perimeter and require authorization.",
+  },
+  {
+    label: "Bullet List",
+    snippet: "- Real-time webhook notifications with idempotent retry logic\n- Automated settlement reconciliation across multiple banking rails\n- Zero-downtime card tokenization fallback pathways",
+  },
+  {
+    label: "Checklist",
+    snippet: "- [x] Complete CERT-In empanelled security audit\n- [x] Establish dedicated RBI-compliant Escrow account\n- [ ] Implement 2-Factor Authentication across all admin surfaces",
+  },
+  {
+    label: "API Code",
+    snippet: "```javascript\n// Initialize GateXPay SDK\nconst gatex = new GateXPay({\n  apiKey: process.env.GATEXPAY_API_KEY,\n  environment: \"production\",\n});\n```",
+  },
+];
+
+const DEFAULT_ARTICLE_TEMPLATE = `## Overview & Industry Context
+The online payments and agency banking landscape across India is undergoing unprecedented regulatory and technological evolution. This guide explores key frameworks and implementation architectures required for enterprise scalability.
+
+> **Key Takeaway:** Verify licensing status and audit escrow settlement timelines directly with banking partners before scaling commercial volume.
+
+## Architectural & Compliance Standards
+Every growing platform must account for three non-negotiable operational requirements:
+- Resilient payment gateway failover across primary and secondary banking rails
+- Card tokenization lifecycle management adhering to RBI circular guidelines
+- Daily automated reconciliation between transaction webhooks and bank nodal accounts
+
+## Practical Implementation Checklist
+Confirm each milestone prior to commercial production launch:
+- [x] Integrate multi-rail API endpoints with idempotent retry mechanisms
+- [x] Establish automated settlement dispute logging
+- [ ] Complete annual third-party ISO 27001 and VAPT security audits
+
+## Looking Ahead
+Partnering with authorized infrastructure providers allows modern fintechs to innovate rapidly while maintaining 100% regulatory integrity.`;
+
+function renderMarkdownPreview(markdown) {
+  if (!markdown || !markdown.trim()) {
+    return (
+      <p style={{ color: "#94A3B8", fontStyle: "italic", margin: 0 }}>
+        No content written yet. Click the quick insert buttons or insert the full article template to see your live preview.
+      </p>
+    );
+  }
+
+  const lines = markdown.split("\n");
+  const elements = [];
+  let currentList = [];
+  let inCodeBlock = false;
+  let codeBuffer = [];
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      elements.push(
+        <ul key={`ul-${elements.length}`}>
+          {currentList.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ul>
+      );
+      currentList = [];
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith("```")) {
+      if (inCodeBlock) {
+        elements.push(
+          <pre key={`code-${elements.length}`}>
+            <code>{codeBuffer.join("\n")}</code>
+          </pre>
+        );
+        codeBuffer = [];
+        inCodeBlock = false;
+      } else {
+        flushList();
+        inCodeBlock = true;
+      }
+      return;
+    }
+
+    if (inCodeBlock) {
+      codeBuffer.push(line);
+      return;
+    }
+
+    if (trimmed.startsWith("## ")) {
+      flushList();
+      elements.push(
+        <h2 key={`h2-${index}`}>{trimmed.replace(/^##\s+/, "")}</h2>
+      );
+    } else if (trimmed.startsWith("### ")) {
+      flushList();
+      elements.push(
+        <h3 key={`h3-${index}`}>{trimmed.replace(/^###\s+/, "")}</h3>
+      );
+    } else if (trimmed.startsWith("> ")) {
+      flushList();
+      const quoteText = trimmed.replace(/^>\s+/, "").replace(/\*\*(.*?)\*\*/g, "$1");
+      elements.push(
+        <blockquote key={`quote-${index}`}>{quoteText}</blockquote>
+      );
+    } else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+      currentList.push(trimmed.replace(/^[-*]\s+/, ""));
+    } else if (trimmed === "") {
+      flushList();
+    } else {
+      flushList();
+      elements.push(<p key={`p-${index}`}>{trimmed}</p>);
+    }
+  });
+
+  flushList();
+  if (inCodeBlock && codeBuffer.length > 0) {
+    elements.push(
+      <pre key={`code-${elements.length}`}>
+        <code>{codeBuffer.join("\n")}</code>
+      </pre>
+    );
+  }
+
+  return elements;
+}
 
 const SUGGESTED_TAGS = [
   "UPI",
@@ -137,6 +275,7 @@ function AddBlogModalContent({
   const [form, setForm] = useState(() => getInitialForm(postToEdit));
   const [slugLocked, setSlugLocked] = useState(!postToEdit);
   const [activeTab, setActiveTab] = useState("general"); // general | content | presentation
+  const [contentView, setContentView] = useState("edit"); // edit | preview
   const [newTagInput, setNewTagInput] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const customCatInputId = useId();
@@ -182,13 +321,32 @@ function AddBlogModalContent({
     }));
   };
 
-  const insertSnippet = (prefix, suffix = "") => {
-    setForm((prev) => ({
-      ...prev,
-      content: prev.content
-        ? `${prev.content}\n\n${prefix}New Section${suffix}`
-        : `${prefix}New Section${suffix}`,
-    }));
+  const insertSnippet = (snippetText) => {
+    setForm((prev) => {
+      const nextContent = prev.content
+        ? `${prev.content.trim()}\n\n${snippetText}`
+        : snippetText;
+      const words = nextContent.trim().split(/\s+/).filter(Boolean).length;
+      const autoReadTime = Math.max(1, Math.ceil(words / 180));
+      return {
+        ...prev,
+        content: nextContent,
+        readTime: words > 40 ? autoReadTime : prev.readTime,
+      };
+    });
+  };
+
+  const handleLoadTemplate = () => {
+    if (
+      form.content &&
+      form.content.trim().length > 0 &&
+      !window.confirm(
+        "Replace current content with the GateXPay Blog Article template structure?"
+      )
+    ) {
+      return;
+    }
+    insertSnippet(DEFAULT_ARTICLE_TEMPLATE);
   };
 
   const handleAddTag = (tagToAdd) => {
@@ -357,7 +515,7 @@ function AddBlogModalContent({
                 <input
                   type="text"
                   className="modal-text-input"
-                  placeholder="e.g. CSP Services: Digital & IT Services for Modern Banking"
+                  placeholder="e.g. Understanding RBI's Payment Aggregator Licensing in 2026"
                   value={form.title}
                   onChange={handleTitleChange}
                   autoFocus
@@ -384,7 +542,7 @@ function AddBlogModalContent({
                   <input
                     type="text"
                     className="modal-text-input blog-slug-input"
-                    placeholder="csp-services-digital-it-services"
+                    placeholder="understanding-rbi-payment-aggregator-licensing"
                     value={form.slug}
                     onChange={handleSlugChange}
                   />
@@ -398,7 +556,7 @@ function AddBlogModalContent({
                 </div>
               </div>
 
-              {/* Category & Badge Theme Preview */}
+              {/* Category & Author (Balanced 2-Column Grid) */}
               <div className="blog-grid-2col">
                 <div className="dash-modal-field">
                   <label className="dash-field-label">
@@ -438,28 +596,6 @@ function AddBlogModalContent({
                 </div>
 
                 <div className="dash-modal-field">
-                  <label className="dash-field-label">Badge Theme Preview</label>
-                  <div className="blog-category-live-preview-box">
-                    <span
-                      className="blog-category-badge"
-                      style={{
-                        backgroundColor: currentCategoryTheme.bg,
-                        color: currentCategoryTheme.color,
-                        borderColor: currentCategoryTheme.border,
-                      }}
-                    >
-                      {currentCategoryName}
-                    </span>
-                    <span className="blog-category-preview-hint">
-                      Guaranteed consistent styling across all blog cards.
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Author & Read Time */}
-              <div className="blog-grid-2col">
-                <div className="dash-modal-field">
                   <label className="dash-field-label">
                     Author <span className="text-rose-500">*</span>
                   </label>
@@ -495,7 +631,10 @@ function AddBlogModalContent({
                     />
                   )}
                 </div>
+              </div>
 
+              {/* Estimated Read Time & Publication Status (Balanced 2-Column Grid) */}
+              <div className="blog-grid-2col">
                 <div className="dash-modal-field">
                   <div className="dash-field-label-row">
                     <label className="dash-field-label">Estimated Read Time</label>
@@ -507,7 +646,7 @@ function AddBlogModalContent({
                     <input
                       type="number"
                       min={1}
-                      max={30}
+                      max={60}
                       className="modal-text-input"
                       value={form.readTime}
                       onChange={(e) =>
@@ -520,13 +659,30 @@ function AddBlogModalContent({
                     <span className="blog-unit-label">minutes</span>
                   </div>
                 </div>
+
+                <div className="dash-modal-field">
+                  <label className="dash-field-label">Publication Status</label>
+                  <div className="modal-select-wrapper">
+                    <select
+                      className="modal-text-input"
+                      value={form.status}
+                      onChange={(e) =>
+                        setForm({ ...form, status: e.target.value })
+                      }
+                    >
+                      <option value="published">Published (Live on Website)</option>
+                      <option value="draft">Draft (Saved Privately)</option>
+                    </select>
+                    <ChevronDown size={14} className="modal-select-chevron" />
+                  </div>
+                </div>
               </div>
 
-              {/* Short Excerpt */}
+              {/* Card Excerpt / Article Lede */}
               <div className="dash-modal-field">
                 <div className="dash-field-label-row">
                   <label className="dash-field-label">
-                    Card Excerpt / Short Summary
+                    Card Excerpt / Article Lede Summary
                   </label>
                   <span className="blog-field-counter">
                     {form.excerpt.length} chars (ideal: 120-180)
@@ -535,7 +691,7 @@ function AddBlogModalContent({
                 <textarea
                   rows={2}
                   className="modal-text-input"
-                  placeholder="A concise 1-2 sentence preview for blog card grids and social shares..."
+                  placeholder="A concise 1-2 sentence preview for blog card grids and opening article introduction..."
                   value={form.excerpt}
                   onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
                 />
@@ -546,67 +702,129 @@ function AddBlogModalContent({
           {/* ── TAB 2: CONTENT & BODY ── */}
           {activeTab === "content" && (
             <div className="blog-form-step-stack">
-              <div className="blog-content-toolbar-row">
-                <span className="blog-content-toolbar-title">Insert Blocks:</span>
-                <button
-                  type="button"
-                  className="blog-snippet-btn"
-                  onClick={() => insertSnippet("## ", "")}
-                >
-                  + Section Heading
-                </button>
-                <button
-                  type="button"
-                  className="blog-snippet-btn"
-                  onClick={() =>
-                    insertSnippet(
-                      "> **Key Takeaway:** ",
-                      "\nPractical implementation insights for enterprise scalability."
-                    )
-                  }
-                >
-                  + Callout Box
-                </button>
-                <button
-                  type="button"
-                  className="blog-snippet-btn"
-                  onClick={() =>
-                    insertSnippet(
-                      "- First core milestone\n- Second operational standard\n- Final compliance checkpoint"
-                    )
-                  }
-                >
-                  + Bullet List
-                </button>
+              {/* Header Bar with View Toggle */}
+              <div className="blog-content-header-bar">
+                <div className="dash-field-label-row" style={{ margin: 0 }}>
+                  <label className="dash-field-label" style={{ margin: 0 }}>
+                    Article Content &amp; Structured Body
+                  </label>
+                </div>
+                <div className="blog-content-view-toggle">
+                  <button
+                    type="button"
+                    className={`blog-view-tab ${contentView === "edit" ? "active" : ""}`}
+                    onClick={() => setContentView("edit")}
+                  >
+                    <FileText size={13} />
+                    <span>Write Markdown</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`blog-view-tab ${contentView === "preview" ? "active" : ""}`}
+                    onClick={() => setContentView("preview")}
+                  >
+                    <Sparkles size={13} />
+                    <span>Live Blog Preview</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="dash-modal-field">
-                <textarea
-                  rows={13}
-                  className="modal-text-input blog-editor-textarea"
-                  placeholder={`Write your article body here...\n\nUse paragraphs and markdown headings (## Section Title).\n\nEach paragraph maintains consistent font hierarchy and line spacing on the live website.`}
-                  value={form.content}
-                  onChange={handleContentChange}
-                />
-              </div>
+              {contentView === "edit" ? (
+                <>
+                  {/* Quick Action Snippets Toolbar */}
+                  <div className="blog-content-toolbar-row">
+                    <span className="blog-content-toolbar-title">Add Elements:</span>
+                    {ARTICLE_SNIPPETS.map((snip, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="blog-snippet-btn"
+                        onClick={() => insertSnippet(snip.snippet)}
+                      >
+                        +{snip.label}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      className="blog-template-btn"
+                      onClick={handleLoadTemplate}
+                      title="Load a complete GateXPay article structure with sections, takeaways, and checklist"
+                    >
+                      <Sparkles size={12} />
+                      <span>Insert Article Template</span>
+                    </button>
+                  </div>
 
-              <div className="blog-content-stats-bar">
-                <span>
-                  Words:{" "}
-                  <strong>
-                    {
-                      form.content
-                        .trim()
-                        .split(/\s+/)
-                        .filter(Boolean).length
-                    }
-                  </strong>
-                </span>
-                <span>•</span>
-                <span>
-                  Estimated Read: <strong>{form.readTime} min read</strong>
-                </span>
-              </div>
+                  <div className="dash-modal-field">
+                    <textarea
+                      rows={14}
+                      className="modal-text-input blog-editor-textarea"
+                      placeholder={`Write your article body here in Markdown format...\n\nUse '## Section Title' to create sections that automatically appear in the Table of Contents on the live blog article.\n\nUse '> **Key Takeaway:** ...' for callout quote cards.\nUse '- item' for bullet lists.\nUse '- [x] item' for compliance checklists.\nUse '\`\`\`code\`\`\`' for API code blocks.`}
+                      value={form.content}
+                      onChange={handleContentChange}
+                    />
+                  </div>
+
+                  <div className="blog-content-stats-bar">
+                    <span>
+                      Words:{" "}
+                      <strong>
+                        {
+                          form.content
+                            .trim()
+                            .split(/\s+/)
+                            .filter(Boolean).length
+                        }
+                      </strong>
+                    </span>
+                    <span>•</span>
+                    <span>
+                      Sections:{" "}
+                      <strong>
+                        {
+                          (form.content.match(/^##\s+/gm) || []).length
+                        }
+                      </strong>
+                    </span>
+                    <span>•</span>
+                    <span>
+                      Estimated Read: <strong>{form.readTime} min read</strong>
+                    </span>
+                  </div>
+                </>
+              ) : (
+                /* Live In-Modal Preview matching the website's Blog UI */
+                <div className="blog-live-preview-box">
+                  <div className="blog-preview-badge-row">
+                    <span className="blog-preview-badge">
+                      {form.category === "custom"
+                        ? form.customCategory || "Category"
+                        : form.category}
+                    </span>
+                    <span className="blog-preview-readtime">
+                      <Clock size={12} />
+                      <span>{form.readTime} min read</span>
+                    </span>
+                    <span style={{ fontSize: "12px", color: "#94A3B8" }}>
+                      • By {form.author === "custom" ? form.customAuthor || "Author" : form.author}
+                    </span>
+                  </div>
+
+                  <h1 className="blog-preview-title">
+                    {form.title || "Untitled Blog Article"}
+                  </h1>
+
+                  {form.excerpt && (
+                    <p className="blog-preview-lede">
+                      {form.excerpt}
+                    </p>
+                  )}
+
+                  <div className="blog-preview-body">
+                    {renderMarkdownPreview(form.content)}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

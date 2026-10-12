@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { X, Trash2 } from "lucide-react";
 export default function DeleteConfirmModal({
   id,
@@ -10,6 +10,11 @@ export default function DeleteConfirmModal({
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Always reset isDeleting state whenever modal opens for an id
+  useEffect(() => {
+    setIsDeleting(false);
+  }, [id]);
+
   if (!id || (Array.isArray(id) && id.length === 0)) return null;
   const isMultiple = Array.isArray(id) && id.length > 1;
   const count = Array.isArray(id) ? id.length : 1;
@@ -19,7 +24,7 @@ export default function DeleteConfirmModal({
     setIsDeleting(true);
     try {
       await onConfirm(id);
-    } catch {
+    } finally {
       setIsDeleting(false);
     }
   };
