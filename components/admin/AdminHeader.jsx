@@ -79,7 +79,6 @@ export default function AdminHeader({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <span className="cmd-k-badge">⌘K</span>
           <button type="submit" className="topbar-search-btn" title="Search">
             <Search size={14} />
           </button>
