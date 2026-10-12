@@ -76,21 +76,21 @@ export default function BlogArticlesTable({
   const getCategoryTheme = (catName) => {
     const name = catName?.toLowerCase() || "";
     if (name.includes("growth") || name.includes("business")) {
-      return { bg: "#F5F3FF", text: "#6D28D9", border: "#E9D5FF" };
+      return { text: "#7E22CE", border: "#DDD6FE" };
     }
     if (name.includes("engineer") || name.includes("tech")) {
-      return { bg: "#F0F9FF", text: "#0369A1", border: "#BAE6FD" };
+      return { text: "#0284C7", border: "#BAE6FD" };
     }
     if (name.includes("compliance") || name.includes("regulation")) {
-      return { bg: "#FEF3C7", text: "#92400E", border: "#FDE68A" };
+      return { text: "#B45309", border: "#FDE68A" };
     }
     if (name.includes("csp") || name.includes("service")) {
-      return { bg: "#ECFDF5", text: "#065F46", border: "#A7F3D0" };
+      return { text: "#059669", border: "#A7F3D0" };
     }
     if (name.includes("news") || name.includes("company")) {
-      return { bg: "#FFF7ED", text: "#C2410C", border: "#FFEDD5" };
+      return { text: "#C2410C", border: "#FED7AA" };
     }
-    return { bg: "#F1F5F9", text: "#334155", border: "#E2E8F0" };
+    return { text: "#475569", border: "#E2E8F0" };
   };
 
   const formatDate = (dateStr) => {
@@ -305,7 +305,7 @@ export default function BlogArticlesTable({
                       <span
                         className="blog-category-tag"
                         style={{
-                          backgroundColor: theme.bg,
+                          backgroundColor: "transparent",
                           color: theme.text,
                           borderColor: theme.border,
                         }}
@@ -425,7 +425,7 @@ export default function BlogArticlesTable({
                   <span
                     className="blog-category-tag"
                     style={{
-                      backgroundColor: theme.bg,
+                      backgroundColor: "transparent",
                       color: theme.text,
                       borderColor: theme.border,
                     }}

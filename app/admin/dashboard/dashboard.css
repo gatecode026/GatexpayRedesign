@@ -3564,7 +3564,7 @@
   white-space: nowrap;
 }
 
-/* ── CATEGORY TAG (CLEAN REFINED ACCENT) ── */
+/* ── CATEGORY TAG (TRANSPARENT OUTLINE BADGE) ── */
 .blog-category-tag {
   display: inline-flex;
   align-items: center;
@@ -3572,6 +3572,8 @@
   font-weight: 500;
   padding: 2.5px 7px;
   border-radius: 4px;
+  background: transparent !important;
+  background-color: transparent !important;
   border: 1px solid transparent;
   white-space: nowrap;
   max-width: 100%;
