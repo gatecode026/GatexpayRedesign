@@ -5,10 +5,6 @@ import {
   Search,
   X,
   ExternalLink,
-  BookOpen,
-  Eye,
-  Calendar,
-  Clock,
   Copy,
   Check,
   ChevronLeft,
@@ -80,21 +76,21 @@ export default function BlogArticlesTable({
   const getCategoryTheme = (catName) => {
     const name = catName?.toLowerCase() || "";
     if (name.includes("growth") || name.includes("business")) {
-      return { bg: "#FAF5FF", text: "#7E22CE", border: "#E9D5FF" };
+      return { bg: "#F5F3FF", text: "#6D28D9", border: "#E9D5FF" };
     }
     if (name.includes("engineer") || name.includes("tech")) {
-      return { bg: "#EFF6FF", text: "#0284C7", border: "#BAE6FD" };
+      return { bg: "#F0F9FF", text: "#0369A1", border: "#BAE6FD" };
     }
     if (name.includes("compliance") || name.includes("regulation")) {
-      return { bg: "#FEF3C7", text: "#B45309", border: "#FDE68A" };
+      return { bg: "#FEF3C7", text: "#92400E", border: "#FDE68A" };
     }
     if (name.includes("csp") || name.includes("service")) {
-      return { bg: "#F0FDF4", text: "#15803D", border: "#BBF7D0" };
+      return { bg: "#ECFDF5", text: "#065F46", border: "#A7F3D0" };
     }
     if (name.includes("news") || name.includes("company")) {
       return { bg: "#FFF7ED", text: "#C2410C", border: "#FFEDD5" };
     }
-    return { bg: "#F1F5F9", text: "#475569", border: "#CBD5E1" };
+    return { bg: "#F1F5F9", text: "#334155", border: "#E2E8F0" };
   };
 
   const formatDate = (dateStr) => {
@@ -270,54 +266,36 @@ export default function BlogArticlesTable({
                     {/* Article Title & Slug */}
                     <td className="td-blog-article">
                       <div className="blog-article-cell">
-                        <div className="blog-article-icon-box">
-                          <BookOpen size={16} />
-                        </div>
-                        <div className="blog-article-info">
-                          <Link
-                            href={`/blog/${post.slug}`}
-                            target="_blank"
-                            className="blog-article-title"
-                            title={post.title}
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          target="_blank"
+                          className="blog-article-title"
+                          title={post.title}
+                        >
+                          {post.title}
+                        </Link>
+                        <div className="blog-article-meta-row">
+                          <span className="blog-slug-text" title={`/blog/${post.slug}`}>
+                            /blog/{post.slug}
+                          </span>
+                          <button
+                            type="button"
+                            className={`blog-copy-slug-btn ${isCopied ? "copied" : ""}`}
+                            onClick={() =>
+                              handleCopyLink(post.slug, post._id)
+                            }
+                            title={
+                              isCopied
+                                ? "Copied to clipboard"
+                                : "Copy article URL"
+                            }
                           >
-                            {post.title}
-                          </Link>
-                          <div className="blog-article-meta-row">
-                            <span className="blog-slug-pill">
-                              <span className="blog-slug-prefix">/blog/</span>
-                              <span className="blog-slug-name">
-                                {post.slug}
-                              </span>
-                            </span>
-                            <button
-                              type="button"
-                              className={`blog-copy-slug-btn ${isCopied ? "copied" : ""}`}
-                              onClick={() =>
-                                handleCopyLink(post.slug, post._id)
-                              }
-                              title={
-                                isCopied
-                                  ? "Copied to clipboard"
-                                  : "Copy full article link"
-                              }
-                            >
-                              {isCopied ? (
-                                <>
-                                  <Check size={11} />
-                                  <span>Copied</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy size={11} />
-                                  <span>Copy</span>
-                                </>
-                              )}
-                            </button>
-                            <span className="blog-read-time">
-                              <Clock size={11} />
-                              <span>{post.readTime || 4} min read</span>
-                            </span>
-                          </div>
+                            {isCopied ? <Check size={11} /> : <Copy size={11} />}
+                          </button>
+                          <span className="blog-meta-dot">·</span>
+                          <span className="blog-read-time">
+                            {post.readTime || 4} min read
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -325,7 +303,7 @@ export default function BlogArticlesTable({
                     {/* Category */}
                     <td className="td-blog-category">
                       <span
-                        className="blog-category-badge"
+                        className="blog-category-tag"
                         style={{
                           backgroundColor: theme.bg,
                           color: theme.text,
@@ -344,13 +322,10 @@ export default function BlogArticlesTable({
                         </div>
                         <div className="blog-author-details">
                           <span className="blog-author-name">
-                            {post.author}
+                            {post.author || "GateXPay"}
                           </span>
                           <span className="blog-publish-date">
-                            <Calendar size={11} />
-                            <span>
-                              {formatDate(post.publishedAt || post.createdAt)}
-                            </span>
+                            {formatDate(post.publishedAt || post.createdAt)}
                           </span>
                         </div>
                       </div>
@@ -359,7 +334,6 @@ export default function BlogArticlesTable({
                     {/* Views */}
                     <td className="td-blog-views">
                       <div className="blog-views-cell">
-                        <Eye size={13} className="blog-views-icon" />
                         <span className="blog-views-num">
                           {(post.views || 0).toLocaleString()}
                         </span>
@@ -370,7 +344,7 @@ export default function BlogArticlesTable({
                     {/* Status */}
                     <td className="td-blog-status">
                       <div
-                        className={`blog-status-pill ${
+                        className={`blog-status-indicator ${
                           post.status === "draft" ? "draft" : "published"
                         }`}
                       >
@@ -396,13 +370,13 @@ export default function BlogArticlesTable({
                           className="blog-view-live-btn"
                           title="Open live article"
                         >
-                          <span>View Live</span>
-                          <ExternalLink size={12} />
+                          <span>View</span>
+                          <ExternalLink size={11} />
                         </Link>
                         {onEditPost && (
                           <button
                             type="button"
-                            className="blog-row-edit-btn"
+                            className="blog-row-action-btn"
                             onClick={() => onEditPost(post)}
                             title="Edit article"
                           >
@@ -412,7 +386,7 @@ export default function BlogArticlesTable({
                         {onDeletePost && (
                           <button
                             type="button"
-                            className="blog-row-del-btn"
+                            className="blog-row-action-btn del"
                             onClick={() => onDeletePost(post)}
                             title="Delete article"
                           >
@@ -449,7 +423,7 @@ export default function BlogArticlesTable({
               <div key={post._id} className="mobile-lead-card blog-mobile-card">
                 <div className="mobile-card-top">
                   <span
-                    className="blog-category-badge"
+                    className="blog-category-tag"
                     style={{
                       backgroundColor: theme.bg,
                       color: theme.text,
@@ -459,12 +433,12 @@ export default function BlogArticlesTable({
                     {post.category?.name || "CSP Services"}
                   </span>
                   <div
-                    className={`blog-status-pill ${
+                    className={`blog-status-indicator ${
                       post.status === "draft" ? "draft" : "published"
                     }`}
                   >
                     <span className="blog-status-dot" />
-                    <span>
+                    <span className="blog-status-text">
                       {post.status
                         ? post.status.charAt(0).toUpperCase() +
                           post.status.slice(1)
@@ -483,14 +457,14 @@ export default function BlogArticlesTable({
                   </Link>
 
                   <div className="mobile-blog-slug-row">
-                    <span className="blog-slug-pill">
-                      <span className="blog-slug-prefix">/blog/</span>
-                      {post.slug}
+                    <span className="blog-slug-text">
+                      /blog/{post.slug}
                     </span>
                     <button
                       type="button"
-                      className="blog-copy-slug-btn"
+                      className={`blog-copy-slug-btn ${isCopied ? "copied" : ""}`}
                       onClick={() => handleCopyLink(post.slug, post._id)}
+                      title={isCopied ? "Copied" : "Copy slug"}
                     >
                       {isCopied ? <Check size={11} /> : <Copy size={11} />}
                     </button>
