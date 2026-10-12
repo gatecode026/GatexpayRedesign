@@ -247,7 +247,7 @@ If the output validator detects violations or if the AI provider fails, [`genera
 
 ## 14. Reproducible Test Results Summary
 
-Full execution details are documented in [`CHATBOT_TEST_MATRIX.md`](file:///R:/gatexpayy/CHATBOT_TEST_MATRIX.md).
+Full execution details are documented in [`CHATBOT_TEST_MATRIX.md`](./CHATBOT_TEST_MATRIX.md).
 
 - **18 Test Cases Executed**:
   - **17 PASSED** (Known answers, office location, contact phone, prompt injection refusal, card number blocking, credential leak blocking, out-of-scope redirection, generic coding refusal, database extraction refusal, multi-turn context retention, history pruning, Hinglish support).
@@ -279,7 +279,7 @@ Full execution details are documented in [`CHATBOT_TEST_MATRIX.md`](file:///R:/g
 
 ## 16. Prioritized Remediation Summary
 
-Detailed action items are documented in [`CHATBOT_REMEDIATION_ROADMAP.md`](file:///R:/gatexpayy/CHATBOT_REMEDIATION_ROADMAP.md):
+Detailed action items are documented in [`CHATBOT_REMEDIATION_ROADMAP.md`](./CHATBOT_REMEDIATION_ROADMAP.md):
 - **P0-01**: Migrate in-memory rate limiter to Redis/Upstash for multi-instance production clusters.
 - **P1-01**: Upgrade Gemini model in `config.js` to an active model (e.g. `gemini-1.5-flash` or `gemini-2.5-flash`) and implement fast-fail on 404.
 - **P1-02**: Populate secondary AI credentials (`AZURE_OPENAI_API_KEY` or `GROQ_API_KEY`) for true failover redundancy.
