@@ -1,6 +1,7 @@
 import { Source_Serif_4, Source_Sans_3, Poppins } from "next/font/google";
 import ConditionalLayout from "@/components/layout/ConditionalLayout/ConditionalLayout";
 import { ContactModalProvider } from "@/components/common/ContactModal/ContactModalContext";
+import TopLoader from "@/components/common/TopLoader/TopLoader";
 import { Analytics } from "@vercel/analytics/next";
 import "@/styles/globals.css";
 const sourceSerifPro = Source_Serif_4({
@@ -65,6 +66,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body>
+        <TopLoader />
         <ContactModalProvider>
           <ConditionalLayout>{children}</ConditionalLayout>
         </ContactModalProvider>

@@ -202,7 +202,7 @@ export const SOLUTIONS = [
   },
 ];
 const SERVICE_HREF = "/services";
-export default function SolutionsMegaMenu({ id }) {
+export default function SolutionsMegaMenu({ id, onItemClick }) {
   const [activeId, setActiveId] = useState(SOLUTIONS[0].id);
   const active = SOLUTIONS.find((c) => c.id === activeId) ?? SOLUTIONS[0];
   return (
@@ -254,6 +254,7 @@ export default function SolutionsMegaMenu({ id }) {
                 key={service.title}
                 href={href}
                 className="service-card"
+                onClick={onItemClick}
               >
                 <span className="service-card__icon" aria-hidden="true">
                   <Icon size={28} strokeWidth={1.75} />
@@ -269,7 +270,11 @@ export default function SolutionsMegaMenu({ id }) {
           })}
         </div>
 
-        <Link href={active.categoryHref || SERVICE_HREF} className="mega-view-all">
+        <Link
+          href={active.categoryHref || SERVICE_HREF}
+          className="mega-view-all"
+          onClick={onItemClick}
+        >
           <span>View all {active.title} Solutions</span>
           <ArrowRight size={15} aria-hidden="true" />
         </Link>

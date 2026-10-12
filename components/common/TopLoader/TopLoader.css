@@ -1,0 +1,49 @@
+/* ==========================================================================
+   TopLoader - Next.js Page Navigation Progress Bar
+   Displays on top of the navbar during route transitions
+   ========================================================================== */
+
+.top-loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 10001;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 0.25s ease;
+}
+
+.top-loader-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0284C7 0%, #00BAFF 55%, #38BDF8 100%);
+  box-shadow: 0 0 10px rgba(0, 186, 255, 0.75), 0 0 5px rgba(2, 132, 199, 0.6);
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  border-radius: 0 2px 2px 0;
+}
+
+.top-loader-glow {
+  position: absolute;
+  right: 0;
+  top: -2px;
+  bottom: -2px;
+  width: 90px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), #00BAFF);
+  box-shadow: 0 0 14px 2px rgba(0, 186, 255, 0.95);
+  opacity: 0.85;
+  border-radius: 50%;
+  animation: top-loader-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes top-loader-pulse {
+  0%, 100% {
+    opacity: 0.65;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1.5);
+  }
+}

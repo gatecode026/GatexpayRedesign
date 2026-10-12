@@ -6,25 +6,9 @@ export const LEGAL_POLICIES = {
     liveSlug: "privacy-policy",
     title: "Privacy Policy",
     description:
-      "At GateXpay, operated by GateXpay Technologies Private Limited, we are committed to protecting user privacy and maintaining the confidentiality of customer information.",
-    pill: "Data Privacy & DPDP Act 2023",
-    lastUpdated: "15 May 2026",
-    effectiveDate: "15 May 2026",
-    heroImage: "/assets/images/solution-tech.png",
-    highlights: [
-      {
-        title: "Zero Data Selling",
-        desc: "We never sell, rent, or trade your personal information to third parties.",
-      },
-      {
-        title: "Encrypted In Transit & Rest",
-        desc: "Bank-grade SSL/TLS transmission and AES-256 stored data protection.",
-      },
-      {
-        title: "User Access Rights",
-        desc: "Direct statutory rights for review, correction, and controlled deletion.",
-      },
-    ],
+      "This Privacy Policy explains what information GateXPay collects and how we protect it. We use your information to deliver services, process transactions, and keep our systems secure.",
+    lastUpdated: "05 May 2024",
+    effectiveDate: "15 May 2024",
     sections: [
       {
         id: "introduction",
@@ -33,7 +17,15 @@ export const LEGAL_POLICIES = {
         blocks: [
           {
             type: "p",
-            text: "This Privacy Policy describes how GateXpay Technologies Private Limited (“GateXpay”, “we”, “us”, or “our”) collects, uses, and shares information about you when you access or use our website, products, and services.",
+            text: "GateXpay Technologies Private Limited (“GateXPay”, “we”, “us”, or “our”) is committed to protecting the privacy and security of our users.",
+          },
+          {
+            type: "p",
+            text: "This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you access or use our platform, including our website, APIs, products, and services.",
+          },
+          {
+            type: "p",
+            text: "Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the platform.",
           },
         ],
       },
@@ -44,127 +36,127 @@ export const LEGAL_POLICIES = {
         blocks: [
           {
             type: "p",
-            text: "We collect information that you provide directly to us and information that is collected automatically.",
+            text: "We collect information that you provide directly to us, as well as information collected automatically when you use our platform:",
           },
           {
             type: "list",
             bold: true,
             items: [
-              "**Personal Information:** Name, email address, phone number, etc.",
-              "**Account Information:** Login credentials, transaction details, etc.",
-              "**Device & Usage Information:** IP address, browser type, device identifiers, pages visited, etc.",
-              "PAN, Aadhaar, GST, and KYC-related documents",
-              "Bank account details",
+              "Personal Identifiers: Legal name, email address, phone number, residential or business address.",
+              "Regulatory & Identity Documentation: Government-issued identification, PAN, Aadhaar (in accordance with applicable law and UIDAI guidelines), voter ID, and passport (for KYC verification).",
+              "Financial & Settlement Data: Bank account numbers, IFSC codes, virtual payment addresses (VPA), and transaction histories.",
+              "Account Credentials: User ID, password, PIN, authentication tokens, and security questions.",
+              "Technical & Device Data: IP address, device identifiers, browser type, operating system version, and server logs.",
             ],
           },
         ],
       },
       {
         id: "how-we-use-information",
-        heading: "3. How We Use Information",
+        heading: "3. How We Use Your Information",
         tocLabel: "How We Use Information",
         blocks: [
           {
             type: "p",
-            text: "We use the information we collect for the following purposes:",
+            text: "GateXPay processes your data strictly for legitimate business, operational, and regulatory purposes:",
           },
           {
             type: "list",
             bold: true,
             items: [
-              "To provide, operate, and maintain our services.",
-              "To process transactions and send related information.",
-              "To improve, personalize, and secure our services.",
-              "To communicate with you about updates or support.",
-              "KYC and merchant onboarding",
-              "Fraud prevention and risk management",
-              "API integrations and technical support",
-              "Regulatory compliance",
+              "To deliver, operate, maintain, and optimize our payment processing, CSP, and TSP services.",
+              "To verify user identities and process mandatory regulatory onboarding under KYC and PMLA guidelines.",
+              "To detect, prevent, and remediate fraud, unauthorized activities, and security breaches.",
+              "To comply with applicable statutory laws, regulatory directives, and legal obligations.",
+              "To communicate with you regarding transactions, service notifications, and customer support inquiries.",
+              "To enhance platform performance and troubleshoot technical and system operations.",
             ],
           },
         ],
       },
       {
-        id: "information-sharing",
-        heading: "4. Information Sharing",
-        tocLabel: "Information Sharing",
+        id: "how-we-share-information",
+        heading: "4. How We Share Information",
+        tocLabel: "How We Share Information",
         blocks: [
           {
             type: "p",
-            text: "We do not sell your personal information. We may share your information with:",
+            text: "We do not sell, rent, or trade your personal information to third parties.",
+          },
+          {
+            type: "p",
+            text: "We may share information with trusted third parties under strict confidentiality and security agreements, and only in the following circumstances:",
           },
           {
             type: "list",
             bold: true,
             items: [
-              "**Service Providers** who assist in our operations.",
-              "**Legal Authorities** if required by law.",
-              "**Business Partners** with your consent or for service delivery.",
-              "Banking partners and payment aggregators",
-              "Licensed financial institutions",
-              "KYC and verification providers",
+              "Banking & Financial Partners: Partner banks, payment aggregators, NPCI, and clearinghouses to execute requested transactions.",
+              "Regulators & Government Bodies: Law enforcement agencies, statutory bodies, or courts when required by law.",
+              "Service Providers: Cloud infrastructure, identity verification, fraud detection, and IT security vendors under strict data handling agreements.",
+              "Corporate Transactions: In connection with any merger, sale of company assets, or financing, subject to confidentiality protections.",
             ],
           },
         ],
       },
       {
         id: "cookies-tracking",
-        heading: "5. Cookies & Tracking",
-        tocLabel: "Cookies & Tracking",
+        heading: "5. Cookies & Tracking Technologies",
+        tocLabel: "Cookies & Tracking Technologies",
         blocks: [
           {
             type: "p",
-            text: "Our website may use cookies and analytics technologies to improve user experience and platform performance.",
+            text: "We use cookies, web beacons, and similar tracking technologies to improve session security, remember user preferences, and analyze platform performance. You can manage or disable cookies through your browser settings, though some platform features may be restricted.",
           },
         ],
       },
       {
         id: "data-retention",
-        heading: "6. Data Retention",
-        tocLabel: "Data Retention",
+        heading: "6. Data Retention Protocols",
+        tocLabel: "Data Retention Protocols",
         blocks: [
           {
             type: "p",
-            text: "Data may be retained as required under applicable Indian laws, compliance obligations, and contractual requirements.",
+            text: "We retain user data only for as long as necessary to fulfill the purposes outlined in this policy, comply with mandatory statutory and regulatory record-keeping periods (including RBI and PMLA guidelines), resolve disputes, and enforce our agreements. Once the retention period expires, data is securely deleted or anonymized.",
           },
         ],
       },
       {
         id: "user-rights",
-        heading: "7. User Rights",
-        tocLabel: "User Rights",
+        heading: "7. User Rights & Data Redressal",
+        tocLabel: "User Rights & Data Redressal",
         blocks: [
           {
             type: "p",
-            text: "Users may request:",
+            text: "As a user, you have certain rights regarding your personal information under applicable Indian law:",
           },
           {
             type: "list",
             bold: true,
             items: [
-              "Data correction",
-              "Account updates",
-              "Limited deletion requests subject to legal obligations",
+              "Right to Review & Access: Request access to your personal data held by GateXPay.",
+              "Right to Correction: Request correction of inaccurate, outdated, or incomplete data.",
+              "Right to Grievance Redressal: Lodge a grievance regarding data handling with our designated Grievance Officer.",
             ],
           },
         ],
       },
       {
-        id: "limitation",
-        heading: "8. Limitation",
-        tocLabel: "Limitation",
+        id: "third-party-services",
+        heading: "8. Third-Party Services & Links",
+        tocLabel: "Third-Party Services & Links",
         blocks: [
           {
             type: "p",
-            text: "GateXpay acts as a technology service provider and CSP platform facilitating access to third-party financial and fintech services.",
+            text: "Our platform may contain links to third-party websites or services. We are not responsible for the privacy practices or content of third-party platforms. We encourage you to review their policies.",
           },
           {
             type: "p",
-            text: "#### Your Rights",
+            text: "GateXPay acts as a technology service provider and CSP facilitator, facilitating access to third-party financial services.",
           },
           {
             type: "p",
-            text: "You have the right to access, correct, or delete your personal data. You can contact us anytime to exercise these rights.",
+            text: "For questions or concerns regarding our privacy practices, please contact our Legal & Compliance team.",
           },
         ],
       },
@@ -3106,13 +3098,19 @@ export const SLUG_ALIAS_MAP = {
   "grievance-redressal": "grievance",
   vendor: "vendor",
   "vendor-disclaimer": "vendor",
+  "fraud-aml": "vendor",
+  "fraud-aml-prevention": "vendor",
   prohibited: "prohibited",
   "prohibited-activities": "prohibited",
   merchant: "merchant",
   "merchant-onboarding": "merchant",
+  "customer-due-diligence": "merchant",
+  "customers-due-diligence": "merchant",
   data: "data",
   "data-protection": "data",
   "aml-kyc": "aml-kyc",
+  "anti-bribery": "aml-kyc",
+  "anti-bribery-policy": "aml-kyc",
 };
 export function resolvePolicySlug(rawSlug) {
   return SLUG_ALIAS_MAP[rawSlug.toLowerCase()];

@@ -95,6 +95,12 @@ export default function Navbar() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [openDropdown]);
+
+  // Close menu and any dropdowns whenever the route changes
+  useEffect(() => {
+    closeMenu();
+  }, [pathname]);
+
   const closeMenu = () => {
     setIsMenuOpen(false);
     setOpenDropdown(null);
@@ -143,7 +149,10 @@ export default function Navbar() {
               Solutions <ChevronDown size={14} />
             </Link>
             <div className="navbar-mega-panel">
-              <SolutionsMegaMenu id="solutions-mega-menu" />
+              <SolutionsMegaMenu
+                id="solutions-mega-menu"
+                onItemClick={closeMenu}
+              />
             </div>
           </div>
 
@@ -170,7 +179,11 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link href="/blog" className={pathname === "/blog" ? "active" : ""}>
+          <Link
+            href="/blog"
+            className={pathname === "/blog" ? "active" : ""}
+            onClick={closeMenu}
+          >
             Resources
           </Link>
         </nav>

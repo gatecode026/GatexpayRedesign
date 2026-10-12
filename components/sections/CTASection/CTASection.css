@@ -241,17 +241,24 @@
 /* ── Large desktop ≥1280px: give generous room for 2-line trust points ── */
 @media (min-width: 1280px) {
   .cta-content {
-    flex: 0 0 auto;
-    max-width: 780px;
+    flex: none;
+    max-width: 885px;
+  }
+  .cta-desc {
+    max-width: 760px;
   }
 }
 
 /* ── Tablet landscape: 1024px – 1279px ── */
 @media (max-width: 1279px) and (min-width: 1024px) {
   .cta-content {
-    flex: 0 0 auto;
-    max-width: 680px;
+    flex: 1 1 auto;
+    max-width: 720px;
     padding: 32px 32px;
+  }
+  .cta-illustration-wrap {
+    flex: 1 1 0;
+    min-width: 240px;
   }
   .cta-desc { max-width: 100%; }
 
@@ -264,12 +271,18 @@
 
 /* ── Tablet portrait: 768px – 1023px ── */
 @media (max-width: 1023px) and (min-width: 768px) {
-  .cta-card { min-height: 340px; }
+  .cta-card { min-height: 360px; }
 
   .cta-content {
-    flex: 0 0 auto;
-    max-width: 620px;
-    padding: 24px 24px;
+    flex: 1 1 60%;
+    max-width: 62%;
+    padding: 24px 20px;
+  }
+
+  .cta-illustration-wrap {
+    flex: 1 1 40%;
+    min-width: 200px;
+    padding: 10px 14px;
   }
 
   .cta-heading {
@@ -283,18 +296,18 @@
     margin-bottom: 20px;
   }
 
-  .cta-features { margin-top: 22px; }
+  .cta-features {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
 
   .cta-feature { gap: 6px; padding-inline: 0; }
-  .cta-feature svg { width: 22px; height: 22px; }
+  .cta-feature svg { width: 20px; height: 20px; }
   .cta-feature-bold { font-size: 11.5px; white-space: nowrap; }
   .cta-feature-light { font-size: 10.5px; white-space: nowrap; }
 
-  .cta-divider { margin-inline: 8px; }
-
-  .cta-illustration-wrap {
-    padding: 10px 14px;
-  }
+  .cta-divider { display: none; }
 }
 
 /* ── Mobile: < 768px — vertical stack, CENTERED ── */
