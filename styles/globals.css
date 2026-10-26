@@ -69,6 +69,31 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* ── Progressive Fluid Scaling for Wide Displays & Zoom-Out (80%, 75%, 67%) ── */
+@media (min-width: 1441px) {
+  :root {
+    --container-max: min(1560px, 90vw);
+    --page-max: min(1720px, 94vw);
+    --page-gutter: clamp(32px, 3.8vw, 96px);
+  }
+}
+
+@media (min-width: 1920px) {
+  :root {
+    --container-max: min(1740px, 88vw);
+    --page-max: min(1880px, 92vw);
+    --page-gutter: clamp(48px, 4.2vw, 112px);
+  }
+}
+
+@media (min-width: 2560px) {
+  :root {
+    --container-max: min(2100px, 86vw);
+    --page-max: min(2300px, 90vw);
+    --page-gutter: clamp(64px, 4.8vw, 136px);
+  }
+}
+
 /* ── Text Selection ─────────────────────────────────────────────────────── */
 ::selection {
   background-color: #046790;

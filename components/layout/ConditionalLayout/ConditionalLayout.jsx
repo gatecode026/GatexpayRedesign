@@ -6,6 +6,7 @@ import Navbar from "@/components/layout/Navbar/Navbar";
 import Footer from "@/components/layout/Footer/Footer";
 import ScrollToTop from "@/components/common/ScrollToTop/ScrollToTop";
 import CookieConsent from "@/components/common/CookieConsent/CookieConsent";
+import BlankLinkHandler from "@/components/common/BlankLinkHandler/BlankLinkHandler";
 
 const Chatbot = dynamic(() => import("@/components/common/Chatbot/Chatbot"), {
   ssr: false,
@@ -18,6 +19,7 @@ export default function ConditionalLayout({ children }) {
   }
   return (
     <>
+      <BlankLinkHandler />
       <Navbar />
       <main>{children}</main>
       <Footer />

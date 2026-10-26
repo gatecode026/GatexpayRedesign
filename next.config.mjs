@@ -20,6 +20,10 @@ const securityHeaders = [
     value: "camera=(), microphone=(), geolocation=()",
   },
   {
+    key: "X-Robots-Tag",
+    value: "noindex, nofollow",
+  },
+  {
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
@@ -60,6 +64,26 @@ const nextConfig = {
         source: "/contact-us",
         destination: "/contact",
         permanent: true,
+      },
+      {
+        source: "/blank",
+        destination: "/404",
+        permanent: false,
+      },
+      {
+        source: "/empty",
+        destination: "/404",
+        permanent: false,
+      },
+      {
+        source: "/undefined",
+        destination: "/404",
+        permanent: false,
+      },
+      {
+        source: "/null",
+        destination: "/404",
+        permanent: false,
       },
     ];
   },

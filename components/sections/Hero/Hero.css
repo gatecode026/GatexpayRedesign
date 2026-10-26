@@ -23,7 +23,7 @@
 .hero-stage {
   position: relative;
   width: 100%;
-  max-width: 1440px;
+  max-width: var(--page-max, 1440px);
   height: 615px;            /* adjusted +15px to accommodate top visual offset */
   margin-inline: auto;
 }
@@ -182,7 +182,8 @@
 .hero-glow-shape,
 .hero-ellipse {
   position: absolute;
-  left: 657px;
+  right: 0;
+  left: auto;
   top: 29px;
   width: 783px;
   height: 571px;
@@ -212,7 +213,8 @@
 }
 
 .hero-device--ipad {
-  left: 1098px;
+  right: 16px;
+  left: auto;
   top: 84px;
   width: 326px;
   z-index: 2;
@@ -221,7 +223,8 @@
 }
 
 .hero-device--iphone {
-  left: 663px;
+  right: 549px;
+  left: auto;
   top: 186px;
   width: 228px;
   z-index: 3;
@@ -230,7 +233,8 @@
 }
 
 .hero-device--macbook {
-  left: 680px;
+  right: 88px;
+  left: auto;
   top: 90px;
   width: 672px;
   z-index: 4;
@@ -312,6 +316,44 @@
 /* ==========================================================================
    Responsive Breakpoints
    ========================================================================== */
+
+/* ── Wide Screens & Zoom Out (≥1600px) ───────────────────────────────────── */
+@media (min-width: 1600px) {
+  .hero-stage {
+    height: clamp(615px, 36vw, 740px);
+  }
+  .hero-content {
+    top: clamp(88px, 5.5vw, 120px);
+    max-width: clamp(767px, 48vw, 900px);
+  }
+  .hero-title {
+    font-size: clamp(62px, 3.6vw, 76px);
+    line-height: 1.30;
+    max-width: 100%;
+  }
+  .hero-desc {
+    font-size: clamp(24px, 1.3vw, 27px);
+    line-height: 1.55;
+    max-width: clamp(612px, 39vw, 720px);
+  }
+  .hero-glow-shape,
+  .hero-ellipse {
+    width: clamp(783px, 46vw, 940px);
+    height: auto;
+  }
+  .hero-device--ipad {
+    width: clamp(326px, 19vw, 390px);
+    right: clamp(16px, 1.2vw, 32px);
+  }
+  .hero-device--macbook {
+    width: clamp(672px, 40vw, 820px);
+    right: clamp(88px, 5.5vw, 110px);
+  }
+  .hero-device--iphone {
+    width: clamp(228px, 13.5vw, 275px);
+    right: clamp(549px, 32vw, 660px);
+  }
+}
 
 /* ── 1200px to 1439px (standard laptops: 1366px, 1280px) ───────────────── */
 @media (max-width: 1439px) and (min-width: 1200px) {
