@@ -245,14 +245,6 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   }
 }
 
-@media (min-width: 1441px) {
-  .industry-card {
-    padding: clamp(28px, 2vw, 36px);
-    gap: clamp(32px, 2.5vw, 48px);
-    border-radius: 32px;
-  }
-}
-
 /* Image */
 .industry-card-img-wrap {
   position: relative;
@@ -268,13 +260,6 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
     min-height: 300px;
     align-self: stretch;
     height: 100%;
-  }
-}
-
-@media (min-width: 1441px) {
-  .industry-card-img-wrap {
-    width: 39%;
-    min-height: clamp(320px, 24vw, 400px);
   }
 }
 
@@ -361,42 +346,85 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
    over the tab card above — that card is the base of this same stack.
    ══════════════════════════════════════════════════════════════════════ */
 
-/* ── Industry Showcase Stage (Natural Height, Zero Blank Void) ─────────────
-   Uses CSS Grid overlay so stage height conforms to content naturally,
-   leaving 0px artificial blank margin at any zoom or screen resolution. ── */
-.industry-showcase-stage {
-  display: grid;
-  grid-template-columns: 1fr;
-  width: 100%;
-  margin-top: 24px;
+/* Reduced-motion fallback: plain stacked cards, normal document flow */
+.industry-stack-static {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Strict 3-Card Stacked Showcase ──────────────────────────────────────
+   Fixed 3-card visible window: MAIN (scale 1.0, y 0), SECOND (scale 0.97, y 18px),
+   THIRD (scale 0.94, y 36px). All other cards are completely hidden. ── */
+.industry-stack-wrap {
   position: relative;
-}
-
-.industry-showcase-card {
-  grid-area: 1 / 1 / 2 / 2;
+  margin-top: 32px;
   width: 100%;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(10px) scale(0.99);
-  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.32s;
-  pointer-events: none;
 }
 
-.industry-showcase-card.is-active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-  z-index: 2;
+.industry-stack-sticky {
+  position: sticky;
+  top: calc(var(--navbar-h, 80px) + var(--industry-tabs-h, 128px) + 24px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  z-index: 10;
+  transition: top 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .industry-showcase-card {
-    transition: none;
-    transform: none;
+body.navbar--hidden .industry-stack-sticky {
+  top: calc(var(--industry-tabs-h, 128px) + 24px);
+}
+
+.industry-stack-stage {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+@media (min-width: 768px) {
+  .industry-stack-stage {
+    height: 400px;
   }
+}
+
+@media (max-width: 767px) {
+  .industry-stack-stage {
+    height: 570px;
+  }
+}
+
+@media (max-width: 480px) {
+  .industry-stack-stage {
+    height: 610px;
+  }
+}
+
+.industry-stack-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  transform-origin: 50% 0%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transition: box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.industry-stack-static .industry-stack-card {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  margin-bottom: 24px;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
 }
 
 .industry-stack-dots {
@@ -415,9 +443,6 @@ body.navbar--hidden .industry-tabs-sticky-wrap {
   height: 8px;
   border-radius: 999px;
   background: #CBD5E1;
-  border: none;
-  padding: 0;
-  outline: none;
   transition: background 0.3s var(--ease-out), width 0.3s var(--ease-out);
   cursor: pointer;
 }

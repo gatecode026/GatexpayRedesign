@@ -23,15 +23,15 @@
 .hero-stage {
   position: relative;
   width: 100%;
-  max-width: var(--page-max, 1440px);
+  max-width: 100%;
   height: 615px;            /* adjusted +15px to accommodate top visual offset */
-  margin-inline: auto;
+  margin-inline: 0;
 }
 
-/* ── Left Content (Aligned with Navbar logo at clamp(20px, 3.5vw, 80px)) ── */
+/* ── Left Content (Anchored to Left Edge / Page Gutter) ── */
 .hero-content {
   position: absolute;
-  left: clamp(20px, 3.5vw, 80px);
+  left: var(--page-gutter, clamp(20px, 3.5vw, 80px));
   top: 88px;                /* increased by 20px (was 68px) */
   width: 767px;
   max-width: calc(100% - clamp(40px, 7vw, 160px));
@@ -338,20 +338,24 @@
   }
   .hero-glow-shape,
   .hero-ellipse {
-    width: clamp(783px, 46vw, 940px);
+    width: clamp(783px, 46vw, 1020px);
     height: auto;
+    aspect-ratio: 783 / 571;
   }
   .hero-device--ipad {
     width: clamp(326px, 19vw, 390px);
     right: clamp(16px, 1.2vw, 32px);
+    top: clamp(84px, 5.2vw, 105px);
   }
   .hero-device--macbook {
     width: clamp(672px, 40vw, 820px);
     right: clamp(88px, 5.5vw, 110px);
+    top: clamp(90px, 5.5vw, 115px);
   }
   .hero-device--iphone {
     width: clamp(228px, 13.5vw, 275px);
     right: clamp(549px, 32vw, 660px);
+    top: clamp(186px, 11vw, 225px);
   }
 }
 
@@ -359,7 +363,7 @@
 @media (max-width: 1439px) and (min-width: 1200px) {
   .hero-stage {
     width: 100%;
-    max-width: 1440px;
+    max-width: 100%;
     height: 615px;
     justify-content: space-between;
   }

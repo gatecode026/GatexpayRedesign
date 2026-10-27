@@ -21,7 +21,7 @@ const securityHeaders = [
   },
   {
     key: "X-Robots-Tag",
-    value: "noindex, nofollow",
+    value: "noindex, nofollow, noarchive, nosnippet",
   },
   {
     key: "Content-Security-Policy",
